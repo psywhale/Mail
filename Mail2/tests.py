@@ -2,29 +2,76 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from .models import Mail, Attachment, Route
 
+
 # Create your tests here.
 
 class InboxTest(TestCase):
     def setUp(self):
 
-        userfrom=User.objects.create_user(username='TestPerson',
-                                 password='whatevs',
-                                 first_name='Testislez',
-                                 last_name='Person')
-        userto = User.objects.create_user(username='Ned',
-                                            password='whatevas',
-                                            first_name='Ned',
-                                            last_name='Person')
+        frank = User.objects.create_user(username='Frank',
+                                         password='whatevs',
+                                         first_name='Testislez',
+                                         last_name='Person')
+        ned = User.objects.create_user(username='Ned',
+                                       password='whatevas',
+                                       first_name='Ned',
+                                       last_name='Person')
+        # Message with an attachment that is for Frank
         mailmsg = Mail.objects.create(content='Test Message',
-                            subject='test subject',
-                            fk_sender=userfrom)
+                                      subject='test message for Frank',
+                                      fk_sender=ned,
+                                      termcode="172s",
+                                      section="21231")
 
-        Route.objects.create(fk_to=userto,
+        Route.objects.create(fk_to=frank,
                              read=False,
                              fk_mail=mailmsg)
 
         Attachment.objects.create(filepath='/mnt/maildata',
                                   filename='tatadfa.doc',
+                                  fk_mail=mailmsg
+                                  )
+        # Messsage for frank that does not have an attachment
+        mailmsg = Mail.objects.create(content='Test message for frank',
+                                      subject='No Attachment for frank',
+                                      fk_sender=ned,
+                                      termcode = "172s",
+                                      section = "21231")
+
+        Route.objects.create(fk_to=frank,
+                             read=False,
+                             fk_mail=mailmsg)
+        # Message for "Ned"
+        mailmsg = Mail.objects.create(content='Test Message 3',
+                                      subject='test subject for Ned',
+                                      fk_sender=frank,
+                                      termcode="172s",
+                                      section="21231"
+                                      )
+
+        Route.objects.create(fk_to=ned,
+                             read=False,
+                             fk_mail=mailmsg)
+
+        Attachment.objects.create(filepath='/mnt/maildata',
+                                  filename='tatadfa2.doc',
+                                  fk_mail=mailmsg
+                                  )
+
+        # A Message to frank that is read
+        mailmsg = Mail.objects.create(content='Test Message 4',
+                                      subject='test email read',
+                                      fk_sender=ned,
+                                      termcode="172s",
+                                      section="21231"
+                                      )
+
+        Route.objects.create(fk_to=frank,
+                             read=True,
+                             fk_mail=mailmsg)
+
+        Attachment.objects.create(filepath='/mnt/maildata',
+                                  filename='tatadfa3.doc',
                                   fk_mail=mailmsg
                                   )
 
@@ -36,15 +83,36 @@ class InboxTest(TestCase):
 
     def test_can_login(self):
         c = Client()
-        res = c.login(username='TestPerson', password='whatevs')
+        res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/')
         self.assertEqual(reslogin.status_code, 200)
 
     def test_can_see_email(self):
         c = Client()
-        res = c.login(username='TestPerson', password='whatevs')
+        res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/')
-        self.assertContains(reslogin.body, 'test subject')
+        exists = False
+        for message in reslogin.context['email']:
+            if message['subject'] == "test message for Frank":
+                exists = True
+        self.assertTrue(exists)
 
+    def test_cannot_see_wrong_email(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/')
+        exists = False
+        for message in reslogin.context['email']:
+            if message['subject'] == "test subject for Ned":
+                exists = True
+        self.assertFalse(exists)
 
-
+    def test_can_see_attachments(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/')
+        exists = False
+        for message in reslogin.context['email']:
+            if message['has_attachment']:
+                exists = True
+        self.assertTrue(exists)

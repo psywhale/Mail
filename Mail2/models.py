@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 class Mail(models.Model):
     content = models.TextField()
     subject = models.CharField(max_length=512)
+    termcode = models.CharField(max_length=4)
+    section = models.CharField(max_length=5)
+    archived = models.BooleanField(default=False)
     fk_sender = models.ForeignKey(User)
 
     def __str__(self):
