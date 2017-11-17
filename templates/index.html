@@ -8,20 +8,11 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-3 col-md-2">
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                    Mail <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Mail</a></li>
-                    <li><a href="#">Contacts</a></li>
-                    <li><a href="#">Tasks</a></li>
-                </ul>
-            </div>
+
         </div>
         <div class="col-sm-9 col-md-10">
             <!-- Split button -->
-            <div class="btn-group">
+<div class="btn-group">
                 <button type="button" class="btn btn-default">
                     <div class="checkbox" style="margin: 0;">
                         <label>
@@ -37,8 +28,6 @@
                     <li><a href="#">None</a></li>
                     <li><a href="#">Read</a></li>
                     <li><a href="#">Unread</a></li>
-                    <li><a href="#">Starred</a></li>
-                    <li><a href="#">Unstarred</a></li>
                 </ul>
             </div>
             <button type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
@@ -49,9 +38,10 @@
                     More <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Mark all as read</a></li>
-                    <li class="divider"></li>
-                    <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>
+                    <li><a href="#">Mark selected as read</a></li>
+                    <li><a href="#">Mark selected as unread</a></li>
+{#                    <li class="divider"></li>#}
+{#                    <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>#}
                 </ul>
             </div>
             <div class="pull-right">
@@ -75,10 +65,22 @@
             <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a href="#"><span class="badge pull-right">32</span> Inbox </a>
                 </li>
-                <li><a href="#">Starred</a></li>
-                <li><a href="#">Important</a></li>
                 <li><a href="#">Sent Mail</a></li>
-                <li><a href="#"><span class="badge pull-right">3</span>Drafts</a></li>
+                <li class="course-list"><a href="#">2C202 - College Algebra</a></li>
+                <li class="course-list"><a href="#">29606 - Micro-Computer</a></li>
+                <li class="course-list"><a href="#">31020 - Agriculture Sciences</a></li>
+                <li class="course-list"><a href="#">3C120 - Trig</a></li>
+                <li>
+                    <a class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer; font-size: 12px">
+                        PAST COURSES: <span class="caret" style="#float:right; #margin:8px 0 0 0"></span><span class="sr-only">Toggle Dropdown</span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">2C202 - College Algebra</a></li>
+                        <li><a href="#">29606 - Micro-Computer</a></li>
+                        <li><a href="#">31020 - Agriculture Sciences</a></li>
+                        <li><a href="#">3C120 - Web Development</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <div class="col-sm-9 col-md-10">
@@ -88,8 +90,6 @@
                 </span>Primary</a></li>
                 <li><a href="#profile" data-toggle="tab"><span class="glyphicon glyphicon-user"></span>
                     Social</a></li>
-                <li><a href="#messages" data-toggle="tab"><span class="glyphicon glyphicon-tags"></span>
-                    Promotions</a></li>
                 <li><a href="#settings" data-toggle="tab"><span class="glyphicon glyphicon-plus no-margin">
                 </span></a></li>
             </ul>
@@ -103,28 +103,43 @@
                                     <input type="checkbox">
                                 </label>
                             </div>
-                            <span class="glyphicon glyphicon-star-empty"></span><span class="name" style="min-width: 120px;
-                                display: inline-block;">Mark Otto</span> <span class="">Nice work on the lastest version</span>
-                            <span class="text-muted" style="font-size: 11px;">- More content here</span> <span class="badge">12:10 AM</span> <span class="pull-right"><span class="glyphicon glyphicon-paperclip">
-                                </span></span></a><a href="#" class="list-group-item">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox">
-                                        </label>
-                                    </div>
-                                    <span class="glyphicon glyphicon-star-empty"></span><span class="name" style="min-width: 120px;
-                                        display: inline-block;">Jason Markus</span> <span class="">This is big title</span>
-                                    <span class="text-muted" style="font-size: 11px;">- I saw that you had..</span> <span class="badge">12:09 AM</span> <span class="pull-right"><span class="glyphicon glyphicon-paperclip">
-                                        </span></span></a><a href="#" class="list-group-item read">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox">
-                                                </label>
-                                            </div>
-                                            <span class="glyphicon glyphicon-star"></span><span class="name" style="min-width: 120px;
-                                                display: inline-block;">Jane Patel</span> <span class="">This is big title</span>
-                                            <span class="text-muted" style="font-size: 11px;">- Hi hello how r u ?</span> <span class="badge">11:30 PM</span> <span class="pull-right"><span class="glyphicon glyphicon-paperclip">
-                                                </span></span></a>
+                            <span class="name unread-mail" style="min-width: 120px; display: inline-block;">Nicholas Hood</span>
+                            <span class="unread-mail">2C202</span>
+                            <span class="text-muted" style="font-size: 11px;"> - Title or Subject line.</span>
+                            <span class="badge unread-mail">Nov 17</span>
+                            <span class="pull-right">
+                                <span class="glyphicon glyphicon-paperclip"></span>
+                            </span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox">
+                                </label>
+                            </div>
+                            <span class="name" style="min-width: 120px; display: inline-block;">Jason Markus</span>
+                            <span class="">31020</span>
+                            <span class="text-muted" style="font-size: 11px;"> - I saw that you had..</span>
+                            <span class="badge">Nov 12</span>
+                            <span class="pull-right">
+
+                            </span>
+                        </a>
+                        <a href="#" class="list-group-item read">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox">
+                                </label>
+                            </div>
+                            <span class="name" style="min-width: 120px; display: inline-block;">Jane Patel</span>
+                            <span class="">31020</span>
+                            <span class="text-muted" style="font-size: 11px;"> - This is big title</span>
+                            <span class="badge">Oct 1</span>
+                            <span class="pull-right">
+                                <span class="glyphicon glyphicon-paperclip">
+                            </span>
+                        </span>
+                        </a>
                     </div>
                 </div>
                 <div class="tab-pane fade in" id="profile">
@@ -134,8 +149,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade in" id="messages">
-                    ...</div>
                 <div class="tab-pane fade in" id="settings">
                     This tab is empty.</div>
             </div>
