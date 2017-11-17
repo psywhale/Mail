@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+
+
+    <br/>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li class="active">Home</li>
+    </ol>
+
+    <div class="row" style="width: 40%; margin: -10px auto 10px;">
+    </div><!--/row-->
+
+    <div class="row">
+        <div class="blog-main">
+
+            <div class="panel panel-info" style="width:70%; margin-left:auto; margin-right:auto;">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        Welcome <span style="color:#fdff7e">{{ user.first_name }}</span>, what would you like to do today?
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div class="list-group" STYLE="margin-top:16px; margin-bottom: 40px;">
+                        <a href="{% url 'outbox' %}" class="list-group-item list-group-item-success2" style="color:green">
+                            <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> Send a Fax (Outbox)
+                        </a>
+                        <a href="{% url 'inbox' %}" class="list-group-item list-group-item-info2" style="color:#f7ad00;">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Received Faxes (Inbox)
+                        </a>
+{#                        <a href="{% url 'manageAccount' %}" class="list-group-item" style="color:#c79031">#}
+{#                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit my Account#}
+{#                        </a>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

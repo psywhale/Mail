@@ -1,0 +1,127 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="title" content="Pioneer Alert System"/>
+    <title>Fax System - Western Oklahoma State College</title>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://www.wosc.edu/img/APPS-seal-F.ico">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/css/blog.css" rel="stylesheet" media="screen">
+    <link href="/static/css/select2.min.css" rel="stylesheet" media="screen">
+    <!-- Custom styles for this template -->
+    <link href="/static/css/TEMPLATE.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <script src="/static/js/select2.full.min.js"></script>
+
+    <![endif]-->
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="data:image/png;base64,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" style="margin: -10px 8px 0 0; float: left;" alt="WOSC_Seal">
+                Western's Fax System
+            </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="{% url 'outbox' %}" class="outbox" style="color:#00f700">
+                                <span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> Send a Fax
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'inbox' %}" class="inbox" style="color:#f7ad00">
+                                <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Fax Inbox
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/accounts/logout" style="#color:red">
+                                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Logout
+                            </a>
+                        </li>
+                {% if user.is_anonymous %}
+                    &nbsp;
+                {% else %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    {% block content %}
+    {% endblock %}
+
+
+<footer clas="blog-footer">
+    <div class="inner">
+        <p style="text-align:center">
+            <img src="https://www.wosc.edu/img/W_icon_full logo.png" alt="WOSC Logo" style="max-width:260px; width:100%; #-webkit-filter: grayscale(1);  #filter: grayscale(1);">
+        </p>
+        <p><div class="fax_number">{{ fax_number }}</div>
+            <div class="version" title="APPLICATION NAME: Western Fax System
+
+            PROGRAMMING &amp; LEAD: Steve Prater
+            FRONT-END DEVELOPER: Nicholas Hood">
+                -- <b>Fax System</b> -- <br>Version 0.2
+            </div>
+        </p>
+    </div>
+</footer>
+<p>&nbsp;</p>
+
+</div><!--/container-->
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="/static/js/custom.js" type="text/javascript"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<!-- ### FOOTABLE CSS & JS ### -->
+<link href="/static/css/footable.core.css" rel="stylesheet" type="text/css"/>
+<link href="/static/css/footable.standalone.css" rel="stylesheet" type="text/css"/>
+<script src="/static/js/footable.js" type="text/javascript"></script>
+<script src="/static/js/footable.sort.js" type="text/javascript"></script>
+<script src="/static/js/footable.filter.js" type="text/javascript"></script>
+<script src="/static/js/image-tooltip.js" type="text/javascript"></script>
+<script src="/static/js/jquery.maskedinput.min.js"></script>
+<script>
+    $('#id_phone').mask("9(999)999-9999", {placeholder: "1(580)555-1212"});
+
+    if(window.location.href.indexOf("inbox") > -1) {
+       $('.inbox').addClass('currenturl');
+    }
+    if(window.location.href.indexOf("send") > -1) {
+       $('.outbox').addClass('currenturl');
+    }
+    if(window.location.href.indexOf("outbox") > -1) {
+       $('.outbox').addClass('currenturl');
+    }
+
+    var faxnumber = '{{ fax_number }}';
+    console.log(faxnumber);
+    $('.breadcrumb').append('<span style=float:right>FAX NUMBER: <strong>' + faxnumber + '</STRONG></span');
+</script>
+
+</body>
+</html>
