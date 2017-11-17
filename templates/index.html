@@ -27,7 +27,7 @@
                     <li><a href="#">All</a></li>
                     <li><a href="#">None</a></li>
                     <li><a href="#">Read</a></li>
-                    <li><a href="#">Unreads</a></li>
+                    <li><a href="#">Unread</a></li>
                 </ul>
             </div>
             <button type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
@@ -66,10 +66,10 @@
                 <li class="active"><a href="#"><span class="badge pull-right">32</span> Inbox </a>
                 </li>
                 <li><a href="#">Sent Mail</a></li>
-                <li class="course-list"><a href="#">2C202 - College Algebra</a></li>
-                <li class="course-list"><a href="#">29606 - Micro-Computer</a></li>
-                <li class="course-list"><a href="#">31020 - Agriculture Sciences</a></li>
-                <li class="course-list"><a href="#">3C120 - Trig</a></li>
+                <li class="course-list"><a href="#" title="2C202 - College Algebra"><span class="badge pull-right">30</span> 2C202 - College Algebra</a></li>
+                <li class="course-list"><a href="#" title="29606 - Micro-Computer">29606 - Micro-Computer</a></li>
+                <li class="course-list"><a href="#"title="31020 - Agriculture Sciences">31020 - Agriculture Sciences</a></li>
+                <li class="course-list"><a href="#"title="3C120 - Trig"><span class="badge pull-right">2</span> 3C120 - Trig</a></li>
                 <li>
                     <a class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer; font-size: 12px">
                         PAST COURSES: <span class="caret" style="#float:right; #margin:8px 0 0 0"></span><span class="sr-only">Toggle Dropdown</span>
@@ -97,6 +97,27 @@
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
                     <div class="list-group">
+
+                        {% for message in email %}
+                        <a href="#" class="list-group-item read">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox">
+                                </label>
+                            </div>
+                            <span class="name {% if message.read %} unread-mail{% endif %}" style="min-width: 120px; display: inline-block;">{{ message.from.first_name }} {{ message.from.last_name }}</span>
+                            <span class="{% if message.read %} unread-mail{% endif %}">{{ message.section }}</span>
+                            <span class="text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
+                            <span class="badge{% if message.read %} unread-mail{% endif %}">{{ message.senddate }}</span>
+                            <span class="pull-right">
+                                {% if message.has_attachment %}
+                                    <span class="glyphicon glyphicon-paperclip">
+                                {% endif %}
+                            </span>
+                        </span>
+                        </a>
+                        {% endfor %}
+
                         <a href="#" class="list-group-item">
                             <div class="checkbox">
                                 <label>
@@ -140,6 +161,7 @@
                             </span>
                         </span>
                         </a>
+
                     </div>
                 </div>
                 <div class="tab-pane fade in" id="profile">
@@ -161,6 +183,6 @@
     </div>
 </div>
 
-
+<span style="color:red">{{ email }}</span>
 
 {% endblock %}
