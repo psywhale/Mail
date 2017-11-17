@@ -126,6 +126,8 @@ venv.bak/
 .idea/**/gradle.xml
 .idea/**/libraries
 
+.idea/
+
 # CMake
 cmake-build-debug/
 
@@ -155,3 +157,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+# no db
+db.sqlite3
+
+.idea/inspectionProfiles/
