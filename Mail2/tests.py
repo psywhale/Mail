@@ -6,6 +6,7 @@ from .models import Mail, Attachment, Route
 
 class InboxTest(TestCase):
     def setUp(self):
+
         userfrom=User.objects.create_user(username='TestPerson',
                                  password='whatevs',
                                  first_name='Testislez',
@@ -26,8 +27,24 @@ class InboxTest(TestCase):
                                   filename='tatadfa.doc',
                                   fk_mail=mailmsg
                                   )
-    def bad_users_have_no_access(self):
-        c=Client()
-        res=c.get('/')
+
+    def test_bad_users_have_no_access(self):
+        c = Client()
+        res = c.get('/')
+
         self.assertEqual(res.status_code, 403)
+
+    def test_can_login(self):
+        c = Client()
+        res = c.login(username='TestPerson', password='whatevs')
+        reslogin = c.get('/')
+        self.assertEqual(reslogin.status_code, 200)
+
+    def test_can_see_email(self):
+        c = Client()
+        res = c.login(username='TestPerson', password='whatevs')
+        reslogin = c.get('/')
+        self.assertContains(reslogin.body, 'test subject')
+
+
 
