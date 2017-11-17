@@ -16,19 +16,19 @@
                 <button type="button" class="btn btn-default">
                     <div class="checkbox" style="margin: 0;">
                         <label>
-                            <input type="checkbox">
+                            <input type="checkbox" class="check" id="checkAll">
                         </label>
                     </div>
                 </button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">All</a></li>
-                    <li><a href="#">None</a></li>
-                    <li><a href="#">Read</a></li>
-                    <li><a href="#">Unread</a></li>
-                </ul>
+{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+{#                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>#}
+{#                </button>#}
+{#                <ul class="dropdown-menu" role="menu">#}
+{#                    <li><a href="#">All</a></li>#}
+{#                    <li><a href="#">None</a></li>#}
+{#                    <li><a href="#">Read</a></li>#}
+{#                    <li><a href="#">Unread</a></li>#}
+{#                </ul>#}
             </div>
             <button type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
                 &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</button>
@@ -38,6 +38,7 @@
                     More <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Archive selected</a></li>
                     <li><a href="#">Mark selected as read</a></li>
                     <li><a href="#">Mark selected as unread</a></li>
 {#                    <li class="divider"></li>#}
@@ -99,10 +100,10 @@
                     <div class="list-group">
 
                         {% for message in email %}
-                        <a href="#" class="list-group-item read">
+                        <a href="#" class="list-group-item {% if message.read == False %} read{% endif %}">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox">
+                                    <input type="checkbox" class="check">
                                 </label>
                             </div>
                             <span class="name {% if message.read %} unread-mail{% endif %}" style="min-width: 120px; display: inline-block;">{{ message.from.first_name }} {{ message.from.last_name }}</span>
@@ -132,7 +133,7 @@
                                 <span class="glyphicon glyphicon-paperclip"></span>
                             </span>
                         </a>
-                        <a href="#" class="list-group-item">
+                        <a href="#" class="list-group-item read">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox">
@@ -145,21 +146,6 @@
                             <span class="pull-right">
 
                             </span>
-                        </a>
-                        <a href="#" class="list-group-item read">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                            </div>
-                            <span class="name" style="min-width: 120px; display: inline-block;">Jane Patel</span>
-                            <span class="">31020</span>
-                            <span class="text-muted" style="font-size: 11px;"> - This is big title</span>
-                            <span class="badge">Oct 1</span>
-                            <span class="pull-right">
-                                <span class="glyphicon glyphicon-paperclip">
-                            </span>
-                        </span>
                         </a>
 
                     </div>
@@ -177,12 +163,14 @@
 
             <div class="row-md-12">
 
+                <div class="well">
+                    <span style="color:red">{{ email }}</span>
+                </div>
 
             </div>
         </div>
     </div>
 </div>
 
-<span style="color:red">{{ email }}</span>
 
 {% endblock %}
