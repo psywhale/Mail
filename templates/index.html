@@ -97,6 +97,27 @@
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
                     <div class="list-group">
+
+                        {% for message in email %}
+                        <a href="#" class="list-group-item read">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox">
+                                </label>
+                            </div>
+                            <span class="name {% if message.read %} unread-mail{% endif %}" style="min-width: 120px; display: inline-block;">{{ message.from.first_name }} {{ message.from.last_name }}</span>
+                            <span class="{% if message.read %} unread-mail{% endif %}">{{ message.section }}</span>
+                            <span class="text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
+                            <span class="badge{% if message.read %} unread-mail{% endif %}">{{ message.senddate }}</span>
+                            <span class="pull-right">
+                                {% if message.has_attachment %}
+                                    <span class="glyphicon glyphicon-paperclip">
+                                {% endif %}
+                            </span>
+                        </span>
+                        </a>
+                        {% endfor %}
+
                         <a href="#" class="list-group-item">
                             <div class="checkbox">
                                 <label>
@@ -140,6 +161,7 @@
                             </span>
                         </span>
                         </a>
+
                     </div>
                 </div>
                 <div class="tab-pane fade in" id="profile">
@@ -161,6 +183,6 @@
     </div>
 </div>
 
-{{ email }}
+<span style="color:red">{{ email }}</span>
 
 {% endblock %}

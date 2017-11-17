@@ -16,6 +16,7 @@ hr { margin-top: 5px;margin-bottom: 10px; }
 .ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}
 .ad a.url {color: #093;text-decoration: none;}
 .unread-mail { font-weight: 900 !important }
+.read-mail { font-weight: normal !important }
 .course-list a { color: #0fa229 }
 .tab-content .badge { background: transparent; color: inherit; font-weight: inherit }
 .badge { z-index: 999; }
