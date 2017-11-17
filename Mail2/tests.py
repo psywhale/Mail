@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from .models import Mail, Attachment, Route
+import datetime
 
 
 # Create your tests here.
@@ -21,7 +22,7 @@ class InboxTest(TestCase):
                                       subject='test message for Frank',
                                       fk_sender=ned,
                                       termcode="172s",
-                                      section="21231")
+                                      section="21232")
 
         Route.objects.create(fk_to=frank,
                              read=False,
@@ -46,7 +47,7 @@ class InboxTest(TestCase):
                                       subject='test subject for Ned',
                                       fk_sender=frank,
                                       termcode="172s",
-                                      section="21231"
+                                      section="21232"
                                       )
 
         Route.objects.create(fk_to=ned,
@@ -116,3 +117,23 @@ class InboxTest(TestCase):
             if message['has_attachment']:
                 exists = True
         self.assertTrue(exists)
+
+    def test_email_has_right_date(self):
+        mailmsg = Mail.objects.create(content='Test timestamp',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Frank"),
+                                      termcode="172s",
+                                      section="21231"
+                                      )
+        self.assertEqual(datetime.datetime.now().day, mailmsg.created.day)
+
+    def test_user_gets_a_list_of_unique_courses(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/')
+        print(reslogin.context['courses'])
+        self.assertTrue(allUnique(reslogin.context['courses']))
+
+def allUnique(x):
+    seen = set()
+    return not any(i in seen or seen.add(i) for i in x)

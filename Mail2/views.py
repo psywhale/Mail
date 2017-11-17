@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from .models import Route, Mail, Attachment
 from braces.views import LoginRequiredMixin
+from pprint import pprint
 
 # Create your views here.
 
@@ -19,14 +20,19 @@ class IndexView(LoginRequiredMixin,TemplateView):
 
         messages = Route.objects.filter(fk_to=self.request.user)
         email = []
+        courses = []
         for message in messages:
             mail = {}
             m = message.fk_mail
+            if m.section not in courses:
+                courses.append(m.section)
             mail['id'] = m.id
             mail['subject'] = m.subject
             mail['read'] = message.read
             mail['termcode'] = m.termcode
             mail['section'] = m.section
+            mail['date'] = str(m.created.month)+"/"+str(m.created.day)+"/"+str(m.created.year)
+            #pprint(mail['date'])
             mail['from'] = m.fk_sender
             if Attachment.objects.filter(fk_mail=m):
                 mail['has_attachment'] = True
@@ -34,5 +40,6 @@ class IndexView(LoginRequiredMixin,TemplateView):
                 mail['has_attachment'] = False
             email.append(mail)
         context['email'] = email
+        context['courses'] = courses
         return context
 
