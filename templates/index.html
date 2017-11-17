@@ -16,19 +16,19 @@
                 <button type="button" class="btn btn-default">
                     <div class="checkbox" style="margin: 0;">
                         <label>
-                            <input type="checkbox">
+                            <input type="checkbox" class="check" id="checkAll">
                         </label>
                     </div>
                 </button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">All</a></li>
-                    <li><a href="#">None</a></li>
-                    <li><a href="#">Read</a></li>
-                    <li><a href="#">Unread</a></li>
-                </ul>
+{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+{#                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>#}
+{#                </button>#}
+{#                <ul class="dropdown-menu" role="menu">#}
+{#                    <li><a href="#">All</a></li>#}
+{#                    <li><a href="#">None</a></li>#}
+{#                    <li><a href="#">Read</a></li>#}
+{#                    <li><a href="#">Unread</a></li>#}
+{#                </ul>#}
             </div>
             <button type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
                 &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</button>
@@ -38,6 +38,7 @@
                     More <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Archive selected</a></li>
                     <li><a href="#">Mark selected as read</a></li>
                     <li><a href="#">Mark selected as unread</a></li>
 {#                    <li class="divider"></li>#}
@@ -66,19 +67,19 @@
                 <li class="active"><a href="#"><span class="badge pull-right">32</span> Inbox </a>
                 </li>
                 <li><a href="#">Sent Mail</a></li>
-                <li class="course-list"><a href="#" title="2C202 - College Algebra"><span class="badge pull-right">30</span> 2C202 - College Algebra</a></li>
-                <li class="course-list"><a href="#" title="29606 - Micro-Computer">29606 - Micro-Computer</a></li>
-                <li class="course-list"><a href="#"title="31020 - Agriculture Sciences">31020 - Agriculture Sciences</a></li>
-                <li class="course-list"><a href="#"title="3C120 - Trig"><span class="badge pull-right">2</span> 3C120 - Trig</a></li>
+                <li class="current-course-list"><a href="#" title="2C202 - College Algebra (30 unread messages)"><span class="badge pull-right">30</span> 2C202 - College Algebra</a></li>
+                <li class="current-course-list"><a href="#" title="29606 - Micro-Computer">29606 - Micro-Computer</a></li>
+                <li class="current-course-list"><a href="#"title="31020 - Agriculture Sciences">31020 - Agriculture Sciences</a></li>
+                <li class="current-course-list"><a href="#"title="3C120 - Trig (2 unread messages)"><span class="badge pull-right">2</span> 3C120 - Trig</a></li>
                 <li>
                     <a class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer; font-size: 12px">
                         PAST COURSES: <span class="caret" style="#float:right; #margin:8px 0 0 0"></span><span class="sr-only">Toggle Dropdown</span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">2C202 - College Algebra</a></li>
-                        <li><a href="#">29606 - Micro-Computer</a></li>
-                        <li><a href="#">31020 - Agriculture Sciences</a></li>
-                        <li><a href="#">3C120 - Web Development</a></li>
+                        <li><a href="#">1C202 - College Algebra</a></li>
+                        <li><a href="#">19606 - Micro-Computer</a></li>
+                        <li><a href="#">11020 - Agriculture Sciences</a></li>
+                        <li><a href="#">1C120 - Web Development</a></li>
                     </ul>
                 </li>
             </ul>
@@ -99,16 +100,16 @@
                     <div class="list-group">
 
                         {% for message in email %}
-                        <a href="#" class="list-group-item read">
+                        <a href="#" class="list-group-item {% if message.read == False %} read{% endif %}">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox">
+                                    <input type="checkbox" class="check">
                                 </label>
                             </div>
-                            <span class="name {% if message.read %} unread-mail{% endif %}" style="min-width: 120px; display: inline-block;">{{ message.from.first_name }} {{ message.from.last_name }}</span>
-                            <span class="{% if message.read %} unread-mail{% endif %}">{{ message.section }}</span>
-                            <span class="text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
-                            <span class="badge{% if message.read %} unread-mail{% endif %}">{{ message.senddate }}</span>
+                            <span class="name {% if message.read %} unread-mail{% endif %}"> {{ message.from.first_name }} {{ message.from.last_name }}</span>
+                            <span class="section {% if message.read %} unread-mail{% endif %}">{{ message.section }}</span>
+                            <span class="subject text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
+                            <span class="date badge {% if message.read %} unread-mail{% endif %}">{{ message.senddate }}Nov 17</span>
                             <span class="pull-right">
                                 {% if message.has_attachment %}
                                     <span class="glyphicon glyphicon-paperclip">
@@ -118,49 +119,6 @@
                         </a>
                         {% endfor %}
 
-                        <a href="#" class="list-group-item">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                            </div>
-                            <span class="name unread-mail" style="min-width: 120px; display: inline-block;">Nicholas Hood</span>
-                            <span class="unread-mail">2C202</span>
-                            <span class="text-muted" style="font-size: 11px;"> - Title or Subject line.</span>
-                            <span class="badge unread-mail">Nov 17</span>
-                            <span class="pull-right">
-                                <span class="glyphicon glyphicon-paperclip"></span>
-                            </span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                            </div>
-                            <span class="name" style="min-width: 120px; display: inline-block;">Jason Markus</span>
-                            <span class="">31020</span>
-                            <span class="text-muted" style="font-size: 11px;"> - I saw that you had..</span>
-                            <span class="badge">Nov 12</span>
-                            <span class="pull-right">
-
-                            </span>
-                        </a>
-                        <a href="#" class="list-group-item read">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                            </div>
-                            <span class="name" style="min-width: 120px; display: inline-block;">Jane Patel</span>
-                            <span class="">31020</span>
-                            <span class="text-muted" style="font-size: 11px;"> - This is big title</span>
-                            <span class="badge">Oct 1</span>
-                            <span class="pull-right">
-                                <span class="glyphicon glyphicon-paperclip">
-                            </span>
-                        </span>
-                        </a>
 
                     </div>
                 </div>
@@ -177,12 +135,14 @@
 
             <div class="row-md-12">
 
+                <div class="well">
+                    <span style="color:red">{{ email }}</span>
+                </div>
 
             </div>
         </div>
     </div>
 </div>
 
-<span style="color:red">{{ email }}</span>
 
 {% endblock %}
