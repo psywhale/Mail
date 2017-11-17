@@ -32,7 +32,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
             mail['termcode'] = m.termcode
             mail['section'] = m.section
             mail['date'] = str(m.created.month)+"/"+str(m.created.day)+"/"+str(m.created.year)
-            mail['time'] = str(m.created.hour)+":"+str(m.created.minute)+":"str(m.created.second)
+            mail['time'] = str(m.created.hour)+":"+str(m.created.minute)+":"+str(m.created.second)
             #pprint(mail['date'])
             mail['from'] = m.fk_sender
             if Attachment.objects.filter(fk_mail=m):
