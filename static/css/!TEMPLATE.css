@@ -1,6 +1,6 @@
 /* CSS used here will be applied after bootstrap.css */
 
-body{ margin-top:50px;}
+body{ margin-top:20px;}
 .nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
 .tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
 .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
@@ -30,7 +30,7 @@ ul.nav.nav-pills.nav-stacked {
 .name, .section, .subject { width: 150px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: -5px; }
 .section { width: 52px; }
 .subject { width: 415px }
-.date { width: 55px; margin: 6px -15px; }
+.date { width: 55px; margin: 6px -5px; }
 .nav-stacked>li+li {
     overflow: hidden;
     text-overflow: ellipsis;
