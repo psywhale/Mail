@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load tz %}
 {% block content %}
 
-    <div class="row" style="width: 40%; margin: 70px auto 10px;">
+    <div class="row" style="#width: 40%; #margin: 70px auto 10px;">
     </div><!--/row-->
 
 <div class="container">
     <div class="row">
         <div class="col-sm-3 col-md-2">
-
+            <img src="https://www.wosc.edu/img/W_icon_full logo.png" alt="WOSC Logo" style="max-width:260px; width:100%; margin-top: 40px #-webkit-filter: grayscale(1);  #filter: grayscale(1);">
         </div>
         <div class="col-sm-9 col-md-10">
             <!-- Split button -->
@@ -100,19 +101,29 @@
                     <div class="list-group">
 
                         {% for message in email|dictsortreversed:"time" %}
-                        <a href="#" class="list-group-item {% if message.read == False %} read{% endif %}">
+                        <a href="#" class="list-group-item {% if message.read == True %} read{% endif %}">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" class="check">
                                 </label>
                             </div>
-                            <span class="name {% if message.read %} unread-mail{% endif %}"> {{ message.from.first_name }} {{ message.from.last_name }}</span>
-                            <span class="section {% if message.read %} unread-mail{% endif %}">{{ message.section }}</span>
+                            <span class="name {% if message.read == False %} unread-mail{% endif %}"> {{ message.from.first_name }} {{ message.from.last_name }}</span>
+                            <span class="section {% if message.read == False %} unread-mail{% endif %}">{{ message.section }}</span>
                             <span class="subject text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
-                            <span class="date badge {% if message.read %} unread-mail{% endif %}"> {{ message.date }}</span>
+                            <span class="date badge {% if message.read == False %} unread-mail{% endif %}">
+                                {% now "Y-m-d" as todays_date %}
+                                {% if todays_date < someday|date:"Y-m-d" %}
+                                   {{ message.date }}
+                                {% else %}
+                                    {{ message.time }}
+                                {% endif %}
+                            {{ value|localtime }}
+{#                            {% timezone user.timezone %}#}
+{#                            {% endtimezone %}#}
+                            </span>
                             <span class="pull-right">
                                 {% if message.has_attachment %}
-                                    <span class="glyphicon glyphicon-paperclip">
+                                    <span class="glyphicon glyphicon-paperclip" style="margin: 5px 14px 0 0 !important;">
                                 {% endif %}
                             </span>
                         </span>
@@ -136,7 +147,7 @@
             <div class="row-md-12">
 
                 <div class="well">
-                    <span style="color:red">{{ email }}{% now "jS F Y H:i" %}</span>
+                    <span style="color:red">{{ email }} ------ {% now "jS F Y H:i" %} ------ </span>
                 </div>
 
             </div>
