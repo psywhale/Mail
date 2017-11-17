@@ -33,6 +33,6 @@ class IndexView(LoginRequiredMixin,TemplateView):
             else:
                 mail['has_attachment'] = False
             email.append(mail)
-        context['email']=email
+        context['email'] = email
         return context
 
