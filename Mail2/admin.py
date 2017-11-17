@@ -5,7 +5,7 @@ class RouteAdmin(admin.ModelAdmin):
     list_display = ['fk_to', 'read', 'fk_mail']
 
 class MailAdmin(admin.ModelAdmin):
-    list_display = ['fk_sender', 'subject']
+    list_display = ['fk_sender', 'subject', 'created']
 
 class AttachmentAdmin(admin.ModelAdmin):
     list_display = ['filename', 'fk_mail']
