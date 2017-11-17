@@ -99,7 +99,7 @@
                 <div class="tab-pane fade in active" id="home">
                     <div class="list-group">
 
-                        {% for message in email %}
+                        {% for message in email|dictsortreversed:"time" %}
                         <a href="#" class="list-group-item {% if message.read == False %} read{% endif %}">
                             <div class="checkbox">
                                 <label>
@@ -109,7 +109,7 @@
                             <span class="name {% if message.read %} unread-mail{% endif %}"> {{ message.from.first_name }} {{ message.from.last_name }}</span>
                             <span class="section {% if message.read %} unread-mail{% endif %}">{{ message.section }}</span>
                             <span class="subject text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
-                            <span class="date badge {% if message.read %} unread-mail{% endif %}">{{ message.senddate }}Nov 17</span>
+                            <span class="date badge {% if message.read %} unread-mail{% endif %}"> {{ message.date }}</span>
                             <span class="pull-right">
                                 {% if message.has_attachment %}
                                     <span class="glyphicon glyphicon-paperclip">
@@ -136,7 +136,7 @@
             <div class="row-md-12">
 
                 <div class="well">
-                    <span style="color:red">{{ email }}</span>
+                    <span style="color:red">{{ email }}{% now "jS F Y H:i" %}</span>
                 </div>
 
             </div>
