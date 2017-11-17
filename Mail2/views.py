@@ -27,11 +27,12 @@ class IndexView(LoginRequiredMixin,TemplateView):
             mail['read'] = message.read
             mail['termcode'] = m.termcode
             mail['section'] = m.section
+            mail['from'] = m.fk_sender
             if Attachment.objects.filter(fk_mail=m):
                 mail['has_attachment'] = True
             else:
                 mail['has_attachment'] = False
             email.append(mail)
-        context['email']=email
+        context['email'] = email
         return context
 
