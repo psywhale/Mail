@@ -27,6 +27,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
             mail['read'] = message.read
             mail['termcode'] = m.termcode
             mail['section'] = m.section
+            mail['from'] = m.fk_sender
             if Attachment.objects.filter(fk_mail=m):
                 mail['has_attachment'] = True
             else:
