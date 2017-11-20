@@ -101,7 +101,7 @@
                     <div class="list-group">
 
                         {% for message in email|dictsortreversed:"time" %}
-                        <a href="#" class="list-group-item {% if message.read == True %} read{% endif %}">
+                        <a href="{% url 'reply' message.id  %}" class="list-group-item {% if message.read == True %} read{% endif %}">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" class="check">
