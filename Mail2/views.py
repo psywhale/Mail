@@ -33,6 +33,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
             mail['section'] = m.section
             mail['date'] = str(m.created.month)+"/"+str(m.created.day)+"/"+str(m.created.year)
             mail['time'] = str(m.created.hour)+":"+str(m.created.minute)+":"+str(m.created.second)
+            mail['timestamp'] = m.created.timestamp()
             #pprint(mail['date'])
             mail['from'] = m.fk_sender
             if Attachment.objects.filter(fk_mail=m):
@@ -43,4 +44,10 @@ class IndexView(LoginRequiredMixin,TemplateView):
         context['email'] = email
         context['courses'] = courses
         return context
+
+class ReplyView(LoginRequiredMixin,TemplateView):
+
+    template_name = 'reply'
+    pass
+
 
