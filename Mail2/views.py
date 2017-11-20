@@ -19,6 +19,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
         # Don't know of an easier way to do this.
 
         messages = Route.objects.filter(fk_to=self.request.user)
+        messages.order_by('created')
         email = []
         courses = []
         for message in messages:
@@ -48,6 +49,10 @@ class IndexView(LoginRequiredMixin,TemplateView):
 class ReplyView(LoginRequiredMixin,TemplateView):
 
     template_name = 'reply'
-    pass
+    raise_exception = True
+
+    def get_context_data(self, **kwargs):
+        context = super(ReplyView, self).get_context_data(**kwargs)
+
 
 
