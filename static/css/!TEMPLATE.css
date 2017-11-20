@@ -60,7 +60,8 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
     right: 5px;
     bottom: 6px;
 }
-
+/* COMPOSE SECTION*/
+.compose-section-subject { font-weight: 900; font-size: 18px; border-bottom: 1px solid #ccc; padding: 12px; }
 
 
 

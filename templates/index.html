@@ -9,7 +9,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-3 col-md-2">
-            <img src="https://www.wosc.edu/img/W_icon_full logo.png" alt="WOSC Logo" style="max-width:260px; width:100%; margin-top: 40px #-webkit-filter: grayscale(1);  #filter: grayscale(1);">
+            <a href="/"><img src="https://www.wosc.edu/img/W_icon_full logo.png" alt="WOSC Logo" style="max-width:260px; width:100%; margin-top: 40px #-webkit-filter: grayscale(1);  #filter: grayscale(1);"></a>
         </div>
         <div class="col-sm-9 col-md-10">
             <div class="input-group" style="width: 33%; float: right;">
@@ -60,7 +60,7 @@
             <a href="#" class="btn btn-danger btn-sm btn-block" role="button"><i class="glyphicon glyphicon-edit"></i> Compose</a>
             <hr>
             <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="#"><span class="badge pull-right2">32</span> Inbox </a>
+                <li class="active"><a href="#ThisISyourInbox!"><span class="badge pull-right2">32</span> Inbox </a>
                 </li>
                 <li><a href="#">Sent Mail</a></li>
                 <li class="current-course-list has-badge"><a href="#" title="2C202 - College Algebra (30 unread messages)"><span class="badge pull-right2">30</span> 2C202 - College Algebra</a></li>
@@ -108,7 +108,7 @@
 
                         {% for message in email|dictsortreversed:"timestamp" %}
 {#                    {% for message in email %}#}
-                        <a href="#" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}">
+                        <a href="{% url "reply" message.id %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" class="check">
