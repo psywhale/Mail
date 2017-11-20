@@ -97,6 +97,11 @@
 <script src="/static/js/image-tooltip.js" type="text/javascript"></script>
 <script src="/static/js/jquery.maskedinput.min.js"></script>
 <script>
+    var d = new Date();
+    var n = d.getTimezoneOffset();
+
+{#    alert(n);#}
+
     $('#id_phone').mask("9(999)999-9999", {placeholder: "1(580)555-1212"});
 
     if(window.location.href.indexOf("inbox") > -1) {

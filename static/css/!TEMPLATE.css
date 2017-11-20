@@ -8,31 +8,36 @@ body{ margin-top:20px;}
 .tab-pane .list-group input[type="checkbox"]{ margin-top: 8px; }
 .tab-pane .list-group .glyphicon { margin-right:5px; }
 .tab-pane .list-group .glyphicon:hover { color:#FFBC00; }
-a.list-group-item.read { color: #222;background-color: #F3F3F3; }
+a.list-group-item.read { color: #222; background-color: #F3F3F3; }
 hr { margin-top: 5px;margin-bottom: 10px; }
-.nav-pills>li>a {padding: 5px 10px;}
-ul.nav.nav-pills.nav-stacked {
-    width: 108%;
-}
-.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }
-.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}
-.ad a.url {color: #093;text-decoration: none;}
+.nav-pills>li>a { padding: 5px 10px;}
+ul.nav.nav-pills.nav-stacked { #width: 108%; }
+.ad { padding: 5px; background: #F5F5F5; color: #222; font-size: 80%; border: 1px solid #E5E5E5; }
+.ad a.title {color: #15C; text-decoration: none; font-weight: bold; font-size: 110%;}
+.ad a.url {color: #093; text-decoration: none;}
 .unread-mail { font-weight: 900 !important }
 .read-mail { font-weight: normal !important }
 .current-course-list a { color: #0fa229 }
 .current-course-list>a>.pull-right { box-shadow: 0 0 0 6px white; }
-.active>a>.pull-right { box-shadow: 0 0 0 7px #337ab7; }
-.nav-pills>li.active>a>.badge {
-    margin-right: -12px;
+.has-badge { font-weight: 900 }
+/*.active>a>.pull-right { #box-shadow: 0 0 0 7px #337ab7; }*/
+/*.nav-pills>li.active>a>.badge { #margin-right: -12px; }*/
+.list-group-item.active>.badge, .nav-pills>.active>a>.badge { color: white; background-color: #767676; }
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover { color: inherit; background-color: inherit; font-weight: 900 }
+.nav-pills>li>a>.badge {
+    position: absolute;
+    margin-left: -30px;
+    top: 6px;
 }
+.main-mail-section { background-color: white }
 .tab-content .badge { background: transparent; color: inherit; font-weight: inherit }
 .badge { z-index: 999; }
 .name, .section, .subject { width: 150px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: -5px; }
 .section { width: 52px; }
 .subject { width: 415px }
-.date { width: 55px; margin: 6px -5px; }
+.date { width: 55px; margin: 6px 12px 6px -5px; }
 .nav-stacked>li+li {
-    overflow: hidden;
+    overflow: inherit;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
