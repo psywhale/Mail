@@ -19,7 +19,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
         # Don't know of an easier way to do this.
 
         messages = Route.objects.filter(fk_to=self.request.user)
-        messages.order_by('created').reverse()
+
         email = []
         courses = []
         for message in messages:
@@ -48,11 +48,23 @@ class IndexView(LoginRequiredMixin,TemplateView):
 
 class ReplyView(LoginRequiredMixin,TemplateView):
 
-    template_name = 'reply'
+    template_name = 'reply.html'
     raise_exception = True
 
     def get_context_data(self, **kwargs):
         context = super(ReplyView, self).get_context_data(**kwargs)
+        if Mail.objects.filter(id=self.kwargs['id']).exists():
+            m = Mail.objects.get(id=self.kwargs['id'])
+            mail = m
+            # mail['date'] = str(m.created.month) + "/" + str(m.created.day) + "/" + str(m.created.year)
+            # mail['time'] = str(m.created.hour) + ":" + str(m.created.minute) + ":" + str(m.created.second)
+            # mail['timestamp'] = m.created.timestamp()
+            context['mail'] = mail
+        else:
+            print("oh noes")
+
+        return context
+
 
 
 

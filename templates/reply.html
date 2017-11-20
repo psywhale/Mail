@@ -1,0 +1,25 @@
+{% load staticfiles %}
+{% load staticfiles %}
+{% load tz %}
+{% block content %}
+
+    <div class="row" style="#width: 40%; #margin: 70px auto 10px;">
+    </div><!--/row-->
+
+
+        <div>
+        From: {{ mail.fk_from }}
+        </div>
+        <div>
+        Date: {{ mail.created }}
+        </div>
+        <div>
+        Subject: {{ mail.subject }}
+        </div>
+        <div>
+        Content: {{ mail.content }}
+        </div>
+
+
+    {% endblock %}
+

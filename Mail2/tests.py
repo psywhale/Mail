@@ -134,6 +134,19 @@ class InboxTest(TestCase):
         print(reslogin.context['courses'])
         self.assertTrue(allUnique(reslogin.context['courses']))
 
+    def test_can_see_individual_mail(self):
+        c = Client()
+        mailmsg = Mail.objects.create(content='Test REPLY',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Frank"),
+                                      termcode="172s",
+                                      section="21231",
+                                      fk_to=User.objects.get(username="Ned")
+                                      )
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/read/'+mailmsg.id)
+
+
 def allUnique(x):
     seen = set()
     return not any(i in seen or seen.add(i) for i in x)
