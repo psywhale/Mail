@@ -19,7 +19,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
         # Don't know of an easier way to do this.
 
         messages = Route.objects.filter(fk_to=self.request.user)
-        messages.order_by('created').reverse()
+        messages.reverse(order_by('created'))
         email = []
         courses = []
         for message in messages:
