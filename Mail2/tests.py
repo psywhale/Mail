@@ -3,10 +3,10 @@ from django.contrib.auth.models import User
 from .models import Mail, Attachment, Route
 import datetime
 
-
 # Create your tests here.
 
-class InboxTest(TestCase):
+class myTestCase(TestCase):
+
     def setUp(self):
 
         frank = User.objects.create_user(username='Frank',
@@ -75,6 +75,10 @@ class InboxTest(TestCase):
                                   filename='tatadfa3.doc',
                                   fk_mail=mailmsg
                                   )
+
+
+class InboxTest(myTestCase):
+
 
     def test_bad_users_have_no_access(self):
         c = Client()
@@ -134,79 +138,7 @@ class InboxTest(TestCase):
         print(reslogin.context['courses'])
         self.assertTrue(allUnique(reslogin.context['courses']))
 
-
-
-
-class ReplyTest(TestCase):
-
-    def setUp(self):
-
-        frank = User.objects.create_user(username='Frank',
-                                         password='whatevs',
-                                         first_name='Testislez',
-                                         last_name='Person')
-        ned = User.objects.create_user(username='Ned',
-                                       password='whatevas',
-                                       first_name='Ned',
-                                       last_name='Person')
-        # Message with an attachment that is for Frank
-        mailmsg = Mail.objects.create(content='Test Message',
-                                      subject='test message for Frank',
-                                      fk_sender=ned,
-                                      termcode="172s",
-                                      section="21232")
-
-        Route.objects.create(fk_to=frank,
-                             read=False,
-                             fk_mail=mailmsg)
-
-        Attachment.objects.create(filepath='/mnt/maildata',
-                                  filename='tatadfa.doc',
-                                  fk_mail=mailmsg
-                                  )
-        # Messsage for frank that does not have an attachment
-        mailmsg = Mail.objects.create(content='Test message for frank',
-                                      subject='No Attachment for frank',
-                                      fk_sender=ned,
-                                      termcode = "172s",
-                                      section = "21231")
-
-        Route.objects.create(fk_to=frank,
-                             read=False,
-                             fk_mail=mailmsg)
-        # Message for "Ned"
-        mailmsg = Mail.objects.create(content='Test Message 3',
-                                      subject='test subject for Ned',
-                                      fk_sender=frank,
-                                      termcode="172s",
-                                      section="21232"
-                                      )
-
-        Route.objects.create(fk_to=ned,
-                             read=False,
-                             fk_mail=mailmsg)
-
-        Attachment.objects.create(filepath='/mnt/maildata',
-                                  filename='tatadfa2.doc',
-                                  fk_mail=mailmsg
-                                  )
-
-        # A Message to frank that is read
-        mailmsg = Mail.objects.create(content='Test Message 4',
-                                      subject='test email read',
-                                      fk_sender=ned,
-                                      termcode="172s",
-                                      section="21231"
-                                      )
-
-        Route.objects.create(fk_to=frank,
-                             read=True,
-                             fk_mail=mailmsg)
-
-        Attachment.objects.create(filepath='/mnt/maildata',
-                                  filename='tatadfa3.doc',
-                                  fk_mail=mailmsg
-                                  )
+class ReplyTest(myTestCase):
 
     def test_user_can_see_mail(self):
         c = Client()
@@ -217,13 +149,12 @@ class ReplyTest(TestCase):
                                       section="21231",
 
                                       )
-        route = Route.objects.create(fk_to=User.objects.get(username="Frank"),
+        Route.objects.create(fk_to=User.objects.get(username="Frank"),
                                      read=False,
                                      fk_mail=mailmsg)
-        res = c.login(username='Frank', password='whatevs')
+        c.login(username='Frank', password='whatevs')
         reslogin = c.get('/reply/' + str(mailmsg.id), follow=True)
         self.assertEqual(reslogin.status_code, 200)
-
 
     def test_user_cannot_see_other_users_mail(self):
         c = Client()
@@ -234,10 +165,10 @@ class ReplyTest(TestCase):
                                       section="21231",
 
                                       )
-        route = Route.objects.create(fk_to=User.objects.get(username="Ned"),
+        Route.objects.create(fk_to=User.objects.get(username="Ned"),
                                      read=False,
                                      fk_mail=mailmsg)
-        res = c.login(username='Frank', password='whatevs')
+        c.login(username='Frank', password='whatevs')
         reslogin = c.get('/reply/' + str(mailmsg.id), follow=True)
         self.assertEqual(reslogin.status_code, 403)
 
@@ -248,16 +179,38 @@ class ReplyTest(TestCase):
                                       fk_sender=User.objects.get(username="Frank"),
                                       termcode="172s",
                                       section="21231",
-
                                       )
-        route = Route.objects.create(fk_to=User.objects.get(username="Ned"),
+
+        Route.objects.create(fk_to=User.objects.get(username="Ned"),
                                      read=False,
                                      fk_mail=mailmsg)
-        res = c.login(username='Ned', password='whatevas')
-        reslogin = c.get('/reply/' + str(mailmsg.id), follow=True)
+        c.login(username='Ned', password='whatevas')
+        c.get('/reply/' + str(mailmsg.id), follow=True)
         self.assertTrue(Route.objects.get(fk_mail=mailmsg).read)
 
+class LabelTest(myTestCase):
 
+    def test_label_view_only_lists_email_for_class(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/label/21231-172s/')
+        exists = False
+
+        for message in reslogin.context['email']:
+            if message['section'] == "21231":
+                exists = True
+        self.assertTrue(exists)
+
+    def test_label_can_not_view_only_lists_email_for_class(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/label/21331-172s/')
+        exists = False
+
+        for message in reslogin.context['email']:
+            if message['section'] == "21231":
+                exists = True
+        self.assertFalse(exists)
 
 def allUnique(x):
     seen = set()
