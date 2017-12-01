@@ -1,6 +1,6 @@
 /* CSS used here will be applied after bootstrap.css */
 
-body{ margin-top:20px;}
+body{ margin-top:20px; font-family: Georgia,Helvetica,Arial,sans-serif; }
 .nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
 .tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
 .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
@@ -36,17 +36,20 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 .section { width: 52px; }
 .subject { width: 415px }
 .date { width: 55px; margin: 6px 12px 6px -5px; }
+/*  REPLY VIEW */
+#editor1 { width:80% !important; }
+.cke_editable {  }
 .nav-stacked>li+li {
     overflow: inherit;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.nav-stacked>li+li:last-child {
-    overflow: inherit;
-    text-overflow: inherit;
-    white-space: inherit;
-    margin-bottom: 25px;
-}
+/*.nav-stacked>li+li:last-child {*/
+    /*overflow: inherit;*/
+    /*text-overflow: inherit;*/
+    /*white-space: inherit;*/
+    /*margin-bottom: 25px;*/
+/*}*/
 .nav-stacked>li {
     overflow: inherit;
     text-overflow: ellipsis;
