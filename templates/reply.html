@@ -61,7 +61,7 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-inbox" title="Current Course">
-                </span>{{ mail.section }} - Need Course Name Here</a></li>
+                </span>{{ mail.section }} - <span class="current-course"></span></a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -72,11 +72,11 @@
                     <div class="compose-section-subject" title="Subject">
                         {{ mail.subject }} &nbsp; <span class="label label-default" style="font-size:11px" title="Course Section Group">{{ mail.section }}</span>
                     </div>
-                    <div style="padding:12px">
-                        <div style="float:right" title="Sent Date: {{ mail.created|date: 'Y-m-d H:i' }}">
+                    <div style="padding:12px" title="Sent by ({{ mail.fk_sender }}) on this date: &nbsp; {{ mail.created }}">
+                        <div style="float:right" >
                             {{ mail.created }}
                         </div>
-                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Sent from:"></span>&nbsp;&nbsp;&nbsp;{{ mail.fk_sender }}
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Sent from: {{ mail.fk_sender }}"></span>&nbsp;&nbsp;&nbsp;{{ mail.fk_sender }}
                         <hr />
                     </div>
                     <div style="padding: 0 12px ">

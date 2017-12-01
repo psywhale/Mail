@@ -151,6 +151,7 @@ function doAjax() {
                 console.log(course.fullname);
 
                 $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list has-badge"><a href="#"title=""> ' + course.fullname +'</a></li>');
+                $('.current-course').html($('.current-course').html() + course.fullname);
             });
         }
     });
