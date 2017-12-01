@@ -128,3 +128,8 @@ STATICFILES_DIRS = ("/static/", BASE_DIR + "/static/")
 #MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIAFILES_DIRS = ("/static/", BASE_DIR + "/static/")
 MEDIA_URL = '/media/'
+
+
+#Moodle Custom Rest API Key
+
+MOODLE_REST_KEY = 'HkHO25shu0i3Tq24iCknrB1mnpOY'
