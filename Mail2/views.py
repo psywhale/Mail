@@ -103,30 +103,30 @@ class LabelView(LoginRequiredMixin, TemplateView):
 
         email = []
         courses = []
+        if allmailincourse_senttouser.count() > 0:
+            for message in allmailincourse_senttouser:
+                mail = {}
 
-        for message in allmailincourse_senttouser:
-            mail={}
-
-            if message.section not in courses:
-                courses.append(message.section)
-            mail['id'] = message.id
-            mail['subject'] = message.subject
-            mail['read'] = Route.objects.filter(fk_mail=message.id).get().read
-            mail['termcode'] = message.termcode
-            mail['section'] = message.section
-            mail['date'] = str(message.created.month) + "/" + str(message.created.day) + "/" + str(message.created.year)
-            mail['time'] = str(message.created.hour) + ":" + str(message.created.minute) + ":" + str(
-                message.created.second)
-            mail['timestamp'] = message.created.timestamp()
-            # pprint(mail['date'])
-            mail['from'] = message.fk_sender
-            if Attachment.objects.filter(fk_mail=message):
-                mail['has_attachment'] = True
-            else:
-                mail['has_attachment'] = False
-            email.append(mail)
-        context['email'] = email
-        context['courses'] = courses
+                if message.section not in courses:
+                    courses.append(message.section)
+                mail['id'] = message.id
+                mail['subject'] = message.subject
+                mail['read'] = Route.objects.filter(fk_mail=message.id).get().read
+                mail['termcode'] = message.termcode
+                mail['section'] = message.section
+                mail['date'] = str(message.created.month) + "/" + str(message.created.day) + "/" + str(message.created.year)
+                mail['time'] = str(message.created.hour) + ":" + str(message.created.minute) + ":" + str(
+                    message.created.second)
+                mail['timestamp'] = message.created.timestamp()
+                # pprint(mail['date'])
+                mail['from'] = message.fk_sender
+                if Attachment.objects.filter(fk_mail=message):
+                    mail['has_attachment'] = True
+                else:
+                    mail['has_attachment'] = False
+                email.append(mail)
+            context['email'] = email
+            context['courses'] = courses
         return context
 
 class ListUnreadView(View):
