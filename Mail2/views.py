@@ -92,8 +92,8 @@ class LabelView(LoginRequiredMixin, TemplateView):
         # Don't know of an easier way to do this.
 
         termcoderaw = str(kwargs['sn']).split("-")
-        termcode = termcoderaw[1]
-        section = termcoderaw[0]
+        termcode = termcoderaw[1].lower()
+        section = termcoderaw[0].lower()
 
 
         routes = Route.objects.filter(fk_to=self.request.user)
