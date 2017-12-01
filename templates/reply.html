@@ -73,8 +73,8 @@
                         {{ mail.subject }} &nbsp; <span class="label label-default" style="font-size:11px" title="Course Section Group">{{ mail.section }}</span>
                     </div>
                     <div style="padding:12px">
-                        <div style="float:right">
-                            SENT: {{ mail.created }}
+                        <div style="float:right" title="Sent Date: {{ mail.created|date: 'Y-m-d H:i' }}">
+                            {{ mail.created }}
                         </div>
                         <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Sent from:"></span>&nbsp;&nbsp;&nbsp;{{ mail.fk_sender }}
                         <hr />
