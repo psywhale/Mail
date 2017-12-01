@@ -44,12 +44,12 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.nav-stacked>li+li:last-child {
-    overflow: inherit;
-    text-overflow: inherit;
-    white-space: inherit;
-    margin-bottom: 25px;
-}
+/*.nav-stacked>li+li:last-child {*/
+    /*overflow: inherit;*/
+    /*text-overflow: inherit;*/
+    /*white-space: inherit;*/
+    /*margin-bottom: 25px;*/
+/*}*/
 .nav-stacked>li {
     overflow: inherit;
     text-overflow: ellipsis;
