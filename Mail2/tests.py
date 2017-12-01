@@ -3,10 +3,10 @@ from django.contrib.auth.models import User
 from .models import Mail, Attachment, Route
 import datetime
 
-
 # Create your tests here.
 
-class InboxTest(TestCase):
+class myTestCase(TestCase):
+
     def setUp(self):
 
         frank = User.objects.create_user(username='Frank',
@@ -76,6 +76,10 @@ class InboxTest(TestCase):
                                   fk_mail=mailmsg
                                   )
 
+
+class InboxTest(myTestCase):
+
+
     def test_bad_users_have_no_access(self):
         c = Client()
         res = c.get('/')
@@ -134,18 +138,79 @@ class InboxTest(TestCase):
         print(reslogin.context['courses'])
         self.assertTrue(allUnique(reslogin.context['courses']))
 
-    def test_can_see_individual_mail(self):
+class ReplyTest(myTestCase):
+
+    def test_user_can_see_mail(self):
+        c = Client()
+        mailmsg = Mail.objects.create(content='Test REPLY',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Ned"),
+                                      termcode="172s",
+                                      section="21231",
+
+                                      )
+        Route.objects.create(fk_to=User.objects.get(username="Frank"),
+                                     read=False,
+                                     fk_mail=mailmsg)
+        c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/reply/' + str(mailmsg.id), follow=True)
+        self.assertEqual(reslogin.status_code, 200)
+
+    def test_user_cannot_see_other_users_mail(self):
         c = Client()
         mailmsg = Mail.objects.create(content='Test REPLY',
                                       subject='test timestamp for Ned',
                                       fk_sender=User.objects.get(username="Frank"),
                                       termcode="172s",
                                       section="21231",
-                                      fk_to=User.objects.get(username="Ned")
-                                      )
-        res = c.login(username='Frank', password='whatevs')
-        reslogin = c.get('/read/'+mailmsg.id)
 
+                                      )
+        Route.objects.create(fk_to=User.objects.get(username="Ned"),
+                                     read=False,
+                                     fk_mail=mailmsg)
+        c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/reply/' + str(mailmsg.id), follow=True)
+        self.assertEqual(reslogin.status_code, 403)
+
+    def test_message_gets_marked_as_read_on_open(self):
+        c = Client()
+        mailmsg = Mail.objects.create(content='Test REPLY',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Frank"),
+                                      termcode="172s",
+                                      section="21231",
+                                      )
+
+        Route.objects.create(fk_to=User.objects.get(username="Ned"),
+                                     read=False,
+                                     fk_mail=mailmsg)
+        c.login(username='Ned', password='whatevas')
+        c.get('/reply/' + str(mailmsg.id), follow=True)
+        self.assertTrue(Route.objects.get(fk_mail=mailmsg).read)
+
+class LabelTest(myTestCase):
+
+    def test_label_view_only_lists_email_for_class(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/label/21231-172s/')
+        exists = False
+
+        for message in reslogin.context['email']:
+            if message['section'] == "21231":
+                exists = True
+        self.assertTrue(exists)
+
+    def test_label_can_not_view_only_lists_email_for_class(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/label/21331-172s/')
+        exists = False
+
+        for message in reslogin.context['email']:
+            if message['section'] == "21231":
+                exists = True
+        self.assertFalse(exists)
 
 def allUnique(x):
     seen = set()
