@@ -1,7 +1,13 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.shortcuts import render, HttpResponse
+from django.views.generic import TemplateView, View
 from .models import Route, Mail, Attachment
+
 from braces.views import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
+import simplejson as json
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 from pprint import pprint
 
 # Create your views here.
@@ -124,3 +130,29 @@ class LabelView(LoginRequiredMixin, TemplateView):
         context['courses'] = courses
         return context
 
+class ListUnreadView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ListUnreadView, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+
+
+
+        courses = json.loads(request.body)
+
+
+       # courses = self.request.POST['courses']
+        results = []
+        for course in courses['courses']:
+            result = {}
+            section, termcode = course.split("-")
+            mails = Mail.objects.filter(termcode=termcode, section=section)
+            #pprint(mails)
+            unread_count = Route.objects.filter(fk_mail__in=mails, read=False, fk_to=self.request.user.id).count()
+            result['course'] = course
+            result['count'] = unread_count
+            results.append(result)
+        #print(json.dumps(results))
+        return HttpResponse(json.dumps(results),content_type="application/json")

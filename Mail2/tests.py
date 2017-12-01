@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from .models import Mail, Attachment, Route
+import simplejson as json
+from pprint import pprint
 import datetime
 
 # Create your tests here.
@@ -135,7 +137,7 @@ class InboxTest(myTestCase):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/')
-        print(reslogin.context['courses'])
+        #print(reslogin.context['courses'])
         self.assertTrue(allUnique(reslogin.context['courses']))
 
 class ReplyTest(myTestCase):
@@ -212,6 +214,21 @@ class LabelTest(myTestCase):
                 exists = True
         self.assertFalse(exists)
 
+
+class ListUnreadTest(myTestCase):
+
+    def test_for_unread_mail(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        data = {}
+        data['courses'] = ['21231-172s', '21232-172s']
+        reslogin = c.post('/listunread/', json.dumps(data), content_type='application/json')
+        data = json.loads(reslogin.content)
+
+        self.assertEqual(data[0]['count'], 1)
+        self.assertEqual(data[1]['count'], 1)
+
+#------------------------------------------------------
 def allUnique(x):
     seen = set()
     return not any(i in seen or seen.add(i) for i in x)
