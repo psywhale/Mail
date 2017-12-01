@@ -72,7 +72,6 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             m = Mail.objects.get(id=self.kwargs['id'])
             mail = m
-            # mail['date'] = str(m.created.month) + "/" + str(m.created.day) + "/" + str(m.created.year)
             # mail['time'] = str(m.created.hour) + ":" + str(m.created.minute) + ":" + str(m.created.second)
             # mail['timestamp'] = m.created.timestamp()
             context['mail'] = mail

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="title" content="Pioneer Alert System"/>
-    <title>Cmail - Western Oklahoma State College</title>
+    <title>Cmail2 - Western Oklahoma State College</title>
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
@@ -70,7 +70,7 @@
 {#        <p style="text-align:center">#}
 {#            <img src="https://www.wosc.edu/img/W_icon_full logo.png" alt="WOSC Logo" style="max-width:260px; width:100%; margin-top: 40px #-webkit-filter: grayscale(1);  #filter: grayscale(1);">#}
 {#        </p>#}
-        <p><div class="fax_number">{{ fax_number }}</div>
+        <p>
             <div class="version" title="APPLICATION NAME: Western Course Mail System
 
             LEAD: &nbsp;Steve Prater
@@ -85,9 +85,14 @@
 
 </div><!--/container-->
 
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+{#<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>#}
 <script src="/static/js/custom.js" type="text/javascript"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<!-- ### CKEditor CSS & JS ### -->
+	<script src="https://cdn.ckeditor.com/4.7.3/basic/ckeditor.js"></script>
+{#	<script src="/static/ckeditor/ckeditor.js"></script>#}
+{#	<link rel="stylesheet" href="/static/ckeditor/skins/moono-lisa/editor.css">#}
 <!-- ### FOOTABLE CSS & JS ### -->
 <link href="/static/css/footable.core.css" rel="stylesheet" type="text/css"/>
 <link href="/static/css/footable.standalone.css" rel="stylesheet" type="text/css"/>
@@ -117,7 +122,45 @@
     var faxnumber = '{{ fax_number }}';
     console.log(faxnumber);
     $('.breadcrumb').append('<span style=float:right>FAX NUMBER: <strong>' + faxnumber + '</STRONG></span');
+
+    $( ".reply_editor" ).attr("placeholder", "Click here to Reply...");
+    $( ".reply_editor" ).delay(800).click(function() {
+        CKEDITOR.replace( 'editor1', {
+            on:
+                {'instanceReady':function(evt){
+                    CKEDITOR.instances.editor1.focus();
+                }
+                }
+        });
+    });
+
+$( document ).ready(
+    doAjax()
+);
+
+{#    ------- THIS IS AJAX YO --------#}
+function doAjax() {
+    $.ajax({
+        url: 'https://moodle.wosc.edu/wosc/rest.php',
+        data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_my_courses'},
+        jsonp: 'callback',
+        dataType: 'jsonp',
+        success: function(response) {
+            jQuery.each(response, function(id, course){
+                console.log(course.shortname);
+                console.log(course.fullname);
+
+                $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list has-badge"><a href="#"title=""> ' + course.fullname +'</a></li>');
+                $('.current-course').html($('.current-course').html() + course.fullname);
+            });
+        }
+    });
+    return;
+}
+
 </script>
+
+
 
 </body>
 </html>

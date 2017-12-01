@@ -19,39 +19,13 @@
                 </span>
             </div>
             <!-- Split button -->
-            <div class="btn-group">
-                <button type="button" class="btn btn-default">
-                    <div class="checkbox" style="margin: 0;">
-                        <label>
-                            <input type="checkbox" class="check" id="checkAll">
-                        </label>
-                    </div>
-                </button>
-{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
-{#                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>#}
-{#                </button>#}
-{#                <ul class="dropdown-menu" role="menu">#}
-{#                    <li><a href="#">All</a></li>#}
-{#                    <li><a href="#">None</a></li>#}
-{#                    <li><a href="#">Read</a></li>#}
-{#                    <li><a href="#">Unread</a></li>#}
-{#                </ul>#}
-            </div>
-            <button type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
-                &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</button>
+            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox">
+                <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;&nbsp;
+            </button>
             <!-- Single button -->
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    More <span class="caret"></span>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Archive to Course Folder">
+                    <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Archive
                 </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Archive selected</a></li>
-                    <li><a href="#">Mark selected as read</a></li>
-                    <li><a href="#">Mark selected as unread</a></li>
-{#                    <li class="divider"></li>#}
-{#                    <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>#}
-                </ul>
-            </div>
         </div>
     </div>
     <hr>
@@ -82,24 +56,12 @@
         </div>
         <div class="col-sm-9 col-md-10 main-mail-section">
             <div class="pull-right">
-                <span class="text-muted"><b>1</b>–<b>50</b> of <b>160</b></span>
-                <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </button>
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </button>
-                </div>
+
             </div>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-inbox">
-                </span>{{ mail.section }} - Need Course Name Here</a></li>
-                <li><a href="#profile" data-toggle="tab"><span class="glyphicon glyphicon-user"></span>
-                    </a></li>
-                <li><a href="#settings" data-toggle="tab"><span class="glyphicon glyphicon-plus no-margin">
-                </span></a></li>
+                <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-inbox" title="Current Course">
+                </span>{{ mail.section }} - <span class="current-course"></span></a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -107,52 +69,45 @@
 
 {#                        {% for message in email %}#}
 
-                    <div class="compose-section-subject">
-                        {{ mail.section }}: {{ mail.subject }}
+                    <div class="compose-section-subject" title="Subject">
+                        {{ mail.subject }} &nbsp; <span class="label label-default" style="font-size:11px" title="Course Section Group">{{ mail.section }}</span>
                     </div>
-                    <div style="padding:12px">
-                        <div style="float:right">
-                            DATE: {{ mail.created }}
+                    <div style="padding:12px" title="Sent by ({{ mail.fk_sender }}) on this date: &nbsp; {{ mail.created }}">
+                        <div style="float:right" >
+                            {{ mail.created }}
                         </div>
-                        FROM: {{ mail.fk_from }}
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Sent from: {{ mail.fk_sender }}"></span>&nbsp;&nbsp;&nbsp;{{ mail.fk_sender }}
                         <hr />
                     </div>
                     <div style="padding: 0 12px ">
-                        CONTENT:<br />
                         {{ mail.content }}
                     </div>
                     <br />
-                    <div>
-                        <textarea style="width:100%; height:80px; padding: 12px;" placeholder="Reply Here"></textarea>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 nopadding">
+                                <textarea id="editor1" class="reply_editor"></textarea>
+                            </div>
+                        </div>
                     </div>
+{#                    <div>#}
+{#                        <textarea style="width:100%; height:80px; padding: 12px;" id="editor1" class="reply_editor" name="editor1" rows="10" data-sample="1" data-sample-short="">#}
+{##}
+{#                        </textarea>#}
+{#                    </div>#}
                     <br />
 {#                        {% endfor %}#}
 
 
                 </div>
-                <div class="tab-pane fade in" id="profile">
-                    <div class="list-group">
-                        <div class="list-group-item">
-                            <span class="text-center">This tab is empty.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade in" id="settings">
-                    This tab is empty.</div>
             </div>
 
             <div class="row-md-12">
-
-                <div class="well">
-                    <span style="color:red">      ------ {% now "jS F Y H:i" %} ------ </span>
-                </div>
 
             </div>
         </div>
     </div>
 </div>
-
-
 
 
 
