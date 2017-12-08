@@ -134,6 +134,22 @@ class ArchiveMailView(LoginRequiredMixin, View):
             raise PermissionDenied
         return redirect("/")
 
+class MarkMailUnreadView(LoginRequiredMixin, View):
+    raise_exception = True
+    #TODO make redirect to prev page not /
+
+    def post(self, request):
+
+        if Mail.objects.filter(id=request.POST['message_id']).exists():
+            message = Mail.objects.get(id=request.POST['message_id'])
+            route = Route.objects.get(fk_mail=message)
+            if request.user.id == route.fk_to.id:
+                route.read = False
+            else:
+                raise PermissionDenied
+        else:
+            raise PermissionDenied
+        return redirect("/")
 
 
 class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):

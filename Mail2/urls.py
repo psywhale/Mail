@@ -8,4 +8,5 @@ urlpatterns= [
     url(r'^listunread/$', ListUnreadView.as_view(), name='listunread'),
     url(r'^audit/$', ListUnreadView.as_view(), name='listunread'),
     url(r'^archive/$', ArchiveMailView.as_view(), name='archivemail'),
+    url(r'^munread/$', ArchiveMailView.as_view(), name='markunread'),
 ]
