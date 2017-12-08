@@ -1,6 +1,8 @@
 from django.shortcuts import render, HttpResponse
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
+from django.contrib.auth.models import User
+from .forms import ReplyForm
 
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
 from django.db.models import Q
@@ -52,9 +54,12 @@ class IndexView(LoginRequiredMixin,TemplateView):
         context['courses'] = courses
         return context
 
-class ReplyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+
+class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     template_name = 'reply.html'
+    form_class = ReplyForm
+    success_url = "/"
     raise_exception = True
 
     def test_func(self, user):
@@ -66,6 +71,36 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         route.read = True
         route.save()
         return super(ReplyView, self).get(args, kwargs)
+
+    def get_initial(self, **kwargs):
+        initial = super(ReplyView, self).get_initial()
+        if Mail.objects.filter(id=self.kwargs['id']).exists():
+            mail_obj = Mail.objects.get(id=self.kwargs['id'])
+            data = {}
+            data['sendto'] = mail_obj.fk_sender_id
+            data['termcode'] = mail_obj.termcode
+            data['section'] = mail_obj.section
+            data['subject'] = "RE: "+mail_obj.subject
+            initial = data
+        return initial
+    
+    def form_valid(self, form):
+        new_msg = Mail()
+        new_route = Route()
+        new_msg.content = self.request.POST['content']
+        new_msg.subject = self.request.POST['subject']
+        new_msg.termcode = self.request.POST['termcode']
+        new_msg.section = self.request.POST['section']
+        new_msg.fk_sender = self.request.user
+        new_msg.save()
+        new_route.fk_to = User.objects.get(id=self.request.POST['sendto'])
+        new_route.fk_mail = new_msg
+        new_route.save()
+        return super(ReplyView, self).form_valid(form)
+
+        
+        
+
 
     def get_context_data(self, **kwargs):
         context = super(ReplyView, self).get_context_data(**kwargs)
