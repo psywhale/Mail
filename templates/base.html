@@ -101,51 +101,19 @@
 <script src="/static/js/footable.filter.js" type="text/javascript"></script>
 <script src="/static/js/image-tooltip.js" type="text/javascript"></script>
 <script src="/static/js/jquery.maskedinput.min.js"></script>
-<script>
-    var d = new Date();
-    var n = d.getTimezoneOffset();
+<script type="text/javascript">
 
-{#    alert(n);#}
-
-    $('#id_phone').mask("9(999)999-9999", {placeholder: "1(580)555-1212"});
-
-    if(window.location.href.indexOf("inbox") > -1) {
-       $('.inbox').addClass('currenturl');
-    }
-    if(window.location.href.indexOf("send") > -1) {
-       $('.outbox').addClass('currenturl');
-    }
-    if(window.location.href.indexOf("outbox") > -1) {
-       $('.outbox').addClass('currenturl');
-    }
-
-    $('.main-mail-section').css("height", $(document).height());
-
-    var faxnumber = '{{ fax_number }}';
-    console.log(faxnumber);
-    $('.breadcrumb').append('<span style=float:right>FAX NUMBER: <strong>' + faxnumber + '</STRONG></span');
-
-    $( ".reply_editor" ).attr("placeholder", "Click here to Reply...");
-    $( ".reply_editor" ).delay(800).click(function() {
-        CKEDITOR.replace( 'id_content', {
-            on:
-                {'instanceReady':function(evt){
-                    CKEDITOR.instances.id_content.focus();
-                }
-                }
-        });
-        $( ".sendmailbutton" ).show();
-    });
-
+{#    ------- THIS IS AJAX YO --------#}
 $( document ).ready(
     doAjax()
 );
 
-{#    ------- THIS IS AJAX YO --------#}
+
 function doAjax() {
     getCourses();
 
 }
+
 
 function getUnreadBadges(){
     var data = {};
@@ -160,26 +128,23 @@ function getUnreadBadges(){
         data: JSON.stringify(data),
         dataType: 'json',
         success: function(response){
+                var total = 0;
                 jQuery.each(response, function(index, element){
                     if (element.count != "0") {
-                        console.log(element.count);
-                        $("#"+element.course).addClass("has-badge");
-                        $("#"+element.course).prepend('<span class="badge pull-right2">' + element.count + '</span>');
+                        $("#" + element.course).addClass("has-badge");
+                        $("#" + element.course).prepend('<div class="badge pull-right2">' + element.count + '</div>');
+{#                        $("#" + element.course).attr('title', total + ' Unread messages...');#}
+                        total = total + element.count;
                     }
-
                 })
+            $("#inbox").prepend('<div class="badge">' + total + '</div>');
+            $("#inbox").attr('title', total + ' total un-read messages...');
         },
         type: 'POST',
         url: '/listunread/'
     });
-
-{##}
-{#function updateBadges(response){#}
-{#    console.log(response);#}
-{#    jQuery.each(data, function(id, course){#}
-{#        console.log(course);#}
-{#    })#}
 }
+
 
 function getCourses(){
     $.ajax({
@@ -202,8 +167,10 @@ function getCourses(){
                         $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list" id="' + course.shortname + '" title="'+ course.fullname +'"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
                     }
                     else {
-                        $('#past-courses').html($('#past-courses').html() + '<li class="past-course-list"><a href="#"title=""> ' + course.fullname + '</a></li>');
+                        $('#past-courses').html($('#past-courses').html() + '<li class="past-course-list"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
                     }
+                    var colors = ['red','green','blue','yellow'];
+                    var sectionNum = course.shortname;
                 }
                 catch(e){
                     return;
@@ -212,12 +179,26 @@ function getCourses(){
                     $('.current-course').html(course.fullname);
                 }
                 $('#{{ mail.section }}-{{ mail.termcode }}').addClass('active-course');
+
             });
             getUnreadBadges();
+            addActiveCourse();
         }
+
     });
+
     return;
 }
+
+
+function addActiveCourse() {
+var sections = window.location.pathname.split('/');
+    if (sections[1] === "label"){
+        console.log(sections[2]);
+        $('#' + sections[2]).addClass('active-course');
+    }
+}
+
 
 function calculateCurrentTermCode(){
 	var date = new Date();

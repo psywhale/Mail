@@ -1,16 +1,15 @@
 {% block topright %}
             <!-- Split button -->
-            <a type="button" class="btn btn-default" href="/" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox">
+            <a type="button" class="btn btn-default" href="#" onClick="window.history.back();" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox">
                 <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;&nbsp;
             </a>
             <!-- Single button -->
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Archive to Course Folder">
                 <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Archive
             </button>
-{#            <ul class="nav nav-tabs">#}
-{#                <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-inbox" title="Current Course">#}
-{#                </span><span class="current-course"></span></a></li>#}
-{#            </ul>#}
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Mark this Message as Un-Read">
+                <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;&nbsp;Mark as Un-Read
+            </button>
 
             <div class="input-group" style="width: 33%; float: right;">
                 <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">

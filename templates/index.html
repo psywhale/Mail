@@ -11,16 +11,18 @@
         <div class="col-sm-4 col-md-3">
             {% include 'global-logo.html' %}
         </div>
-        <div class="col-sm-8 col-md-9">
+        <div class="col-sm-8 col-md-9 search-area">
             <div class="input-group" style="width: 33%; float: right;">
                 <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
                 <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button">Go!</button>
                 </span>
             </div>
+            <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" onClick="location.reload();" style="padding: 5px; margin: 0 10px -6px -6px;">
+                &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
             <!-- Split button -->
-            <div class="btn-group">
-                <span class="text-muted"><b>1</b>–<b>50</b> of <b>160</b></span>
+            <div class="btn-group paginated">
+                <div class="text-muted"><b>1</b>–<b>50</b> of <b>160</b></div>
                 <div class="btn-group btn-group-sm">
                     <button type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-chevron-left"></span>
@@ -46,8 +48,6 @@
 {#                    <li><a href="#">Unread</a></li>#}
 {#                </ul>#}
             </div>
-{#            <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" href="/">#}
-{#                &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>#}
             <!-- Single button -->
 {#            <div class="btn-group">#}
 {#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
@@ -66,7 +66,7 @@
     <hr>
     <div class="row">
 
-{% include 'global-leftcoursemenu.html' %}
+{% include 'global-left_course_menu.html' %}
 
         <div class="col-sm-8 col-md-9 main-mail-section">
 {#            <div class="pull-right">#}
