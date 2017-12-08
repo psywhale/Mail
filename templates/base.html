@@ -119,6 +119,8 @@
        $('.outbox').addClass('currenturl');
     }
 
+    $('.main-mail-section').css("height", $(document).height());
+
     var faxnumber = '{{ fax_number }}';
     console.log(faxnumber);
     $('.breadcrumb').append('<span style=float:right>FAX NUMBER: <strong>' + faxnumber + '</STRONG></span');
@@ -132,6 +134,7 @@
                 }
                 }
         });
+        $( ".sendmailbutton" ).show();
     });
 
 $( document ).ready(
@@ -140,23 +143,107 @@ $( document ).ready(
 
 {#    ------- THIS IS AJAX YO --------#}
 function doAjax() {
+    getCourses();
+
+}
+
+function getUnreadBadges(){
+    var data = {};
+    var x = 1;
+    $('.current-course-list').each(function(){
+        data[x] = {course: this.id};
+        x++;
+    });
+
+    $.ajax({
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        success: function(response){
+                jQuery.each(response, function(index, element){
+                    if (element.count != "0") {
+                        console.log(element.count);
+                        $("#"+element.course).addClass("has-badge");
+                        $("#"+element.course).prepend('<span class="badge pull-right2">' + element.count + '</span>');
+                    }
+
+                })
+        },
+        type: 'POST',
+        url: '/listunread/'
+    });
+
+{##}
+{#function updateBadges(response){#}
+{#    console.log(response);#}
+{#    jQuery.each(data, function(id, course){#}
+{#        console.log(course);#}
+{#    })#}
+}
+
+function getCourses(){
     $.ajax({
         url: 'https://moodle.wosc.edu/wosc/rest.php',
         data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_my_courses'},
         jsonp: 'callback',
         dataType: 'jsonp',
         success: function(response) {
+{#            console.log(response);#}
             jQuery.each(response, function(id, course){
-                console.log(course.shortname);
-                console.log(course.fullname);
-
-                $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list has-badge"><a href="#"title=""> ' + course.fullname +'</a></li>');
-                $('.current-course').html($('.current-course').html() + course.fullname);
+{#                console.log(course.shortname);#}
+{#                console.log(course.fullname);#}
+{#                console.log(course);#}
+                $('#all-courses').html($('#all-courses').html() + course.fullname);
+                var termCode = calculateCurrentTermCode();
+                var info = course.shortname.split("-");
+                try {
+                    myTC = info[1];
+                    if (termCode == info[1].toLowerCase()) {
+                        $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list" id="' + course.shortname + '" title="'+ course.fullname +'"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
+                    }
+                    else {
+                        $('#past-courses').html($('#past-courses').html() + '<li class="past-course-list"><a href="#"title=""> ' + course.fullname + '</a></li>');
+                    }
+                }
+                catch(e){
+                    return;
+                }
+                if ("{{ mail.section }}-{{ mail.termcode }}" == course.shortname ){
+                    $('.current-course').html(course.fullname);
+                }
+                $('#{{ mail.section }}-{{ mail.termcode }}').addClass('active-course');
             });
+            getUnreadBadges();
         }
     });
     return;
 }
+
+function calculateCurrentTermCode(){
+	var date = new Date();
+	var month = date.getMonth() + 1;
+	var day = date.getDate();
+
+	if((month >= 1) && (month < 5)){
+		var year = date.getYear() - 101;
+        var semester = "3s";
+     }
+	if((month > 5) && (month < 8)){
+		var year = date.getYear() - 100;
+		var semester = "1s";
+	}
+	if((month == 5) && (day >= 20)){
+		var year = date.getYear() - 100;
+		var semester = "1s";
+	}
+	if((month >= 8) && (month <= 12)){
+		var year = date.getYear() - 100;
+		var semester = "2s";
+	}
+
+	return year+semester;
+}
+
 
 </script>
 

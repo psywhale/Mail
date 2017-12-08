@@ -1,6 +1,6 @@
 /* CSS used here will be applied after bootstrap.css */
 
-body{ margin-top:20px; font-family: Georgia,Helvetica,Arial,sans-serif; }
+body{ margin-top:20px; font-family: Georgia,Helvetica,Arial,sans-serif; background-color: #f4fff4}
 .nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
 .tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
 .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
@@ -20,18 +20,25 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 .current-course-list a { color: #0fa229 }
 .current-course-list>a>.pull-right { box-shadow: 0 0 0 6px white; }
 .has-badge { font-weight: 900 }
+.active-course a { background-color: darkgreen; color:gold !important; }
 /*.active>a>.pull-right { #box-shadow: 0 0 0 7px #337ab7; }*/
 /*.nav-pills>li.active>a>.badge { #margin-right: -12px; }*/
+.main-mail-section { background-color: #FFF; margin-top:-10px; padding-top:10px }
+.tab-content { margin: -10px -15px }
+.list-group-item { border:0; border-bottom: 1px solid #ddd; margin-bottom:0; border-left: 4px solid transparent;  }
+a.list-group-item:focus, a.list-group-item:hover { border-left: 4px dotted #c6e8c6; }
 .list-group-item.active>.badge, .nav-pills>.active>a>.badge { color: white; background-color: #767676; }
 .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover { color: inherit; background-color: inherit; font-weight: 900 }
-.nav-pills>li>a>.badge {
-    position: absolute;
-    margin-left: -30px;
-    top: 6px;
+.nav-pills>li>a>.badge { position: absolute; margin-left: -30px; top: 6px; }
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: 9px;
+    margin-left: 9px;
 }
 .main-mail-section { background-color: white }
 .tab-content .badge { background: transparent; color: inherit; font-weight: inherit }
-.badge { z-index: 999; }
+.nav .badge { z-index: 999; position: absolute; top: 6px; left: -10px; }
 .name, .section, .subject { width: 150px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: -5px; }
 .section { width: 52px; }
 .subject { width: 415px }
@@ -43,6 +50,7 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
     overflow: inherit;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin-right: -15px;
 }
 /*.nav-stacked>li+li:last-child {*/
     /*overflow: inherit;*/
@@ -64,7 +72,7 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
     bottom: 6px;
 }
 /* COMPOSE SECTION*/
-.compose-section-subject { font-weight: 900; font-size: 18px; border-bottom: 1px solid #ccc; padding: 12px; }
+.compose-section-subject { font-weight: 900; font-size: 18px; border-bottom: 1px solid #ccc; padding: 0 12px 12px; margin-top: 15px}
 
 
 
