@@ -127,10 +127,10 @@
 
     $( ".reply_editor" ).attr("placeholder", "Click here to Reply...");
     $( ".reply_editor" ).delay(800).click(function() {
-        CKEDITOR.replace( 'editor1', {
+        CKEDITOR.replace( 'id_content', {
             on:
                 {'instanceReady':function(evt){
-                    CKEDITOR.instances.editor1.focus();
+                    CKEDITOR.instances.id_content.focus();
                 }
                 }
         });

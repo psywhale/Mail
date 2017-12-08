@@ -5,7 +5,8 @@
 
     <div class="row" style="#width: 40%; #margin: 70px auto 10px;">
     </div><!--/row-->
-
+    <form action='.'  method="post">
+                {% csrf_token %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-4 col-md-3">
@@ -30,7 +31,7 @@
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
 
-{#                        {% for message in email %}#}
+
 
                     <div class="compose-section-subject" title="Subject">
                         {{ mail.subject }} &nbsp; <span class="label label-default" style="font-size:11px" title="Course Section Group">{{ mail.section }}</span>
@@ -51,7 +52,10 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-12 nopadding">
-                                <textarea id="editor1" class="reply_editor"></textarea>
+
+                                {{ form.content }}
+
+                                <!--<textarea id="editor1" class="reply_editor"></textarea>-->
                             </div>
                         </div>
                         <br />
@@ -69,7 +73,11 @@
         </div>
     </div>
 </div>
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
 
+</form>
 
 
     {% endblock %}
