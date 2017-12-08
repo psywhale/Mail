@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.views.generic import TemplateView, View
 from .models import Route, Mail, Attachment
 
-from braces.views import LoginRequiredMixin, UserPassesTestMixin
+from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
 from django.db.models import Q
 import simplejson as json
 from django.views.decorators.csrf import csrf_exempt
@@ -81,6 +81,18 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         return context
 
 
+class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
+    group_required = u"Auditors"
+    template_name = 'audit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AuditView, self).get_context_data(**kwargs)
+
+        return context
+
+    pass
+
+
 class LabelView(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'
     raise_exception = True
@@ -92,8 +104,8 @@ class LabelView(LoginRequiredMixin, TemplateView):
         # Don't know of an easier way to do this.
 
         termcoderaw = str(kwargs['sn']).split("-")
-        termcode = termcoderaw[1]
-        section = termcoderaw[0]
+        termcode = termcoderaw[1].lower()
+        section = termcoderaw[0].lower()
 
 
         routes = Route.objects.filter(fk_to=self.request.user)
@@ -103,30 +115,30 @@ class LabelView(LoginRequiredMixin, TemplateView):
 
         email = []
         courses = []
+        if allmailincourse_senttouser.count() > 0:
+            for message in allmailincourse_senttouser:
+                mail = {}
 
-        for message in allmailincourse_senttouser:
-            mail={}
-
-            if message.section not in courses:
-                courses.append(message.section)
-            mail['id'] = message.id
-            mail['subject'] = message.subject
-            mail['read'] = Route.objects.filter(fk_mail=message.id).get().read
-            mail['termcode'] = message.termcode
-            mail['section'] = message.section
-            mail['date'] = str(message.created.month) + "/" + str(message.created.day) + "/" + str(message.created.year)
-            mail['time'] = str(message.created.hour) + ":" + str(message.created.minute) + ":" + str(
-                message.created.second)
-            mail['timestamp'] = message.created.timestamp()
-            # pprint(mail['date'])
-            mail['from'] = message.fk_sender
-            if Attachment.objects.filter(fk_mail=message):
-                mail['has_attachment'] = True
-            else:
-                mail['has_attachment'] = False
-            email.append(mail)
-        context['email'] = email
-        context['courses'] = courses
+                if message.section not in courses:
+                    courses.append(message.section)
+                mail['id'] = message.id
+                mail['subject'] = message.subject
+                mail['read'] = Route.objects.filter(fk_mail=message.id).get().read
+                mail['termcode'] = message.termcode
+                mail['section'] = message.section
+                mail['date'] = str(message.created.month) + "/" + str(message.created.day) + "/" + str(message.created.year)
+                mail['time'] = str(message.created.hour) + ":" + str(message.created.minute) + ":" + str(
+                    message.created.second)
+                mail['timestamp'] = message.created.timestamp()
+                # pprint(mail['date'])
+                mail['from'] = message.fk_sender
+                if Attachment.objects.filter(fk_mail=message):
+                    mail['has_attachment'] = True
+                else:
+                    mail['has_attachment'] = False
+                email.append(mail)
+            context['email'] = email
+            context['courses'] = courses
         return context
 
 class ListUnreadView(View):
