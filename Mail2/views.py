@@ -128,11 +128,13 @@ class ArchiveMailView(LoginRequiredMixin, View):
             message = Mail.objects.get(id=request.POST['message_id'])
             if request.user.id == Route.objects.get(fk_mail=message).fk_to.id:
                 message.archived = True
+                message.save()
+                return redirect("/")
             else:
                 raise PermissionDenied
         else:
             raise PermissionDenied
-        return redirect("/")
+
 
 class MarkMailUnreadView(LoginRequiredMixin, View):
     raise_exception = True
@@ -143,13 +145,16 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
         if Mail.objects.filter(id=request.POST['message_id']).exists():
             message = Mail.objects.get(id=request.POST['message_id'])
             route = Route.objects.get(fk_mail=message)
+            pprint(route)
             if request.user.id == route.fk_to.id:
                 route.read = False
+                route.save()
+                return redirect("/")
             else:
                 raise PermissionDenied
         else:
             raise PermissionDenied
-        return redirect("/")
+
 
 
 class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
@@ -220,9 +225,11 @@ class ListUnreadView(View):
 
     def post(self, request):
         courses = json.loads(request.body)
+        print(courses)
         results = {}
         for i, entry in enumerate(courses):
-            course = courses[i]["course"]
+            # TODO Figure out why test fails but not real world.
+            course = courses[entry]["course"]
             section, termcode = course.split("-")
             # print("section={},termcode={}".format(section,termcode));
             mails = Mail.objects.filter(termcode=termcode, section=section)
