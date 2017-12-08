@@ -1,16 +1,23 @@
 {% block topright %}
             <!-- Split button -->
-            <a type="button" class="btn btn-default" href="#" onClick="window.history.back();" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox">
+            <a type="button" class="btn btn-default" href="{{ request.META.HTTP_REFERER }}" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox">
                 <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;&nbsp;
             </a>
             <!-- Single button -->
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Archive to Course Folder">
-                <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Archive
-            </button>
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Mark this Message as Un-Read">
-                <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;&nbsp;Mark as Un-Read
-            </button>
-
+            <form action="/archive/" method="POST" id="archive" style="display:inline-block">
+                {% csrf_token %}
+                <input value="{{ mail.id }}" name="message_id" type="hidden">
+                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="archive-btn" title="Archive to Course Folder">
+                    <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Archive
+                </a>
+            </form>
+            <form action="/munread/" method="POST" id="munread" style="display:inline-block">
+                {% csrf_token %}
+                <input value="{{ mail.id }}" name="message_id" type="hidden">
+                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="munread-btn" title="Mark this Message as Un-Read">
+                    <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;&nbsp;Mark as Un-Read
+                </a>
+            </form>
             <div class="input-group" style="width: 33%; float: right;">
                 <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
                 <span class="input-group-btn">

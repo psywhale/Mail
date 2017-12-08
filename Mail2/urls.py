@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import IndexView,ReplyView, LabelView, ListUnreadView, ArchiveMailView
+from .views import IndexView,ReplyView, LabelView, ListUnreadView, ArchiveMailView, MarkMailUnreadView
 
 urlpatterns= [
     url(r'^$',IndexView.as_view(), name='IndexView'),
@@ -8,5 +8,5 @@ urlpatterns= [
     url(r'^listunread/$', ListUnreadView.as_view(), name='listunread'),
     url(r'^audit/$', ListUnreadView.as_view(), name='listunread'),
     url(r'^archive/$', ArchiveMailView.as_view(), name='archivemail'),
-    url(r'^munread/$', ArchiveMailView.as_view(), name='markunread'),
+    url(r'^munread/$', MarkMailUnreadView.as_view(), name='markunread'),
 ]

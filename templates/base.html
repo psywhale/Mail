@@ -136,9 +136,11 @@ function getUnreadBadges(){
 {#                        $("#" + element.course).attr('title', total + ' Unread messages...');#}
                         total = total + element.count;
                     }
-                })
-            $("#inbox").prepend('<div class="badge">' + total + '</div>');
-            $("#inbox").attr('title', total + ' total un-read messages...');
+                });
+                if (total != "0") {
+                    $("#inbox").prepend('<div class="badge">' + total + '</div>');
+                    $("#inbox").attr('title', total + ' total un-read messages...');
+                }
         },
         type: 'POST',
         url: '/listunread/'
@@ -225,7 +227,12 @@ function calculateCurrentTermCode(){
 	return year+semester;
 }
 
-
+$('#archive-btn').click(function () {
+    $('form#archive').submit();
+});
+$('#munread-btn').click(function () {
+    $('form#munread').submit();
+});
 </script>
 
 
