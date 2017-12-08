@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.views.generic import TemplateView, View
 from .models import Route, Mail, Attachment
 
-from braces.views import LoginRequiredMixin, UserPassesTestMixin
+from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
 from django.db.models import Q
 import simplejson as json
 from django.views.decorators.csrf import csrf_exempt
@@ -79,6 +79,18 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             print("oh noes")
 
         return context
+
+
+class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
+    group_required = u"Auditors"
+    template_name = 'audit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AuditView, self).get_context_data(**kwargs)
+
+        return context
+
+    pass
 
 
 class LabelView(LoginRequiredMixin, TemplateView):
