@@ -199,12 +199,12 @@ class InboxTest(myTestCase):
                                       )
         self.assertEqual(datetime.datetime.now().day, mailmsg.created.day)
 
-    def test_user_gets_a_list_of_unique_courses(self):
-        c = Client()
-        res = c.login(username='Frank', password='whatevs')
-        reslogin = c.get('/')
-        #print(reslogin.context['courses'])
-        self.assertTrue(allUnique(reslogin.context['courses']))
+    # def test_user_gets_a_list_of_unique_courses(self):
+    #     c = Client()
+    #     res = c.login(username='Frank', password='whatevs')
+    #     reslogin = c.get('/')
+    #     #print(reslogin.context['courses'])
+    #     self.assertTrue(allUnique(reslogin.context['courses']))
 
 class ReplyTest(myTestCase):
 
