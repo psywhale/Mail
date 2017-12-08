@@ -12,14 +12,14 @@
         <div class="col-sm-4 col-md-3">
             {% include 'global-logo.html' %}
         </div>
-        <div class="col-sm-8 col-md-9">
-            {% include 'global-search_and_view.html' %}
+        <div class="col-sm-8 col-md-9 search-area">
+            {% include 'global-search_and_nav_buttons.html' %}
         </div>
     </div>
     <hr>
     <div class="row">
 
-        {% include 'global-leftcoursemenu.html' %}
+        {% include 'global-left_course_menu.html' %}
 
         <div class="col-sm-8 col-md-9 main-mail-section">
             <div class="pull-right">
@@ -45,8 +45,10 @@
                         <hr />
                     </div>
 
-                    <div style="padding: 0 12px ">
-                        {{ mail.content }}
+                    <div style="padding: 0 30px; min-height: 100px">
+                        {% autoescape off %}
+                            {{ mail.content }}
+                        {% endautoescape %}
                     </div>
                     <br />
                     <div class="container-fluid">
