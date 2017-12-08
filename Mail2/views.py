@@ -1,9 +1,10 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse,redirect
 from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
 from django.contrib.auth.models import User
-from .forms import ReplyForm
 
+from .forms import ReplyForm
+from django.core.exceptions import PermissionDenied
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
 from django.db.models import Q
 import simplejson as json
@@ -116,6 +117,41 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         return context
 
 
+
+class ArchiveMailView(LoginRequiredMixin, View):
+    raise_exception = True
+    #TODO make redirect to prev page not /
+
+    def post(self, request):
+
+        if Mail.objects.filter(id=request.POST['message_id']).exists():
+            message = Mail.objects.get(id=request.POST['message_id'])
+            if request.user.id == Route.objects.get(fk_mail=message).fk_to.id:
+                message.archived = True
+            else:
+                raise PermissionDenied
+        else:
+            raise PermissionDenied
+        return redirect("/")
+
+class MarkMailUnreadView(LoginRequiredMixin, View):
+    raise_exception = True
+    #TODO make redirect to prev page not /
+
+    def post(self, request):
+
+        if Mail.objects.filter(id=request.POST['message_id']).exists():
+            message = Mail.objects.get(id=request.POST['message_id'])
+            route = Route.objects.get(fk_mail=message)
+            if request.user.id == route.fk_to.id:
+                route.read = False
+            else:
+                raise PermissionDenied
+        else:
+            raise PermissionDenied
+        return redirect("/")
+
+
 class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
     group_required = u"Auditors"
     template_name = 'audit.html'
@@ -184,16 +220,14 @@ class ListUnreadView(View):
 
     def post(self, request):
         courses = json.loads(request.body)
-        # print(courses["1"])
-        # courses = self.request.POST['courses']
         results = {}
-        for i,entry in enumerate(courses):
-            course = courses[entry]["course"]
+        for i, entry in enumerate(courses):
+            course = courses[i]["course"]
             section, termcode = course.split("-")
             # print("section={},termcode={}".format(section,termcode));
             mails = Mail.objects.filter(termcode=termcode, section=section)
             unread_count = Route.objects.filter(fk_mail__in=mails, read=False, fk_to=request.user.id).count()
 
             results[i] = {"course": course, "count": unread_count }
-        print(results)
+        # print(results)
         return HttpResponse(json.dumps(results),content_type="application/json")
