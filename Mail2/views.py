@@ -34,8 +34,8 @@ class IndexView(LoginRequiredMixin,TemplateView):
         for route in routes:
             mail = {}
             message = route.fk_mail
-            if message.section not in courses:
-                courses.append(message.section)
+            # if message.section not in courses:
+            #     courses.append(message.section)
             if message.archived is False:
                 mail['id'] = message.id
                 mail['subject'] = message.subject
@@ -53,7 +53,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
                     mail['has_attachment'] = False
                 email.append(mail)
         context['email'] = email
-        context['courses'] = courses
+        # context['courses'] = courses
         return context
 
 
@@ -150,6 +150,8 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
             if request.user.id == route.fk_to.id:
                 route.read = False
                 route.save()
+                message.archived = False
+                message.save()
                 return redirect("/")
             else:
                 raise PermissionDenied
