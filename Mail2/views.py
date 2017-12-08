@@ -136,22 +136,17 @@ class ListUnreadView(View):
         return super(ListUnreadView, self).dispatch(request, *args, **kwargs)
 
     def post(self, request):
-
-
-
         courses = json.loads(request.body)
-
-
-       # courses = self.request.POST['courses']
-        results = []
-        for course in courses['courses']:
-            result = {}
+        # print(courses["1"])
+        # courses = self.request.POST['courses']
+        results = {}
+        for i,entry in enumerate(courses):
+            course = courses[entry]["course"]
             section, termcode = course.split("-")
+            # print("section={},termcode={}".format(section,termcode));
             mails = Mail.objects.filter(termcode=termcode, section=section)
-            #pprint(mails)
-            unread_count = Route.objects.filter(fk_mail__in=mails, read=False, fk_to=self.request.user.id).count()
-            result['course'] = course
-            result['count'] = unread_count
-            results.append(result)
-        #print(json.dumps(results))
+            unread_count = Route.objects.filter(fk_mail__in=mails, read=False, fk_to=request.user.id).count()
+
+            results[i] = {"course": course, "count": unread_count }
+        print(results)
         return HttpResponse(json.dumps(results),content_type="application/json")
