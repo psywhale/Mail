@@ -78,6 +78,39 @@ class myTestCase(TestCase):
                                   fk_mail=mailmsg
                                   )
 
+class MarkMailUnreadTest(myTestCase):
+
+
+    def test_bad_users_cannot_markunread(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        mailmsg = Mail.objects.create(content='Test REPLY',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Frank"),
+                                      termcode="172s",
+                                      section="21231",
+                                      )
+        Route.objects.create(fk_to=User.objects.get(username="Ned"),
+                                     read=False,
+                                     fk_mail=mailmsg)
+        res = c.post('/munread/', {"message_id":mailmsg.id})
+        self.assertEqual(res.status_code, 403)
+
+    def test_good_users_can_markunread(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        mailmsg = Mail.objects.create(content='Test REPLY',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Ned"),
+                                      termcode="172s",
+                                      section="21231",
+                                      )
+        Route.objects.create(fk_to=User.objects.get(username="Frank"),
+                                     read=False,
+                                     fk_mail=mailmsg)
+        res = c.post('/archive/', {"message_id":mailmsg.id})
+        self.assertEqual(res.status_code, 302)
+
 
 class ArchiveTest(myTestCase):
 
