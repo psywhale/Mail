@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load tz %}
+{% block content %}
+
+    <div class="row" style="#width: 40%; #margin: 70px auto 10px;">
+    </div><!--/row-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4 col-md-3">
+            {% include 'global-logo.html' %}
+        </div>
+        <div class="col-sm-8 col-md-9 search-area">
+            <div class="input-group" style="width: 33%; float: right;">
+                <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
+                <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button">Go!</button>
+                </span>
+            </div>
+            <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" onClick="location.reload();" style="padding: 5px; margin: 0 10px -6px -6px;">
+                &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
+            <!-- Split button -->
+            <div class="btn-group paginated">
+                <div class="text-muted"><b>1</b>–<b>50</b> of <b>160</b></div>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </button>
+                    <button type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </button>
+                </div>
+{#                <button type="button" class="btn btn-default">#}
+{#                    <div class="checkbox" style="margin: 0;">#}
+{#                        <label>#}
+{#                            <input type="checkbox" class="check" id="checkAll">#}
+{#                        </label>#}
+{#                    </div>#}
+{#                </button>#}
+{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+{#                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>#}
+{#                </button>#}
+{#                <ul class="dropdown-menu" role="menu">#}
+{#                    <li><a href="#">All</a></li>#}
+{#                    <li><a href="#">None</a></li>#}
+{#                    <li><a href="#">Read</a></li>#}
+{#                    <li><a href="#">Unread</a></li>#}
+{#                </ul>#}
+            </div>
+            <!-- Single button -->
+{#            <div class="btn-group">#}
+{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+{#                    More <span class="caret"></span>#}
+{#                </button>#}
+{#                <ul class="dropdown-menu" role="menu">#}
+{#                    <li><a href="#">Archive selected</a></li>#}
+{#                    <li><a href="#">Mark selected as read</a></li>#}
+{#                    <li><a href="#">Mark selected as unread</a></li>#}
+{#                    <li class="divider"></li>#}
+{#                    <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>#}
+{#                </ul>#}
+{#            </div>#}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+
+{% include 'global-left_course_menu.html' %}
+
+        <div class="col-sm-8 col-md-9 main-mail-section">
+{#            <div class="pull-right">#}
+{##}
+{#            </div>#}
+            <!-- Nav tabs -->
+{#            <ul class="nav nav-tabs">#}
+{#                <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-inbox">#}
+{#                </span>{{ message.section }}</a></li>#}
+{#                <li><a href="#profile" data-toggle="tab"><span class="glyphicon glyphicon-user"></span>#}
+{#                    </a></li>#}
+{#                <li><a href="#settings" data-toggle="tab"><span class="glyphicon glyphicon-plus no-margin">#}
+{#                </span></a></li>#}
+{#            </ul>#}
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="home">
+                    <div class="list-group">
+
+                        {% for message in email|dictsortreversed:"timestamp" %}
+{#                    {% for message in email %}#}
+
+                        <a href="{% url 'outboxreply' message.id %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="check">
+                                </label>
+                            </div>
+                            <span class="name {% if message.read == False %} unread-mail{% endif %}"> {{ message.to.first_name }} {{ message.to.last_name }}</span>
+                            <span class="section {{ message.section }} {% if message.read == False %} unread-mail{% endif %}">{{ message.section }}</span>
+                            <span class="subject text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
+                            <span class="date badge {% if message.read == False %} unread-mail{% endif %}">
+                                {% now "Y-m-d" as todays_date %}
+                                {% if todays_date >= message.date|date:"Y-m-d" %}
+                                   {{ message.date }}
+                                {% else %}
+                                    {{ message.timestamp }} Today
+                                {% endif %}
+                            </span>
+                            <span class="pull-right">
+                                {% if message.has_attachment %}
+                                    <span class="glyphicon glyphicon-paperclip" style="margin: 5px 14px 0 0 !important;">
+                                {% endif %}
+                            </span>
+                        </span>
+                        </a>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+                <div class="tab-pane fade in" id="profile">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <span class="text-center">This tab is empty.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade in" id="settings">
+                    This tab is empty.</div>
+            </div>
+
+            <div class="row-md-12">
+
+{#                <div class="well">#}
+{#                    <span style="color:red">{{ email }} ------ {% now "jS F Y H:i" %} ------ </span>#}
+{#                </div>#}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
