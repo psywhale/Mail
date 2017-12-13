@@ -182,6 +182,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
             m = Mail.objects.get(id=self.kwargs['id'])
             r = Route.objects.get(fk_mail=m)
             info= {
+                'id': m.id,
                 'content': m.content,
                 'subject': m.subject,
                 'termcode': m.termcode,
