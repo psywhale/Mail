@@ -69,5 +69,4 @@ function calculateCurrentTermCode(){
 	return year+semester;
 }
 
-var now = $.datepicker({dateFormat:"yy/mm/dd"}).datepicker("setDate",new Date());
-$('.current-date').html(now);
+
