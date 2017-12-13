@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from .views import IndexView,ReplyView, \
     LabelView, ListUnreadView, ArchiveMailView, MarkMailUnreadView,\
-    ComposeView, OutboxView
+    ComposeView, OutboxView, OutboxReplyView
 
 urlpatterns= [
     url(r'^$',IndexView.as_view(), name='IndexView'),
@@ -13,4 +13,5 @@ urlpatterns= [
     url(r'^munread/$', MarkMailUnreadView.as_view(), name='markunread'),
     url(r'^compose/$', ComposeView.as_view(), name='compose'),
     url(r'^outbox/$', OutboxView.as_view(), name='outbox'),
+    url(r'^or/(?P<id>[0-9]+)/$', OutboxReplyView.as_view(), name='outboxreply'),
 ]

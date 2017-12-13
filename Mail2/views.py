@@ -56,8 +56,9 @@ class IndexView(LoginRequiredMixin,TemplateView):
         # context['courses'] = courses
         return context
 
+
 class OutboxView(LoginRequiredMixin,TemplateView):
-    template_name = 'index.html'
+    template_name = 'outbox.html'
     raise_exception = True
 
     def get_context_data(self, **kwargs):
@@ -67,37 +68,41 @@ class OutboxView(LoginRequiredMixin,TemplateView):
         # Creating a context with the proper information.
         # Don't know of an easier way to do this.
 
-        routes = Route.objects.filter(fk_to=self.request.user)
+        usermails = Mail.objects.filter(fk_sender=self.request.user)
+
 
         email = []
         courses = []
-        for route in routes:
+        for usermail in usermails:
             mail = {}
-            message = route.fk_mail
+            dprint(usermail)
+            route = Route.objects.get(fk_mail=usermail)
             # if message.section not in courses:
             #     courses.append(message.section)
-            if message.archived is True:
-                mail['id'] = message.id
-                mail['subject'] = message.subject
-                mail['read'] = route.read
-                mail['termcode'] = message.termcode
-                mail['section'] = message.section
-                mail['date'] = str(message.created.month)+"/"+str(message.created.day)+"/"+str(message.created.year)
-                mail['time'] = str(message.created.hour)+":"+str(message.created.minute)+":"+str(message.created.second)
-                mail['timestamp'] = message.created.timestamp()
-                #pprint(mail['date'])
-                mail['from'] = message.fk_sender
-                if Attachment.objects.filter(fk_mail=message):
-                    mail['has_attachment'] = True
-                else:
-                    mail['has_attachment'] = False
-                email.append(mail)
+            #if usermail.fk_sender is self.request.user:
+            mail['id'] = usermail.id
+            mail['subject'] = usermail.subject
+            mail['read'] = route.read
+            mail['to'] = route.fk_to
+            mail['termcode'] = usermail.termcode
+            mail['section'] = usermail.section
+            mail['date'] = str(usermail.created.month)+"/"+str(usermail.created.day)+"/"+str(usermail.created.year)
+            mail['time'] = str(usermail.created.hour)+":"+str(usermail.created.minute)+":"+str(usermail.created.second)
+            mail['timestamp'] = usermail.created.timestamp()
+            #pprint(mail['date'])
+            mail['from'] = usermail.fk_sender
+            if Attachment.objects.filter(fk_mail=usermail):
+                mail['has_attachment'] = True
+            else:
+                mail['has_attachment'] = False
+            email.append(mail)
         context['email'] = email
+        #dprint(email)
         # context['courses'] = courses
         return context
 
 
-class ComposeView(LoginRequiredMixin,FormView):
+class ComposeView(LoginRequiredMixin, FormView):
     template_name = 'compose.html'
     form_class = ComposeForm
     success_url = "/"
@@ -161,23 +166,45 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         new_route.save()
         return super(ReplyView, self).form_valid(form)
 
-        
-        
-
-
     def get_context_data(self, **kwargs):
+        #
+        # content = models.TextField()
+        # subject = models.CharField(max_length=512)
+        # termcode = models.CharField(max_length=4)
+        # section = models.CharField(max_length=5)
+        # archived = models.BooleanField(default=False)
+        # fk_sender = models.ForeignKey(User)
+        # created = models.DateTi
         context = super(ReplyView, self).get_context_data(**kwargs)
+        info = {}
+
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             m = Mail.objects.get(id=self.kwargs['id'])
-            mail = m
-            # mail['time'] = str(m.created.hour) + ":" + str(m.created.minute) + ":" + str(m.created.second)
-            # mail['timestamp'] = m.created.timestamp()
-            context['mail'] = mail
+            r = Route.objects.get(fk_mail=m)
+            info= {
+                'content': m.content,
+                'subject': m.subject,
+                'termcode': m.termcode,
+                'section': m.section,
+                'fk_sender': m.fk_sender,
+                'to': r.fk_to,
+                'created': m.created,
+            }
+
+            context['mail'] = info
+            # dprint(context)
         else:
             # todo raise error
             print("oh noes")
 
         return context
+
+
+class OutboxReplyView(ReplyView):
+
+    def test_func(self, user):
+        mail = Mail.objects.get(pk=self.kwargs['id'])
+        return self.request.user == mail.fk_sender
 
 
 
