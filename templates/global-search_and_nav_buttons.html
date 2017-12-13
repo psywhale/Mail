@@ -1,25 +1,28 @@
 {% block topright %}
             <!-- Split button -->
             <a type="button" class="btn btn-default" href="{{ request.META.HTTP_REFERER }}" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox">
-                <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;&nbsp;Back
             </a>
             <!-- Single button -->
-            <form action="/archive/" method="POST" id="archive" style="display:inline-block">
+    {% if "/or/" in request.path %} <a type="button" class="btn btn-default sentmailbox-indicator2" href='{% url 'outbox' %}'>SENT MAILBOX</a>{% endif %}
+    {% if not "/or/" in request.path %}
+            <form action="{% url 'archivemail' %}" method="POST" id="archive" style="display:inline-block">
                 {% csrf_token %}
                 <input value="{{ mail.id }}" name="message_id" type="hidden">
                 <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="archive-btn" title="Archive to Course Folder">
                     <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Archive
                 </a>
             </form>
-            <form action="/munread/" method="POST" id="munread" style="display:inline-block">
+            <form action="{% url 'markunread' %}" method="POST" id="munread" style="display:inline-block">
                 {% csrf_token %}
                 <input value="{{ mail.id }}" name="message_id" type="hidden">
                 <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="munread-btn" title="Mark this Message as Un-Read">
                     <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;&nbsp;Mark as Un-Read
                 </a>
             </form>
+    {% endif %}
             <div class="input-group" style="width: 33%; float: right;">
-                <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
+                <input type="text" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">
                 <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button">Go!</button>
                 </span>

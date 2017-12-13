@@ -16,6 +16,8 @@
         });
         $( ".sendmailbutton" ).show();
     });
+    $( ".compose .reply_editor" ).attr("placeholder", "Click here to Compose...");
+    $("#id_instructor").prop("selectedIndex", 0);
 
 
 // {#    ------- THIS IS BUTTONTS & MAIL FUNCTIONS --------#}
@@ -66,3 +68,5 @@ function calculateCurrentTermCode(){
 
 	return year+semester;
 }
+
+

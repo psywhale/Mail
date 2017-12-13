@@ -1,6 +1,7 @@
 /* CSS used here will be applied after bootstrap.css */
 
-body{ margin-top:20px; font-family: Georgia,Helvetica,Arial,sans-serif; background-color: #f4fff4}
+body{ margin-top:20px; font-family: Roboto,sans-serif; background-color: #f4fff4}
+.user-logged-in { position: absolute; top:5px; right:15px; font-size: 11px; }
 .nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
 .tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
 .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
@@ -8,7 +9,7 @@ body{ margin-top:20px; font-family: Georgia,Helvetica,Arial,sans-serif; backgrou
 .tab-pane .list-group input[type="checkbox"]{ margin-top: 8px; }
 .tab-pane .list-group .glyphicon { margin-right:5px; }
 .tab-pane .list-group .glyphicon:hover { color:#FFBC00; }
-a.list-group-item.read { color: #222; background-color: #F3F3F3; }
+a.list-group-item.read { color: #222; background-color: #f3f7f3; }
 hr { margin-top: 5px;margin-bottom: 10px; }
 .ad { padding: 5px; background: #F5F5F5; color: #222; font-size: 80%; border: 1px solid #E5E5E5; }
 .ad a.title {color: #15C; text-decoration: none; font-weight: bold; font-size: 110%;}
@@ -22,9 +23,10 @@ hr { margin-top: 5px;margin-bottom: 10px; }
 /*.active>a>.pull-right { #box-shadow: 0 0 0 7px #337ab7; }*/
 /*.nav-pills>li.active>a>.badge { #margin-right: -12px; }*/
 .main-mail-section { background-color: #FFF; margin-top:-10px; padding-top:10px }
+.sentmailbox-indicator { cursor: alias; border: 1px dotted #c4dcc4 }
 .tab-content { margin: -10px -24px 0 -15px }
 .list-group-item { border:0; border-bottom: 1px solid #ddd; margin-bottom:0; border-left: 4px solid transparent;  }
-a.list-group-item:focus, a.list-group-item:hover { border-left: 4px dotted #c6e8c6; }
+a.list-group-item:focus, a.list-group-item:hover { border-left: 4px dotted #c6e8c6; background-color: #f6fff6 }
 .list-group-item.active>.badge, .nav-pills>.active>a>.badge { color: white; background-color: #767676; }
 .nav-pills>li>a { padding: 5px 10px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 ul.nav.nav-pills.nav-stacked { #width: 108%; }
@@ -41,16 +43,19 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 .btn-group .text-muted { margin:4px 10px 0; display: inline-block; }
 .search-area { margin: 22px 0 0}
 .paginated { margin: 7px 0 0}
-.main-mail-section { background-color: white }
+.main-mail-section { background: white url(https://www.wosc.edu/img/seal651.png) no-repeat center center }
 .tab-content .badge { background: transparent; color: inherit; font-weight: inherit }
-.nav .badge { z-index: 999; position: absolute; top: 6px; left: -20px; }
+.nav .badge { z-index: 999; position: absolute; top: 6px; left: -20px; background-color: #006300; }
 .nav .badge div { text-align:center }
-.name, .section, .subject { width: 150px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: -5px; }
-.section { width: 58px; border-radius: 8px; background-color: aquamarine; padding: 2px 6px; }
-.subject { width: 415px }
+.name, .section, .subject { width: 170px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: -5px; }
+.section { width: 60px; border-radius: 8px; background-color: aquamarine; padding: 2px 6px 2px 10px; font-weight: 500 }
+.s22222 { background-color: #51D2FF }
+.subject { width: 52%; #width: 415px }
+.tab-pane .list-group .glyphicon-paperclip { position: absolute; top:2px; right: -2px; border-radius: 8px; background-color: #d6d6d6; padding: 2px 3px; }
 .date { width: 55px; margin: 6px 12px 6px -5px; }
 /*  REPLY VIEW */
-#id_content { width:98% !important; height: 50px }
+#id_content { width:98% !important; height: 50px; border-radius: 8px; padding:4px 12px }
+input#id_subject { width:60%; border-radius: 8px; padding:6px 12px }
 .cke_editable {  }
 .nav-stacked>li+li {
     overflow: inherit;
@@ -79,8 +84,8 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 }
 /* COMPOSE SECTION*/
 .compose-section-subject { font-weight: 900; font-size: 18px; border-bottom: 1px solid #ccc; padding: 0 12px 12px; margin-top: 15px}
-
-
+.compose #id_content { width:98% !important; height: 80px }
+.cke, .cke_top, .cke_inner, .cke_bottom, .cke_wysiwyg { border-radius: 8px; }
 
 
 a {
@@ -149,7 +154,9 @@ tr.hover {
     ul.nav.nav-pills.nav-stacked {
         width: 100%;
     }
-    .subject { width: 100% }
+    .subject { width: 35% }
+    .name { max-width: 20%; }
+    .tab-content .badge { #float:none }
     .activities {
         margin: -10px auto 35px !important
     }
@@ -168,11 +175,15 @@ tr.hover {
     }
 }
 
+@media (max-width: 410px) and (max-width: 767px) {
+    .subject { width: 17% }
+}
+
 @media (min-width: 768px) and (max-width: 996px) {
     /*div.row:first-of-type {*/
         /*width: 76% !important;*/
     /*}*/
-    .subject { width: 180px }
+    .subject { width: 25% }
     .activities {
         margin: -10px auto 35px !important
     }

@@ -30,46 +30,13 @@
 </head>
 <body>
 
-{#<nav class="navbar navbar-inverse navbar-fixed-top">#}
-{#    <div class="container">#}
-{#        <div class="navbar-header">#}
-{#            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"#}
-{#                    aria-expanded="false" aria-controls="navbar">#}
-{#                <span class="sr-only">Toggle navigation</span>#}
-{#                <span class="icon-bar"></span>#}
-{#                <span class="icon-bar"></span>#}
-{#                <span class="icon-bar"></span>#}
-{#            </button>#}
-{#            <a class="navbar-brand" href="/">#}
-{#                <img src="data:image/png;base64,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" style="margin: -10px 8px 0 0; float: left;" alt="WOSC_Seal">#}
-{#                Western Cmail#}
-{#            </a>#}
-{#        </div>#}
-{#        <div id="navbar" class="navbar-collapse collapse">#}
-{#            <ul class="nav navbar-nav navbar-right">#}
-{#                        <li>#}
-{#                            <a href="/accounts/logout" style="#color:red">#}
-{#                                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Logout#}
-{#                            </a>#}
-{#                        </li>#}
-{#                {% if user.is_anonymous %}#}
-{#                    &nbsp;#}
-{#                {% else %}#}
-{#                {% endif %}#}
-{#            </ul>#}
-{#        </div>#}
-{#    </div>#}
-{#</nav>#}
-
+    <div class="user-logged-in"><i>Logged in as</i> {{ user.first_name }} {{ user.last_name }}</div>
     {% block content %}
     {% endblock %}
 
 
 <footer clas="blog-footer">
     <div class="inner">
-{#        <p style="text-align:center">#}
-{#            <img src="https://www.wosc.edu/img/W_icon_full logo.png" alt="WOSC Logo" style="max-width:260px; width:100%; margin-top: 40px #-webkit-filter: grayscale(1);  #filter: grayscale(1);">#}
-{#        </p>#}
         <p>
             <div class="version" title="APPLICATION NAME: Western Course Mail System
 
@@ -86,13 +53,10 @@
 </div><!--/container-->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-{#<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>#}
 <script src="/static/js/custom.js" type="text/javascript"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <!-- ### CKEditor CSS & JS ### -->
 	<script src="https://cdn.ckeditor.com/4.7.3/basic/ckeditor.js"></script>
-{#	<script src="/static/ckeditor/ckeditor.js"></script>#}
-{#	<link rel="stylesheet" href="/static/ckeditor/skins/moono-lisa/editor.css">#}
 <!-- ### FOOTABLE CSS & JS ### -->
 <link href="/static/css/footable.core.css" rel="stylesheet" type="text/css"/>
 <link href="/static/css/footable.standalone.css" rel="stylesheet" type="text/css"/>
@@ -157,7 +121,7 @@ function getCourses(){
         success: function(response) {
 {#            console.log(response);#}
             jQuery.each(response, function(id, course){
-{#                console.log(course.shortname);#}
+{#                console.log(course.id);#}
 {#                console.log(course.fullname);#}
 {#                console.log(course);#}
                 $('#all-courses').html($('#all-courses').html() + course.fullname);
@@ -166,7 +130,7 @@ function getCourses(){
                 try {
                     myTC = info[1];
                     if (termCode == info[1].toLowerCase()) {
-                        $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list" id="' + course.shortname + '" title="'+ course.fullname +'"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
+                        $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list ' + course.shortname + '" id="' + course.shortname + '" title="'+ course.fullname +'"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
                     }
                     else {
                         $('#past-courses').html($('#past-courses').html() + '<li class="past-course-list"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
@@ -202,6 +166,12 @@ var sections = window.location.pathname.split('/');
 }
 
 
+function addComposeOptionsForInstructors() {
+
+{#    <option value="value1">Value 1</option>#}
+}
+
+
 function calculateCurrentTermCode(){
 	var date = new Date();
 	var month = date.getMonth() + 1;
@@ -227,12 +197,14 @@ function calculateCurrentTermCode(){
 	return year+semester;
 }
 
+
 $('#archive-btn').click(function () {
     $('form#archive').submit();
 });
 $('#munread-btn').click(function () {
     $('form#munread').submit();
 });
+
 </script>
 
 

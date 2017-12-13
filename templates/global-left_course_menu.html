@@ -1,11 +1,11 @@
 {% block leftcoursemenu %}
         <div class="col-sm-4 col-md-3">
-            <a href="#" class="btn btn-danger btn-sm btn-block" role="button"><i class="glyphicon glyphicon-edit"></i> Compose</a>
+            <a href="{% url 'compose' %}" class="btn btn-danger btn-sm btn-block" role="button"><i class="glyphicon glyphicon-edit"></i> Compose</a>
             <hr>
             <ul class="nav nav-pills nav-stacked" id="current-courses">
-                <li id="inbox" class="active21"><a href="/"> Inbox </a>
+                <li id="inbox" class=""><a href="/"> Inbox </a>
                 </li>
-                <li><a href="#Future-site-of-SENT-MAIL">Sent Mail  <span style="font-size:11px">(Coming Soon!)</span></a></li>
+                <li class="{% if "/outbox/" in request.path %} active-course{% endif %}{% if "/or/" in request.path %} active-course{% endif %}"><a href="{% url 'outbox' %}">Sent Mail</a></li>
 {#                <li class="current-course-list has-badge"><a href="#" title="2C202 - College Algebra (30 unread messages)"><span class="badge pull-right2">30</span> 2C202 - College Algebra</a></li>#}
 {#                <li class="current-course-list"><a href="#" title="29606 - Micro-Computer">29606 - Micro-Computer</a></li>#}
 {#                <li class="current-course-list"><a href="#"title="31020 - Agriculture Sciences">31020 - Agriculture Sciences</a></li>#}

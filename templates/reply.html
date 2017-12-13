@@ -38,14 +38,17 @@
                     </div>
 
                     <div style="padding:12px" title="Sent by ({{ mail.fk_sender }}) on this date: &nbsp; {{ mail.created }}">
-                        <div style="float:right" >
-                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" title="Sent from: {{ mail.fk_sender }}"></span>&nbsp;&nbsp;&nbsp;{{ mail.created }}
+                        <div style="float:right; margin: 10px 5px 0 0" >
+                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp; {{ mail.created }}
                         </div>
-                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Sent from: {{ mail.fk_sender }}"></span>&nbsp;&nbsp;&nbsp;{{ mail.fk_sender }}
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp; <strong>FROM:</strong> {{ mail.fk_sender.first_name }} {{ mail.fk_sender.last_name }} ({{ mail.fk_sender }})
+                    </div>
+                    <div style="padding:12px; margin-top:-18px" title="Sent to you ({{ mail.to }})">
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp; <div style="#border-bottom:1px dotted #ddd; display: inline-block" title="Sent to you: ({{ mail.to }})"><strong>TO:</strong> {{ mail.to.first_name }} {{ mail.to.last_name }} ({{ mail.to }})</div>
                         <hr />
                     </div>
 
-                    <div style="padding: 0 30px; min-height: 100px">
+                    <div style="padding: 0 30px; min-height: 80px">
                         {% autoescape off %}
                             {{ mail.content }}
                         {% endautoescape %}
@@ -54,10 +57,12 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-12 nopadding">
-
+                                {% if message.has_attachment %}
+                                    <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!">
+                                {% endif %}
+                                <hr />
+                                <div style="font-size: 11px; font-style: italic; padding:8px 8px 0">REPLY TO: &nbsp; {{ mail.to.first_name }} {{ mail.to.last_name }}</div>
                                 {{ form.content }}
-
-                                <!--<textarea id="editor1" class="reply_editor"></textarea>-->
                             </div>
                         </div>
                         <br />
