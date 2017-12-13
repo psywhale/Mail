@@ -328,9 +328,9 @@ class OutboxTest(myTestCase):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/outbox')
-        self.assertEqual(reslogin.status_code, 301)
+        self.assertEqual(reslogin.status_code, 200)
 
-    def test_can_see_compose(self):
+    def test_can_see_outbox(self):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/outbox')
