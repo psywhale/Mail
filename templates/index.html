@@ -18,6 +18,13 @@
                 <button class="btn btn-secondary" type="button">Go!</button>
                 </span>
             </div>
+            <button type="button" class="btn btn-default" style=" margin: 6px 15px 0 -9px; padding: 0px 11px;">
+                <div class="checkbox" style="margin: 3px -3px;">
+                    <label>
+                        <input type="checkbox" id="checkall" style="margin: 7px 0 0 -16px;">
+                    </label>
+                </div>
+            </button>
             <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" onClick="location.reload();" style="padding: 5px; margin: 0 10px -6px -6px;">
                 &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
             <!-- Split button -->
@@ -31,13 +38,6 @@
                         <span class="glyphicon glyphicon-chevron-right"></span>
                     </button>
                 </div>
-{#                <button type="button" class="btn btn-default">#}
-{#                    <div class="checkbox" style="margin: 0;">#}
-{#                        <label>#}
-{#                            <input type="checkbox" class="check" id="checkAll">#}
-{#                        </label>#}
-{#                    </div>#}
-{#                </button>#}
 {#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
 {#                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>#}
 {#                </button>#}
@@ -88,10 +88,11 @@
 
                         {% for message in email|dictsortreversed:"timestamp" %}
 {#                    {% for message in email %}#}
-                        <a href="{% url "reply" message.id %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %} {% if message.read == False %} unread-mail{% endif %}" title="MAIL FROM: {{ message.from.first_name }} {{ message.from.last_name }} in {{ message.section }}. SUBJECT: {{ message.subject }}.">
+                        <a href="{% url "reply" message.id %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %} {% if message.read == False %} unread-mail{% endif %}"
+                           title="MAIL FROM: {{ message.from.first_name }} {{ message.from.last_name }} in {{ message.section }}. SUBJECT: {{ message.subject }}.">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" class="check">
+                                    <input type="checkbox" class="check" id="message-id-{{ message.id }}">
                                 </label>
                             </div>
                             <span class="name"> {{ message.from.first_name }} {{ message.from.last_name }}</span>

@@ -4,6 +4,7 @@
 
 // {#    ------- THIS IS MAIL (Reply, Compose, View) --------#}
     $('.main-mail-section').css("height", $(document).height());
+    $(".mail-content a").attr("target","_blank");
 
     $( ".reply_editor" ).attr("placeholder", "Click here to Reply...");
     $( ".reply_editor" ).delay(800).click(function() {
@@ -68,5 +69,39 @@ function calculateCurrentTermCode(){
 
 	return year+semester;
 }
+
+
+// {#    ------- THIS IS Check all checkboxes --------#}
+
+//  $('#checkall').click(function(){
+//      $('input[name=chkbx]').prop("checked", true);
+//      $('#checkall').addClass('uncheck-all');
+// });
+//  $('#checkall:checked').click(function(){
+//      $('input[name=chkbx]').prop("checked", false);
+//      $('#checkall').removeClass('uncheck-all');
+// });
+   $("#checkall").change(function(){
+     var checked = $(this).is(':checked');
+     if(checked){
+       $(".checkbox").each(function(){
+         $(this).prop("checked",true);
+       });
+     }else{
+       $(".checkbox").each(function(){
+         $(this).prop("checked",false);
+       });
+     }
+   });
+
+  $(".checkbox").click(function(){
+
+    if($(".checkbox").length == $(".checkbox:checked").length) {
+      $("#checkall").prop("checked", true);
+    } else {
+      $("#checkall").removeAttr("checked");
+    }
+
+  });
 
 

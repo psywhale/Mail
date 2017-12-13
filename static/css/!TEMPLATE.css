@@ -56,6 +56,7 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 /*  REPLY VIEW */
 #id_content { width:98% !important; height: 50px; border-radius: 8px; padding:4px 12px }
 input#id_subject { width:60%; border-radius: 8px; padding:6px 12px }
+.mail-content { padding: 0 30px; min-height: 80px;  }
 .cke_editable {  }
 .nav-stacked>li+li {
     overflow: inherit;

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load tz %}
+{% localtime on %}
+    <p>{{ currentime }}</p>
+{% endlocaltime %}
 {% block content %}
 
     <div class="row" style="#width: 40%; #margin: 70px auto 10px;">
@@ -41,14 +44,18 @@
                         <div style="float:right; margin: 10px 5px 0 0" >
                             <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp; {{ mail.created }}
                         </div>
-                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp; <strong>FROM:</strong> {{ mail.fk_sender.first_name }} {{ mail.fk_sender.last_name }} ({{ mail.fk_sender }})
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>
+                        &nbsp;&nbsp; <strong>FROM:</strong> {{ mail.fk_sender.first_name }} {{ mail.fk_sender.last_name }} ({{ mail.fk_sender }})
                     </div>
                     <div style="padding:12px; margin-top:-18px" title="Sent to you ({{ mail.to }})">
-                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp; <div style="#border-bottom:1px dotted #ddd; display: inline-block" title="Sent to you: ({{ mail.to }})"><strong>TO:</strong> {{ mail.to.first_name }} {{ mail.to.last_name }} ({{ mail.to }})</div>
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>
+                        &nbsp;&nbsp; <div style="display: inline-block" title="Sent to you: ({{ mail.to }})">
+                        <strong>TO:</strong> {{ mail.to.first_name }} {{ mail.to.last_name }} ({{ mail.to }})
+                    </div>
                         <hr />
                     </div>
 
-                    <div style="padding: 0 30px; min-height: 80px">
+                    <div class="mail-content">
                         {% autoescape off %}
                             {{ mail.content }}
                         {% endautoescape %}
@@ -86,6 +93,11 @@
 
 </form>
 
+<script>
+
+{#    alert("{{ mail.created|localtime }}");#}
+
+</script>
 
     {% endblock %}
 
