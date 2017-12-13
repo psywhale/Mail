@@ -75,7 +75,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
         courses = []
         for usermail in usermails:
             mail = {}
-            dprint(usermail)
+
             route = Route.objects.get(fk_mail=usermail)
             # if message.section not in courses:
             #     courses.append(message.section)
@@ -206,6 +206,19 @@ class OutboxReplyView(ReplyView):
     def test_func(self, user):
         mail = Mail.objects.get(pk=self.kwargs['id'])
         return self.request.user == mail.fk_sender
+
+    def get_initial(self, **kwargs):
+        initial = super(OutboxReplyView, self).get_initial()
+        if Mail.objects.filter(id=self.kwargs['id']).exists():
+            mail_obj = Mail.objects.get(id=self.kwargs['id'])
+            router = Route.objects.get(fk_mail=mail_obj)
+            data = {}
+            data['sendto'] = router.fk_to.id
+            data['termcode'] = mail_obj.termcode
+            data['section'] = mail_obj.section
+            data['subject'] = "RE: "+mail_obj.subject
+            initial = data
+        return initial
 
 
 
