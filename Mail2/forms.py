@@ -10,5 +10,10 @@ class ReplyForm(forms.Form):
     section = forms.CharField(widget=forms.HiddenInput)
 
 
+class ComposeForm(ReplyForm):
+    sendto = forms.ChoiceField(widget=forms.Select(), initial="")
+    subject = forms.CharField(widget=forms.TextInput(), max_length=510)
+
+
 
 
