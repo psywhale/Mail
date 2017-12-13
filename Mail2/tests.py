@@ -334,10 +334,16 @@ class OutboxTest(myTestCase):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/outbox/')
-        exists = True
+        exists = False
         # TODO make it test for view
+        for message in reslogin.context['email']:
+            if message['subject'] == "test subject for Ned":
+                exists = True
 
-        self.assertEqual(reslogin.status_code, 200)
+        self.assertTrue(exists)
+
+
+class OutboxReplyTest(myTestCase):
 
 #------------------------------------------------------
 def allUnique(x):
