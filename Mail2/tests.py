@@ -286,12 +286,58 @@ class ListUnreadTest(myTestCase):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
         data = []
-        data.append({"course": '21231-172s' })
-        data.append({"course": '21232-172s' })
+        data.append({"course": '21231-172s'})
+        data.append({"course": '21232-172s'})
         reslogin = c.post('/listunread/', json.dumps(data), content_type='application/json')
         data = json.loads(reslogin.content)
         self.assertEqual(data["0"]['count'], 1)
         self.assertEqual(data["1"]['count'], 1)
+
+class ComposeTest(myTestCase):
+
+    def test_bad_users_have_no_access(self):
+        c = Client()
+        res = c.get('/compose/')
+
+        self.assertEqual(res.status_code, 403)
+
+    def test_can_login(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/compose')
+        self.assertEqual(reslogin.status_code, 301)
+
+    def test_can_see_compose(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/compose')
+        exists = True
+        # TODO make it test for view
+
+        self.assertEqual(reslogin.status_code, 301)
+
+class OutboxTest(myTestCase):
+
+    def test_bad_users_have_no_access(self):
+        c = Client()
+        res = c.get('/outbox')
+
+        self.assertEqual(res.status_code, 403)
+
+    def test_can_login(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/outbox')
+        self.assertEqual(reslogin.status_code, 301)
+
+    def test_can_see_compose(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/outbox')
+        exists = True
+        # TODO make it test for view
+
+        self.assertEqual(reslogin.status_code, 301)
 
 #------------------------------------------------------
 def allUnique(x):

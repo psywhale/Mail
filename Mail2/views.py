@@ -2,8 +2,8 @@ from django.shortcuts import render, HttpResponse,redirect
 from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
 from django.contrib.auth.models import User
-
-from .forms import ReplyForm
+from Mail2proj.settings import DEBUG
+from .forms import ReplyForm, ComposeForm
 from django.core.exceptions import PermissionDenied
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
 from django.db.models import Q
@@ -55,6 +55,26 @@ class IndexView(LoginRequiredMixin,TemplateView):
         context['email'] = email
         # context['courses'] = courses
         return context
+
+class ComposeView(LoginRequiredMixin,FormView):
+    template_name = 'compose.html'
+    form_class = ComposeForm
+    success_url = "/"
+    raise_exception = True
+
+    def form_valid(self, form):
+        new_msg = Mail()
+        new_route = Route()
+        new_msg.content = self.request.POST['content']
+        new_msg.subject = self.request.POST['subject']
+        new_msg.termcode = self.request.POST['termcode']
+        new_msg.section = self.request.POST['section']
+        new_msg.fk_sender = self.request.user
+        new_msg.save()
+        new_route.fk_to = User.objects.get(id=self.request.POST['sendto'])
+        new_route.fk_mail = new_msg
+        new_route.save()
+        return super(ComposeView, self).form_valid()
 
 
 class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
@@ -113,6 +133,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
             # mail['timestamp'] = m.created.timestamp()
             context['mail'] = mail
         else:
+            # todo raise error
             print("oh noes")
 
         return context
@@ -146,7 +167,6 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
         if Mail.objects.filter(id=request.POST['message_id']).exists():
             message = Mail.objects.get(id=request.POST['message_id'])
             route = Route.objects.get(fk_mail=message)
-            pprint(route)
             if request.user.id == route.fk_to.id:
                 route.read = False
                 route.save()
@@ -228,16 +248,22 @@ class ListUnreadView(View):
 
     def post(self, request):
         courses = json.loads(request.body)
-        print(courses)
         results = {}
+
         for i, entry in enumerate(courses):
             # TODO Figure out why test fails but not real world.
-            course = courses[entry]["course"]
+            # pprint(entry)
+            course = entry["course"]
             section, termcode = course.split("-")
             # print("section={},termcode={}".format(section,termcode));
             mails = Mail.objects.filter(termcode=termcode, section=section)
             unread_count = Route.objects.filter(fk_mail__in=mails, read=False, fk_to=request.user.id).count()
-
             results[i] = {"course": course, "count": unread_count }
-        # print(results)
         return HttpResponse(json.dumps(results),content_type="application/json")
+
+
+# for debugging
+
+def dprint(msg):
+    if DEBUG == True:
+        pprint(msg)
