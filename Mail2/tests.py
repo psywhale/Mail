@@ -304,40 +304,40 @@ class ComposeTest(myTestCase):
     def test_can_login(self):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
-        reslogin = c.get('/compose')
-        self.assertEqual(reslogin.status_code, 301)
+        reslogin = c.get('/compose/')
+        self.assertEqual(reslogin.status_code, 200)
 
     def test_can_see_compose(self):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
-        reslogin = c.get('/compose')
+        reslogin = c.get('/compose/')
         exists = True
         # TODO make it test for view
 
-        self.assertEqual(reslogin.status_code, 301)
+        self.assertEqual(reslogin.status_code, 200)
 
 class OutboxTest(myTestCase):
 
     def test_bad_users_have_no_access(self):
-        c = Client()
-        res = c.get('/outbox')
+        tt = Client()
+        res = tt.get('/outbox/')
 
         self.assertEqual(res.status_code, 403)
 
     def test_can_login(self):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
-        reslogin = c.get('/outbox')
+        reslogin = c.get('/outbox/')
         self.assertEqual(reslogin.status_code, 200)
 
     def test_can_see_outbox(self):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
-        reslogin = c.get('/outbox')
+        reslogin = c.get('/outbox/')
         exists = True
         # TODO make it test for view
 
-        self.assertEqual(reslogin.status_code, 301)
+        self.assertEqual(reslogin.status_code, 200)
 
 #------------------------------------------------------
 def allUnique(x):
