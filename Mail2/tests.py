@@ -345,6 +345,30 @@ class OutboxTest(myTestCase):
 
 class OutboxReplyTest(myTestCase):
 
+    def test_bad_users_have_no_access(self):
+        tt = Client()
+        res = tt.get('/outbox/')
+
+        self.assertEqual(res.status_code, 403)
+
+    def test_can_reply_from_outbox(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        mailmsg = Mail.objects.create(content='Test REPLY',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Frank"),
+                                      termcode="172s",
+                                      section="21231",
+                                      )
+        Route.objects.create(fk_to=User.objects.get(username="Ned"),
+                             read=False,
+                             fk_mail=mailmsg)
+        resout = c.get('/or/'+str(mailmsg.id)+"/")
+        self.assertEqual(resout.status_code, 200)
+
+
+
+
 #------------------------------------------------------
 def allUnique(x):
     seen = set()
