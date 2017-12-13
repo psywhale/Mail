@@ -38,14 +38,17 @@
                     </div>
 
                     <div style="padding:12px" title="Sent by ({{ mail.fk_sender }}) on this date: &nbsp; {{ mail.created }}">
-                        <div style="float:right" >
-                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" title="Sent from: {{ mail.fk_sender }}"></span>&nbsp;&nbsp;&nbsp;{{ mail.created }}
+                        <div style="float:right; margin: 10px 5px 0 0" >
+                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp; {{ mail.created }}
                         </div>
-                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Sent from: {{ mail.fk_sender }}"></span>&nbsp;&nbsp;&nbsp;{{ mail.fk_sender }}
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp; FROM: {{ mail.fk_sender.firstname }} {{ mail.fk_sender.lastname }}
+                    </div>
+                    <div style="padding:12px; margin-top:-18px" title="Sent to you ({{ mail.to }})">
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp; <div style="#border-bottom:1px dotted #ddd; display: inline-block" title="Sent to you: ({{ mail.to }})">TO: {{ mail.to.firstname }} {{ mail.to.lastname }}</div>
                         <hr />
                     </div>
 
-                    <div style="padding: 0 30px; min-height: 100px">
+                    <div style="padding: 0 30px; min-height: 80px">
                         {% autoescape off %}
                             {{ mail.content }}
                         {% endautoescape %}

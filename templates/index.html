@@ -22,7 +22,7 @@
                 &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
             <!-- Split button -->
             <div class="btn-group paginated">
-                <div class="text-muted"><b>1</b>–<b>50</b> of <b>160</b></div>
+                <div class="text-muted"><b>1</b>–<b>50</b> of <b>INFINITY</b></div>
                 <div class="btn-group btn-group-sm">
                     <button type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-chevron-left"></span>
@@ -97,6 +97,7 @@
                             <span class="name {% if message.read == False %} unread-mail{% endif %}"> {{ message.from.first_name }} {{ message.from.last_name }}</span>
                             <span class="section {{ message.section }} {% if message.read == False %} unread-mail{% endif %}">{{ message.section }}</span>
                             <span class="subject text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
+
                             <span class="date badge {% if message.read == False %} unread-mail{% endif %}">
                                 {% now "Y-m-d" as todays_date %}
                                 {% if todays_date >= message.date|date:"Y-m-d" %}
@@ -105,13 +106,14 @@
                                     {{ message.timestamp }} Today
                                 {% endif %}
                             </span>
-                            <span class="pull-right">
                                 {% if message.has_attachment %}
-                                    <span class="glyphicon glyphicon-paperclip" style="margin: 5px 14px 0 0 !important;">
+                                    <span class="glyphicon glyphicon-paperclip">
                                 {% endif %}
-                            </span>
+{#                            <span class="pull-right">#}
+{#                            </span>#}
                         </span>
                         </a>
+
                         {% endfor %}
 
 

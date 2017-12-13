@@ -248,12 +248,12 @@ class ListUnreadView(View):
 
     def post(self, request):
         courses = json.loads(request.body)
+        # dprint(courses)
         results = {}
 
         for i, entry in enumerate(courses):
             # TODO Figure out why test fails but not real world.
-            # pprint(entry)
-            course = entry["course"]
+            course =courses[entry]['course']
             section, termcode = course.split("-")
             # print("section={},termcode={}".format(section,termcode));
             mails = Mail.objects.filter(termcode=termcode, section=section)

@@ -43,14 +43,16 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 .paginated { margin: 7px 0 0}
 .main-mail-section { background-color: white }
 .tab-content .badge { background: transparent; color: inherit; font-weight: inherit }
-.nav .badge { z-index: 999; position: absolute; top: 6px; left: -20px; }
+.nav .badge { z-index: 999; position: absolute; top: 6px; left: -20px; background-color: #006300; }
 .nav .badge div { text-align:center }
 .name, .section, .subject { width: 150px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: -5px; }
 .section { width: 58px; border-radius: 8px; background-color: aquamarine; padding: 2px 6px; }
-.subject { width: 415px }
+.subject { width: 52%; #width: 415px }
+.tab-pane .list-group .glyphicon-paperclip { position: absolute; top:2px; right: -2px; border-radius: 8px; background-color: #d6d6d6; padding: 2px 3px; }
 .date { width: 55px; margin: 6px 12px 6px -5px; }
 /*  REPLY VIEW */
-#id_content { width:98% !important; height: 50px }
+#id_content { width:98% !important; height: 50px; border-radius: 8px; padding:4px 12px }
+input#id_subject { width:60%; border-radius: 8px; padding:6px 12px }
 .cke_editable {  }
 .nav-stacked>li+li {
     overflow: inherit;
@@ -79,8 +81,8 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 }
 /* COMPOSE SECTION*/
 .compose-section-subject { font-weight: 900; font-size: 18px; border-bottom: 1px solid #ccc; padding: 0 12px 12px; margin-top: 15px}
-
-
+.compose #id_content { width:98% !important; height: 80px }
+.cke, .cke_top, .cke_inner, .cke_bottom, .cke_wysiwyg { border-radius: 8px; }
 
 
 a {
@@ -149,7 +151,9 @@ tr.hover {
     ul.nav.nav-pills.nav-stacked {
         width: 100%;
     }
-    .subject { width: 100% }
+    .subject { width: 22% }
+    .name { max-width: 20%; }
+    .tab-content .badge { #float:none }
     .activities {
         margin: -10px auto 35px !important
     }
@@ -172,7 +176,7 @@ tr.hover {
     /*div.row:first-of-type {*/
         /*width: 76% !important;*/
     /*}*/
-    .subject { width: 180px }
+    .subject { width: 34% }
     .activities {
         margin: -10px auto 35px !important
     }

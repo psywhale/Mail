@@ -34,26 +34,22 @@
                 {% csrf_token %}
 
                     <div class="compose-section-subject" title="Subject">
-                        <input id="id_subject" type="text" placeholder="Compose Subject Line"/>
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                        <select name="instructor" id="id_instructor">
+                            <option value disabled selected> &nbsp; --- Select an Instructor --- &nbsp; </option>
+                            <div id="selected_instructors"></div>
+                        </select>
                     </div>
 
-                    <div style="padding:12px">
+                    <div style="padding:24px">
                         <div style="float:right" >
-                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;DATE?
+                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;<span class="current-date"></span>
                         </div>
-                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;SEND TO:
-                        <hr />
+                        <input id="id_subject" type="text" placeholder="Subject Line..." />
                     </div>
-
-                    <div style="padding: 0 30px; min-height: 100px">
-                        {% autoescape off %}
-                            {{ mail.content }}
-                        {% endautoescape %}
-                    </div>
-                    <br />
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-lg-12 nopadding">
+                            <div class="col-lg-12 nopadding compose">
 
                                 {{ form.content }}
 
