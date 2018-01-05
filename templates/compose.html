@@ -32,43 +32,58 @@
 
                 <form action='.'  method="post">
                 {% csrf_token %}
+                <input type="hidden" value="{{ sn }}" name="termcode" id="id_termcode">
+                <input type="hidden" value="{{ sn }}" name="section" id="id_section">
 
-                    <div class="compose-section-subject" title="Course List">
+                    <div class="compose-section-subject" title="Course List" style="padding-top: 10px">
                         <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
                         <select name="instructor" id="id_course_list">
-                            <option value disabled selected> &nbsp; --- Select a Course --- &nbsp; </option>
+                            <option value  selected> &nbsp; --- Select a Course --- &nbsp; </option>
                             <div id="selected_instructors"></div>
                         </select>
                     </div>
 
-                    <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none">
+                    <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none;">
                         <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                        <select name="instructor" id="id_student_list">
+                        <select name="sendto" id="id_sendto">
                             <option value disabled selected> &nbsp; --- Select a Student --- &nbsp; </option>
                             <div id="selected_students"></div>
                         </select>
                     </div>
 
-                    <div style="padding:24px">
+                    <div class="compose-section-subject" >
                         <div style="float:right" >
-                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;<span class="current-date"></span>
+                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                            <span class="current-date"></span>
                         </div>
-                        <input id="id_subject" type="text" placeholder="Subject Line..." />
+                        <span class="glyphicon glyphicon-share-alt" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                        <input id="id_subject" name='subject' type="text" placeholder="Subject Line..." />
                     </div>
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-12 nopadding compose">
 
-                                {{ form.content }}
+                                {% autoescape off %}
+                                    {{ form.content }}
+                                {% endautoescape %}
 
                             </div>
                         </div>
                         <br />
-                        <button class="btn btn-success sendmailbutton" style="float:right;display:none">
+                        <button class="btn btn-success sendmailbutton" style="float:right;">
                             <span class="glyphicon glyphicon-send" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
                             Send Message
                         </button>
                     </div>
+                {% if form.errors %}
+                    {% for error in errors %}
+                        {{ error }}
+                    {% endfor %}
+                {% endif %}
+{#                {% for hidden in form.hidden_fields %}#}
+{#                    {{ hidden }}#}
+{#                {% endfor %}#}
+                </form>
                 </div>
             </div>
 
@@ -78,24 +93,28 @@
         </div>
     </div>
 </div>
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
 
-</form>
 
 {#<script src="https://cdn.ckeditor.com/4.7.3/full/ckeditor.js"></script>#}
     <script src="https://cdn.ckeditor.com/4.8.0/full-all/ckeditor.js"></script>
 
 
     <script type="application/javascript">
+
 $( document ).ready(
-    listClasses(),
-    listStudents()
+    {% if sn == 'False' %}
+        listClasses(),
+    {% else %}
+        listStudents({{ sn }})
+    {% endif %}
+
 );
+
+$(document).on('change', '#id_course_list', listStudents);
 
 
 function listClasses(){
+
        var termCode = calculateCurrentTermCode();
        $.ajax({
            url: 'https://moodle.wosc.edu/wosc/rest.php',
@@ -114,6 +133,10 @@ function listClasses(){
                   }
                   catch(e){}
                });
+               {% if sn != 'False' %}
+                    $('#id_course_list').val();
+                    $('#show_students_div').slideDown();
+               {% endif %}
            }
        })
 }
@@ -121,18 +144,31 @@ function listClasses(){
 
 
 function listStudents(){
-    console.log('listing students:');
-       $.ajax({
-           url: 'https://moodle.wosc.edu/wosc/rest.php',
-           data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_members', section: '{{ sn }}'},
-           jsonp: 'callback',
-           dataType: 'jsonp',
-           success: function (response) {
-               console.log('success!!!');
-               console.log(response);
-           }
-       })
+    sn = $('#id_course_list').val();
+    $("#id_termcode").val(sn.split("-")[1]);
+    $("#id_section").val(sn.split("-")[0]);
+    if(sn != '')
+    {
+        $.ajax({
+            url: 'https://moodle.wosc.edu/wosc/rest.php',
+            data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_members', section: sn,},
+            jsonp: 'callback',
+            dataType: 'jsonp',
+            success: function (response) {
+                jQuery.each(response, function (index, data) {
+                    try {
+                        $('#id_sendto').append($('<option></option> ')
+                            .attr("value", data.username)
+                            .text(data.username));
+                    }
+                    catch (e) {
+                    }
+                });
+            }
+        })
+    }
 }
+
 
 
 $('#id_course_list').change(function(){
@@ -145,7 +181,14 @@ $('#id_course_list').change(function(){
 		customConfig: '/static/ckeditor/config.js'
 	} );
 
-    </script>
+	MathJax.Hub.Config({
+  PreviewHTML: {
+    scale: 200
+  }
+});
+
+
+</script>
 
     {% endblock %}
 
