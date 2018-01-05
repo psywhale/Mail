@@ -126,7 +126,7 @@ class ComposeView(LoginRequiredMixin, FormView):
 
         context = super(ComposeView, self).get_context_data(**kwargs)
 
-        context = {'sn':self.kwargs['sn']}
+        context['sn'] = self.kwargs['sn']
 
         return context
 
