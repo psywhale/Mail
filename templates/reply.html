@@ -65,7 +65,7 @@
                         <div class="row">
                             <div class="col-lg-12 nopadding">
                                 {% if message.has_attachment %}
-                                    <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!">
+                                    <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!"></span>
                                 {% endif %}
                                 <hr />
                                 <div style="font-size: 11px; font-style: italic; padding:8px 8px 0">REPLY TO: &nbsp; {{ mail.to.first_name }} {{ mail.to.last_name }}</div>
@@ -73,7 +73,8 @@
                             </div>
                         </div>
                         <br />
-                        <button class="btn btn-success sendmailbutton" style="float:right;display:none">
+                        <a href="http://www.wiris.com/editor/demo/en/mathml-latex" target="_blank">Math Tool Helper</a>
+                        <button class="btn btn-success sendmailbutton" style="float:right;#display:none">
                             <span class="glyphicon glyphicon-send" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
                             Send Message
                         </button>
@@ -92,8 +93,16 @@
         {% endfor %}
 
 </form>
-
+    <!--  ### CKEditor CSS & JS ### -->
+{#	<script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>#}
+{#    <script src="/static/ckeditor/ckeditor.js"></script>#}
+{#    <script src="/static/ckeditor_full/ckeditor.js"></script>#}
+    <script src="https://cdn.ckeditor.com/4.8.0/full-all/ckeditor.js"></script>
 <script>
+
+	CKEDITOR.replace( 'id_content', {
+		customConfig: '/static/ckeditor/config.js'
+	} );
 
 {#    alert("{{ mail.created|localtime }}");#}
 

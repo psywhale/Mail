@@ -19,6 +19,9 @@
     <link href="/static/css/select2.min.css" rel="stylesheet" media="screen">
     <!-- Custom styles for this template -->
     <link href="/static/css/!TEMPLATE.css" rel="stylesheet" media="screen">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/static/js/custom.js" type="text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -52,19 +55,15 @@
 
 </div><!--/container-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="/static/js/custom.js" type="text/javascript"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<!-- ### CKEditor CSS & JS ### -->
-	<script src="https://cdn.ckeditor.com/4.7.3/basic/ckeditor.js"></script>
+
 <!-- ### FOOTABLE CSS & JS ### -->
-<link href="/static/css/footable.core.css" rel="stylesheet" type="text/css"/>
-<link href="/static/css/footable.standalone.css" rel="stylesheet" type="text/css"/>
-<script src="/static/js/footable.js" type="text/javascript"></script>
-<script src="/static/js/footable.sort.js" type="text/javascript"></script>
-<script src="/static/js/footable.filter.js" type="text/javascript"></script>
-<script src="/static/js/image-tooltip.js" type="text/javascript"></script>
-<script src="/static/js/jquery.maskedinput.min.js"></script>
+{#<link href="/static/css/footable.core.css" rel="stylesheet" type="text/css"/>#}
+{#<link href="/static/css/footable.standalone.css" rel="stylesheet" type="text/css"/>#}
+{#<script src="/static/js/footable.js" type="text/javascript"></script>#}
+{#<script src="/static/js/footable.sort.js" type="text/javascript"></script>#}
+{#<script src="/static/js/footable.filter.js" type="text/javascript"></script>#}
+{#<script src="/static/js/image-tooltip.js" type="text/javascript"></script>#}
+{#<script src="/static/js/jquery.maskedinput.min.js"></script>#}
 <script type="text/javascript">
 
 {#    ------- THIS IS AJAX YO --------#}
@@ -111,50 +110,10 @@ function getUnreadBadges(){
     });
 }
 
+$('#{{ mail.section }}-{{ mail.termcode }}').addClass('active-course');
 
-function getCourses(){
-    $.ajax({
-        url: 'https://moodle.wosc.edu/wosc/rest.php',
-        data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_my_courses'},
-        jsonp: 'callback',
-        dataType: 'jsonp',
-        success: function(response) {
-{#            console.log(response);#}
-            jQuery.each(response, function(id, course){
-{#                console.log(course.id);#}
-{#                console.log(course.fullname);#}
-{#                console.log(course);#}
-                $('#all-courses').html($('#all-courses').html() + course.fullname);
-                var termCode = calculateCurrentTermCode();
-                var info = course.shortname.split("-");
-                try {
-                    myTC = info[1];
-                    if (termCode == info[1].toLowerCase()) {
-                        $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list ' + course.shortname + '" id="' + course.shortname + '" title="'+ course.fullname +'"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
-                    }
-                    else {
-                        $('#past-courses').html($('#past-courses').html() + '<li class="past-course-list"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
-                    }
-                    var colors = ['red','green','blue','yellow'];
-                    var sectionNum = course.shortname;
-                }
-                catch(e){
-                    return;
-                }
-                if ("{{ mail.section }}-{{ mail.termcode }}" == course.shortname ){
-                    $('.current-course').html(course.fullname);
-                }
-                $('#{{ mail.section }}-{{ mail.termcode }}').addClass('active-course');
 
-            });
-            getUnreadBadges();
-            addActiveCourse();
-        }
-
-    });
-
-    return;
-}
+$('.main-mail-section').css("height", $(document).height());
 
 
 function addActiveCourse() {
@@ -166,37 +125,6 @@ var sections = window.location.pathname.split('/');
 }
 
 
-function addComposeOptionsForInstructors() {
-
-{#    <option value="value1">Value 1</option>#}
-}
-
-
-function calculateCurrentTermCode(){
-	var date = new Date();
-	var month = date.getMonth() + 1;
-	var day = date.getDate();
-
-	if((month >= 1) && (month < 5)){
-		var year = date.getYear() - 101;
-        var semester = "3s";
-     }
-	if((month > 5) && (month < 8)){
-		var year = date.getYear() - 100;
-		var semester = "1s";
-	}
-	if((month == 5) && (day >= 20)){
-		var year = date.getYear() - 100;
-		var semester = "1s";
-	}
-	if((month >= 8) && (month <= 12)){
-		var year = date.getYear() - 100;
-		var semester = "2s";
-	}
-
-	return year+semester;
-}
-
 
 $('#archive-btn').click(function () {
     $('form#archive').submit();
@@ -204,6 +132,27 @@ $('#archive-btn').click(function () {
 $('#munread-btn').click(function () {
     $('form#munread').submit();
 });
+
+
+// {#    ------- THIS IS MAIL (Reply, Compose, View) --------#}
+
+    $(".mail-content a").attr("target","_blank");
+
+    $( ".reply_editor" ).attr("placeholder", "Click here to Reply...");
+{#    $( ".reply_editor" ).delay(800).click(function() {#}
+{#        CKEDITOR.replace( 'id_content', {#}
+{#            on:#}
+{#                {'instanceReady':function(evt){#}
+{#                    CKEDITOR.instances.id_content.focus();#}
+{#                    config.extraPlugins = 'mathjax';#}
+{#                }#}
+{#                }#}
+{##}
+{#        });#}
+{#        $( ".sendmailbutton" ).show();#}
+{#    });#}
+    $( ".compose .reply_editor" ).attr("placeholder", "Click here to Compose...");
+    $("#id_instructor").prop("selectedIndex", 0);
 
 </script>
 

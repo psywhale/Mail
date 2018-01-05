@@ -2,23 +2,7 @@
     var d = new Date();
     var n = d.getTimezoneOffset();
 
-// {#    ------- THIS IS MAIL (Reply, Compose, View) --------#}
-    $('.main-mail-section').css("height", $(document).height());
-    $(".mail-content a").attr("target","_blank");
 
-    $( ".reply_editor" ).attr("placeholder", "Click here to Reply...");
-    $( ".reply_editor" ).delay(800).click(function() {
-        CKEDITOR.replace( 'id_content', {
-            on:
-                {'instanceReady':function(evt){
-                    CKEDITOR.instances.id_content.focus();
-                }
-                }
-        });
-        $( ".sendmailbutton" ).show();
-    });
-    $( ".compose .reply_editor" ).attr("placeholder", "Click here to Compose...");
-    $("#id_instructor").prop("selectedIndex", 0);
 
 
 // {#    ------- THIS IS BUTTONTS & MAIL FUNCTIONS --------#}
@@ -28,19 +12,19 @@
 
 
 // {#    ------- THIS IS FOOTABLES --------#}
-    $(function () {
-        $('.footable').footable();
-        addRowToggle: false
-    });
-
-    $(function () {
-        $('table').footable();
-        $('table').trigger('footable_clear_filter');
-        $('.toggle').click(function () {
-            $('.toggle').toggle();
-            $('table').trigger($(this).data('trigger')).trigger('footable_redraw');
-        });
-    });
+//     $(function () {
+//         $('.footable').footable();
+//         addRowToggle: false
+//     });
+//
+//     $(function () {
+//         $('table').footable();
+//         $('table').trigger('footable_clear_filter');
+//         $('.toggle').click(function () {
+//             $('.toggle').toggle();
+//             $('table').trigger($(this).data('trigger')).trigger('footable_redraw');
+//         });
+//     });
 
 
 
@@ -104,4 +88,33 @@ function calculateCurrentTermCode(){
 
   });
 
-
+function getCourses(){
+    $.ajax({
+        url: 'https://moodle.wosc.edu/wosc/rest.php',
+        data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_my_courses'},
+        jsonp: 'callback',
+        dataType: 'jsonp',
+        success: function (response) {
+            jQuery.each(response, function (id, course) {
+                $('#all-courses').html($('#all-courses').html() + course.fullname);
+                var termCode = calculateCurrentTermCode();
+                var info = course.shortname.split("-");
+                try {
+                    myTC = info[1];
+                    if (termCode == info[1].toLowerCase()) {
+                        $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list ' + course.shortname + '" id="' + course.shortname + '" title="' + course.fullname + '"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
+                    }
+                    else {
+                        $('#past-courses').html($('#past-courses').html() + '<li class="past-course-list"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
+                    }
+                    var colors = ['red', 'green', 'blue', 'yellow'];
+                    var sectionNum = course.shortname;
+                }
+                catch (e) {
+                }
+            });
+            getUnreadBadges();
+            addActiveCourse();
+        }
+    });
+}
