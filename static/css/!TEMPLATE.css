@@ -87,7 +87,7 @@ input#id_subject { width:60%; border-radius: 8px; padding:6px 12px }
 .compose-section-subject { font-weight: 900; font-size: 18px; border-bottom: 1px solid #ccc; padding: 0 12px 12px; margin-top: 15px}
 .compose #id_content { width:98% !important; height: 80px }
 .cke, .cke_top, .cke_inner, .cke_bottom, .cke_wysiwyg { border-radius: 8px; }
-
+#id_course_list { max-width: 90%; }
 
 a {
     color: #005600;
@@ -201,6 +201,13 @@ tr.hover {
 
     .supervisor-text:after {
         content: "Supervisor"
+    }
+}
+
+@media (min-width: 1600px) {
+    .container-fluid {
+        max-width: 1850px;
+        margin: 0 auto;
     }
 }
 

@@ -33,11 +33,19 @@
                 <form action='.'  method="post">
                 {% csrf_token %}
 
-                    <div class="compose-section-subject" title="Subject">
-                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                        <select name="instructor" id="id_instructor">
+                    <div class="compose-section-subject" title="Course List">
+                        <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                        <select name="instructor" id="id_course_list">
                             <option value disabled selected> &nbsp; --- Select a Course --- &nbsp; </option>
                             <div id="selected_instructors"></div>
+                        </select>
+                    </div>
+
+                    <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none">
+                        <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                        <select name="instructor" id="id_student_list">
+                            <option value disabled selected> &nbsp; --- Select a Student --- &nbsp; </option>
+                            <div id="selected_students"></div>
                         </select>
                     </div>
 
@@ -53,7 +61,6 @@
 
                                 {{ form.content }}
 
-                                <!--<textarea id="editor1" class="reply_editor"></textarea>-->
                             </div>
                         </div>
                         <br />
@@ -77,6 +84,68 @@
 
 </form>
 
+{#<script src="https://cdn.ckeditor.com/4.7.3/full/ckeditor.js"></script>#}
+    <script src="https://cdn.ckeditor.com/4.8.0/full-all/ckeditor.js"></script>
+
+
+    <script type="application/javascript">
+$( document ).ready(
+    listClasses(),
+    listStudents()
+);
+
+
+function listClasses(){
+       var termCode = calculateCurrentTermCode();
+       $.ajax({
+           url: 'https://moodle.wosc.edu/wosc/rest.php',
+           data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_my_courses'},
+           jsonp: 'callback',
+           dataType: 'jsonp',
+           success: function (response) {
+               jQuery.each(response, function (id, course) {
+                  var info = course.shortname.split("-");
+                  try {
+                      if (termCode == info[1].toLowerCase()) {
+                          $('#id_course_list').append($('<option></option> ')
+                              .attr("value", course.shortname)
+                              .text(course.fullname));
+                      }
+                  }
+                  catch(e){}
+               });
+           }
+       })
+}
+
+
+
+function listStudents(){
+    console.log('listing students:');
+       $.ajax({
+           url: 'https://moodle.wosc.edu/wosc/rest.php',
+           data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_members', section: '{{ sn }}'},
+           jsonp: 'callback',
+           dataType: 'jsonp',
+           success: function (response) {
+               console.log('success!!!');
+               console.log(response);
+           }
+       })
+}
+
+
+$('#id_course_list').change(function(){
+    var myID = $(this).val();
+    $('#show_students_div').slideDown();
+});
+
+
+	CKEDITOR.replace( 'id_content', {
+		customConfig: '/static/ckeditor/config.js'
+	} );
+
+    </script>
 
     {% endblock %}
 
