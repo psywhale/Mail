@@ -120,7 +120,7 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_route.fk_to = User.objects.get(id=self.request.POST['sendto'])
         new_route.fk_mail = new_msg
         new_route.save()
-        return super(ComposeView, self).form_valid()
+        return super(ComposeView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
 
