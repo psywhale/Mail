@@ -125,8 +125,10 @@ class ComposeView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
 
         context = super(ComposeView, self).get_context_data(**kwargs)
-
-        context['sn'] = self.kwargs['sn']
+        if 'sn' in self.kwargs:
+            context['sn'] = self.kwargs['sn']
+        else:
+            context['sn'] = 'False'
 
         return context
 
@@ -280,7 +282,13 @@ class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
 
         return context
 
+
+class AuditViewClass(AuditView):
     pass
+
+class AuditViewUser(AuditView):
+    pass
+
 
 
 class LabelView(LoginRequiredMixin, TemplateView):
