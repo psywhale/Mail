@@ -85,6 +85,19 @@
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
                     <div class="list-group">
+                    {% csrf_token %}
+
+                    {% if "/user" in request.path %}
+                        {% include 'audit_form_user.html' %}
+                    {% elif "/class" in request.path %}
+                        {% include 'audit_form_class.html' %}
+                    {% else %}
+                        <div>Choose type of search on the left</div>
+                    {% endif %}
+
+
+
+
 
                         {% for message in email|dictsortreversed:"timestamp" %}
 {#                    {% for message in email %}#}

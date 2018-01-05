@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
 from django.contrib.auth.models import User
 from Mail2proj.settings import DEBUG
-from .forms import ReplyForm, ComposeForm
+from .forms import ReplyForm, ComposeForm, AuditClassForm, AuditUserForm
 from django.core.exceptions import PermissionDenied
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
 from django.db.models import Q
@@ -283,11 +283,26 @@ class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
         return context
 
 
-class AuditViewClass(AuditView):
-    pass
+class AuditViewClass(AuditView, FormView):
+    form_class = AuditClassForm
 
-class AuditViewUser(AuditView):
-    pass
+    def get_initial(self, **kwargs):
+        initial = super(AuditViewClass, self).get_initial()
+        data = []
+        dataqs = Mail.objects.values('section','termcode').annotate().distinct('section','termcode')
+        for row in dataqs:
+            data.append(row["section"] + "-" + row["termcode"])
+        dprint(data)
+        initial = data
+        return initial
+
+
+class AuditViewUser(AuditView, FormView):
+    form_class = AuditUserForm
+
+    def get_initial(self, **kwargs):
+        data = super(AuditViewUser, self).get_initial()
+        return data
 
 
 

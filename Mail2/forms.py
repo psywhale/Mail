@@ -11,9 +11,13 @@ class ReplyForm(forms.Form):
 
 
 class ComposeForm(ReplyForm):
-    sendto = forms.ChoiceField(widget=forms.Select(), initial="")
+    sendto = forms.CharField(widget=forms.Select(), initial="")
     subject = forms.CharField(widget=forms.TextInput(), max_length=510)
 
+class AuditClassForm(forms.Form):
+    audit_class = forms.ChoiceField(widget=forms.Select(), initial="")
 
+class AuditUserForm(forms.Form):
+    audit_user = forms.ChoiceField(widget=forms.Select(), initial="")
 
 
