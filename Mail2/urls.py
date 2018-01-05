@@ -11,6 +11,8 @@ urlpatterns= [
     url(r'^audit/$', ListUnreadView.as_view(), name='listunread'),
     url(r'^archive/$', ArchiveMailView.as_view(), name='archivemail'),
     url(r'^munread/$', MarkMailUnreadView.as_view(), name='markunread'),
+    url(r'^compose/(?P<sn>[0-9Cc]{5}\-[0-9]{3}[sS]+)/$', ComposeView.as_view(), name='compose'),
+    #TODO: Remove later
     url(r'^compose/$', ComposeView.as_view(), name='compose'),
     url(r'^outbox/$', OutboxView.as_view(), name='outbox'),
     url(r'^or/(?P<id>[0-9]+)/$', OutboxReplyView.as_view(), name='outboxreply'),
