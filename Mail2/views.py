@@ -117,7 +117,7 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_msg.section = self.request.POST['section']
         new_msg.fk_sender = self.request.user
         new_msg.save()
-        new_route.fk_to = User.objects.get(id=self.request.POST['sendto'])
+        new_route.fk_to = User.objects.get(username=self.request.POST['sendto'])
         new_route.fk_mail = new_msg
         new_route.save()
         return super(ComposeView, self).form_valid(form)
@@ -289,11 +289,12 @@ class AuditViewClass(AuditView, FormView):
     def get_initial(self, **kwargs):
         initial = super(AuditViewClass, self).get_initial()
         data = []
-        dataqs = Mail.objects.values('section','termcode').annotate().distinct('section','termcode')
+        dataqs = Mail.objects.values('section','termcode').annotate().distinct()
         for row in dataqs:
             data.append(row["section"] + "-" + row["termcode"])
         dprint(data)
-        initial = data
+        initial["audit_class"] = data
+        dprint(initial)
         return initial
 
 
