@@ -122,6 +122,15 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_route.save()
         return super(ComposeView, self).form_valid()
 
+    def get_context_data(self, **kwargs):
+
+        context = super(ComposeView, self).get_context_data(**kwargs)
+
+        context = {'sn':self.kwargs['sn']}
+
+        return context
+
+
 
 class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
