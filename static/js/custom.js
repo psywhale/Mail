@@ -28,7 +28,7 @@
 
 
 
-// {#    ------- THIS IS CURRENT TIME CALC --------#}
+// {#    ------- THIS IS CURRENT TERMCODE --------#}
 function calculateCurrentTermCode(){
 	var date = new Date();
 	var month = date.getMonth() + 1;

@@ -6,6 +6,7 @@
             <!-- Single button -->
     {% if "/or/" in request.path %} <a type="button" class="btn btn-default sentmailbox-indicator2" href='{% url 'outbox' %}'>SENT MAILBOX</a>{% endif %}
     {% if not "/or/" in request.path %}
+        {% if not "/compose/" in request.path %}
             <form action="{% url 'archivemail' %}" method="POST" id="archive" style="display:inline-block">
                 {% csrf_token %}
                 <input value="{{ mail.id }}" name="message_id" type="hidden">
@@ -20,6 +21,7 @@
                     <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;&nbsp;Mark as Un-Read
                 </a>
             </form>
+        {% endif %}
     {% endif %}
             <div class="input-group" style="width: 33%; float: right;">
                 <input type="text" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">

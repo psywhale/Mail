@@ -36,7 +36,7 @@
                 <form action='.'  method="post">
                 {% csrf_token %}
 
-                    <div class="compose-section-subject" title="Subject">
+                    <div class="reply-section-subject" title="Subject">
                         {{ mail.subject }} &nbsp; <span class="label label-default" style="font-size:11px" title="Course Section Group">{{ mail.section }}</span>
                     </div>
 
@@ -98,11 +98,18 @@
 {#    <script src="/static/ckeditor/ckeditor.js"></script>#}
 {#    <script src="/static/ckeditor_full/ckeditor.js"></script>#}
     <script src="https://cdn.ckeditor.com/4.8.0/full-all/ckeditor.js"></script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <script>
 
 	CKEDITOR.replace( 'id_content', {
 		customConfig: '/static/ckeditor/config.js'
-	} );
+	});
+
+MathJax.Hub.Config({
+  PreviewHTML: {
+    scale: 200
+  }
+});
 
 {#    alert("{{ mail.created|localtime }}");#}
 
