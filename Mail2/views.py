@@ -53,6 +53,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
                     mail['has_attachment'] = False
                 email.append(mail)
         context['email'] = email
+        context['usertype'] = self.request.session['usertype']
         # context['courses'] = courses
         return context
 
