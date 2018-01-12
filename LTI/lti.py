@@ -69,7 +69,7 @@ class LtiLaunch(View):
 
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         # If you want to add them to a special group, here is the pace to do it.
-        user_group = Group.objects.get(name='subscriber')
-        user.groups.add(user_group)
-        user.save()
+        # user_group = Group.objects.get(name='subscriber')
+        # user.groups.add(user_group)
+        # user.save()
         return user
