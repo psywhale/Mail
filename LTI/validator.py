@@ -1,6 +1,6 @@
 from oauthlib.oauth2 import RequestValidator
 from oauth2 import SignatureMethod_HMAC_SHA1
-from CampusClaxon.settings import LTI
+from Mail2proj.settings import LTI
 
 class MyRequestValidator(RequestValidator):
 
