@@ -5,7 +5,7 @@ from .views import IndexView,ReplyView, \
     AuditViewUser, Launch
 
 urlpatterns= [
-    url(r'^$',IndexView.as_view(), name='IndexView'),
+    url(r'^$',IndexView.as_view(), name=['IndexView','index']),
     url(r'^reply/(?P<id>[0-9]+)/$', ReplyView.as_view(), name='reply'),
     url(r'^label/(?P<sn>[0-9Cc]{5}\-[0-9]{3}[sS]+)/$', LabelView.as_view(), name='label'),
     url(r'^listunread/$', ListUnreadView.as_view(), name='listunread'),
