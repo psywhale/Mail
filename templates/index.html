@@ -89,6 +89,7 @@
 
                     {% if not email %}
                         <a href="#" class="list-group-item">
+                            <h2>Welcome to Course Mail2</h2>
                             Lorem ipsum dolor sit amet, pro nullam facilisi an, per iuvaret conclusionemque te. Te audire dolorem nominavi sea, ut ubique dignissim intellegam per. His cu noluisse accusata quaerendum. Molestie deseruisse et eam. Ad accumsan recteque mediocritatem eum, qui aeterno consequat te, ut sed omnis dolore. At vix clita atomorum, at nec mazim nihil liberavisse. Scripta labores quaestio te nec. Mel an sapientem evertitur, est quis maluisset definiebas ut. Purto audiam omittam pro te, ad ius voluptua deserunt constituto. Vix natum regione detracto no, pri ne lorem vocibus volutpat. Errem ceteros duo te. Usu ei nulla platonem accommodare. Ne tollit malorum per, eius mundi ornatus per cu. Qui no delectus salutatus conclusionemque, ei suscipiantur signiferumque duo. Unum rationibus suscipiantur cu mea, vel ei paulo inimicus. Quo cu putent equidem dolorum. Quis saepe luptatum vix et, mea ad tempor malorum menandri. Nullam everti intellegebat nec ne. Vix torquatos maiestatis no. Ex sonet sadipscing cum, probo erant detracto ex quo. Solum dolorem ex cum. Paulo decore nostrum usu ut. Feugait constituam pri eu, graeci semper doctus ei mea, debet dictas cum id. Ea quas intellegam vix, euismod fastidii electram an sed. Eu consulatu posidonium scribentur vix, id clita essent veritus qui.
                         </a>
                     {% endif %}
@@ -103,7 +104,7 @@
                                 </label>
                             </div>
                             <span class="name"> {{ message.from.first_name }} {{ message.from.last_name }}</span>
-                            <span class="section s{{ message.section }}">{{ message.section }}</span>
+                            <span class="{% cycle 'red' 'green' 'blue' %} section s{{ message.section }}">{{ message.section }}</span>
                             <span class="subject text-muted"> &nbsp; {{ message.subject }}</span>
 
                             <span class="date badge">

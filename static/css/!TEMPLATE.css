@@ -95,6 +95,12 @@ input#id_subject { width:60%; border-radius: 8px; padding:6px 12px }
 select#id_sendto option { font-size: 20px; }
 /*select#id_sendto option:first-of-type { font-size: 18px; }*/
 
+
+
+
+.red { background-color:indianred }
+.blue { background-color:cornflowerblue }
+green { background-color:aquamarine }
 a {
     color: #005600;
     border-bottom: 1px dotted #777;
