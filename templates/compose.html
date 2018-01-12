@@ -43,22 +43,22 @@
                                 <div id="selected_instructors"></div>
                             </select>
                         </div>
-                    {% else %}
-                        <div class="compose-section-subject" title="Course List" style="padding-top: 10px">
-                            <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                            <select name="instructor" id="id_course_list" disabled>
-                                <option value="{{ sn }}" disabled selected> &nbsp; --- {{ sn }} --- &nbsp; </option>
-                                <div id="selected_instructors"></div>
-                            </select>
-                        </div>
-                        <div class="compose-section-subject" id="show_students_div" title="Students in selected course:">
+
+                        <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:">
                             <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                            <select name="sendto" id="id_sendto" multiple>
-    {#                            <option value disabled selected> &nbsp; --- Select a Student --- &nbsp; </option>#}
-                                <div id="selected_students"></div>
-                            </select>
-                            <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>
+                            <input type="text" name="INSERT INSTRUCTOR NAME" id="id_instructor" class="compose_inputs" value="INSERT INSTRUCTOR NAME" disabled />
                         </div>
+                    {% else %}
+                        <div class="compose-section-subject" title="Course" style="padding-top: 10px">
+                            <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                            <input type="text" name="{{ sn }}" id="id_course" class="compose_inputs" value="{{ sn }}" disabled />
+                        </div>
+                        {% if session.usertype == "student" %}
+                            <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:">
+                                <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                                <input type="text" name="INSERT INSTRUCTOR NAME" id="id_instructor" class="compose_inputs" value="INSERT INSTRUCTOR NAME" disabled />
+                            </div>
+                        {% endif %}
                     {% endif %}
 
                     {% if session.usertype == "instructor" %}
@@ -69,8 +69,6 @@
                                 <div id="selected_students"></div>
                             </select>
                             <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>
-{#                                <br />#}
-{#                                <p style="font-style: italic">(We recommend using a Forum post instead of Select All)</p>#}
                         </div>
                     {% elif session.usertype == "student" %}
                         <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:" style="display:none;">
