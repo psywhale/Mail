@@ -387,12 +387,13 @@ class Launch(LtiLaunch):
             # Get the user or add them if they do not currently exist
             user = self.get_or_add_user(tp)
             params = tp.to_params()
+            m = {}
 
             # get the course number from the course title if this is a Moodle integration
-            m = re.search("\[[(a-zA-Z0-9)]+\]", params['context_title'])
+            #m = re.search("\[[(a-zA-Z0-9)]+\]", params['context_title'])
             if m:
                 self.request.session['refering_course'] = m
-                self.request.session['refering_course_id'] = params['context_id']
+            self.request.session['refering_course_id'] = params['context_id']
             if self.is_instructor(tp):
                 login(request, user)
                 self.request.session['usertype'] = 'instructor'
