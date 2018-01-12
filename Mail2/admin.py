@@ -10,6 +10,7 @@ class MailAdmin(admin.ModelAdmin):
 class AttachmentAdmin(admin.ModelAdmin):
     list_display = ['filename', 'fk_mail']
 
+
 # Register your models here.
 admin.site.register(Route, RouteAdmin)
 admin.site.register(Mail, MailAdmin)
