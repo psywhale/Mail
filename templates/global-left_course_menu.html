@@ -9,7 +9,7 @@
         {% endif %}
             <hr>
             <ul class="nav nav-pills nav-stacked" id="current-courses">
-                <li id="inbox" class=""><a href="/"> Inbox </a>
+                <li id="inbox" class=""><a href="/"> Mail2 Inbox </a>
                 </li>
                 <li class="{% if "/outbox/" in request.path %} active-course{% endif %}{% if "/or/" in request.path %} active-course{% endif %}"><a href="{% url 'outbox' %}">Sent Mail</a></li>
 {#                <li class="current-course-list has-badge"><a href="#" title="2C202 - College Algebra (30 unread messages)"><span class="badge pull-right2">30</span> 2C202 - College Algebra</a></li>#}

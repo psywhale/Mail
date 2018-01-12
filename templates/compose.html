@@ -61,27 +61,25 @@
                     </div>
                 {% endif %}
 
-                    {% for group in user.groups.all %}
-                        {% if group.name == "instructor" %}
-                            <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none;">
-                                <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                                <select name="sendto" id="id_sendto" multiple>
+                    {% if session.usertype == "instructor" %}
+                        <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none;">
+                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                            <select name="sendto" id="id_sendto" multiple>
 {#                                    <option value disabled selected> &nbsp; --- Select a Student --- &nbsp; </option>#}
-                                    <div id="selected_students"></div>
-                                </select>
-                                <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>
+                                <div id="selected_students"></div>
+                            </select>
+                            <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>
 {#                                <br />#}
 {#                                <p style="font-style: italic">(We recommend using a Forum post instead of Select All)</p>#}
-                            </div>
-                        {% elif group.name == "student" %}
-                            <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:" style="display:none;">
-                                <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                                <select name="sendto" id="id_sendto" disabled>
-                                    <option value="INSERT_INSTRUCTOR_NAME" disabled selected> INSERT INSTRUCTOR NAME </option>
-                                </select>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                        </div>
+                    {% elif session.usertype == "student" %}
+                        <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:" style="display:none;">
+                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                            <select name="sendto" id="id_sendto" disabled>
+                                <option value="INSERT_INSTRUCTOR_NAME" disabled selected> INSERT INSTRUCTOR NAME </option>
+                            </select>
+                        </div>
+                    {% endif %}
 
                     <div class="compose-section-subject" >
                         <div style="float:right" >
