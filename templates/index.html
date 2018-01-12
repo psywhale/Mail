@@ -29,7 +29,7 @@
                 &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
             <!-- Split button -->
             <div class="btn-group paginated">
-                <div class="text-muted"><b>1</b>–<b>50</b> of <b>INFINITY</b></div>
+                <div class="text-muted"><b>1</b>–<b>50</b> of <b>INFINITY</b>  = session = {{ session.usertype }}</div>
                 <div class="btn-group btn-group-sm">
                     <button type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-chevron-left"></span>
@@ -134,14 +134,22 @@
 
             <div class="row-md-12">
 
-{#                <div class="well">#}
-{#                    <span style="color:red">{{ email }} ------ {% now "jS F Y H:i" %} ------ </span>#}
-{#                </div>#}
+                <div class="well">
+                    <span style="color:red">{{ email }} ------ {% now "jS F Y H:i" %} ------ </span>
+                </div>
 
             </div>
         </div>
     </div>
 </div>
+
+<script>
+
+  $('.main-mail-section:empty').html(function() {
+      return "NON Yet!";
+  });
+
+</script>
 
 
 {% endblock %}
