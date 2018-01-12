@@ -72,12 +72,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Mail2proj.wsgi.application'
 
 LTI = {
-    'title' : 'Syllabus',
-    'launch_url' : 'https://syllabus.wosc.edu/launch/',
+    'title' : 'Mail2',
+    'launch_url' : 'https://mail2.wosc.edu/launch/',
     'secure_launch' : 'demo_url',
     'extensions' : {},
-    'description' : 'Syllabus Version 2',
-    'key': 'woscSyllabus',
+    'description' : 'Course Mail 2',
+    'key': 'woscCourseMail2',
     'secret': '6246ttka4fefljvlps984hd71td11q5m',
     'signature_method': 'HMAC-SHA1'
 }
