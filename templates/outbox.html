@@ -52,7 +52,7 @@
                                     <input type="checkbox" class="check">
                                 </label>
                             </div>
-                            <span class="name"> {{ message.to }} </span>
+                            <span class="name"> {{ message.to|capfirst }} </span>
                             <span class="section {{ message.section }}">{{ message.section }}</span>
                             <span class="subject text-muted"> - {{ message.subject }}</span>
                             <span class="date badge">
