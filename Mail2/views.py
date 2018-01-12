@@ -53,7 +53,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
                     mail['has_attachment'] = False
                 email.append(mail)
         context['email'] = email
-        context['usertype'] = self.request.session['usertype']
+        context['session'] = self.request.session
         # context['courses'] = courses
         return context
 
@@ -98,6 +98,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
                 mail['has_attachment'] = False
             email.append(mail)
         context['email'] = email
+        context['session'] = self.request.session
         #dprint(email)
         # context['courses'] = courses
         return context
@@ -130,7 +131,7 @@ class ComposeView(LoginRequiredMixin, FormView):
             context['sn'] = self.kwargs['sn']
         else:
             context['sn'] = 'False'
-
+        context['session'] = self.request.session
         return context
 
 
@@ -208,7 +209,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         else:
             # todo raise error
             print("oh noes")
-
+        context['session'] = self.request.session
         return context
 
 
@@ -279,7 +280,7 @@ class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AuditView, self).get_context_data(**kwargs)
-
+        context['session'] = self.request.session
         return context
 
 
@@ -353,6 +354,7 @@ class LabelView(LoginRequiredMixin, TemplateView):
                 email.append(mail)
             context['email'] = email
             context['courses'] = courses
+        context['session'] = self.request.session
         return context
 
 class ListUnreadView(View):
