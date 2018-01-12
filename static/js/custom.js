@@ -106,6 +106,7 @@ function getCourses(){
                     }
                     else {
                         $('#past-courses').html($('#past-courses').html() + '<li class="past-course-list"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
+                        $('#past-courses-compose').html($('#past-courses-compose').html() + '<li class="past-course-compose-list"><a href="/compose/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
                     }
                     var colors = ['red', 'green', 'blue', 'yellow'];
                     var sectionNum = course.shortname;

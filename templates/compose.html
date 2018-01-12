@@ -35,6 +35,7 @@
                 <input type="hidden" value="{{ sn }}" name="termcode" id="id_termcode">
                 <input type="hidden" value="{{ sn }}" name="section" id="id_section">
 
+                {% if not sn in request.path %}
                     <div class="compose-section-subject" title="Course List" style="padding-top: 10px">
                         <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
                         <select name="instructor" id="id_course_list">
@@ -42,14 +43,41 @@
                             <div id="selected_instructors"></div>
                         </select>
                     </div>
-
-                    <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none;">
+                {% else %}
+                    <div class="compose-section-subject" title="Course List" style="padding-top: 10px">
+                        <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                        <select name="instructor" id="id_course_list" disabled>
+                            <option value="{{ sn }}" disabled selected> &nbsp; --- {{ sn }} --- &nbsp; </option>
+                            <div id="selected_instructors"></div>
+                        </select>
+                    </div>
+                    <div class="compose-section-subject" id="show_students_div" title="Students in selected course:">
                         <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                        <select name="sendto" id="id_sendto">
+                        <select name="sendto" id="id_sendto" multiple>
                             <option value disabled selected> &nbsp; --- Select a Student --- &nbsp; </option>
                             <div id="selected_students"></div>
                         </select>
                     </div>
+                {% endif %}
+
+                    {% for group in user.groups.all %}
+                        {% if group.name == "instructor" %}
+                            <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none;">
+                                <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                                <select name="sendto" id="id_sendto" multiple>
+                                    <option value disabled selected> &nbsp; --- Select a Student --- &nbsp; </option>
+                                    <div id="selected_students"></div>
+                                </select>
+                            </div>
+                        {% elif group.name == "student" %}
+                            <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:" style="display:none;">
+                                <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                                <select name="sendto" id="id_sendto" disabled>
+                                    <option value="INSERT_INSTRUCTOR_NAME" disabled selected> INSERT INSTRUCTOR NAME </option>
+                                </select>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
 
                     <div class="compose-section-subject" >
                         <div style="float:right" >
@@ -105,9 +133,8 @@ $( document ).ready(
     {% if sn == 'False' %}
         listClasses(),
     {% else %}
-        listStudents({{ sn }})
+        listStudents("{{ sn }}")
     {% endif %}
-
 );
 
 $(document).on('change', '#id_course_list', listStudents);
@@ -142,6 +169,10 @@ function listClasses(){
 }
 
 
+    $('#id_course_list').on('change', function () {
+        $('#show_instructor_div').slideDown();
+    });
+
 
 function listStudents(){
     sn = $('#id_course_list').val();
@@ -151,7 +182,7 @@ function listStudents(){
     {
         $.ajax({
             url: 'https://moodle.wosc.edu/wosc/rest.php',
-            data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_members', section: sn,},
+            data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_members', section: sn},
             jsonp: 'callback',
             dataType: 'jsonp',
             success: function (response) {

@@ -117,7 +117,7 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_msg.section = self.request.POST['section']
         new_msg.fk_sender = self.request.user
         new_msg.save()
-        new_route.fk_to = User.objects.get(id=self.request.POST['sendto'])
+        new_route.fk_to = User.objects.get(username=self.request.POST['sendto'])
         new_route.fk_mail = new_msg
         new_route.save()
         return super(ComposeView, self).form_valid(form)
