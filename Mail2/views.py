@@ -157,7 +157,8 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             mail_obj = Mail.objects.get(id=self.kwargs['id'])
             data = {}
-            data['sendto'] = mail_obj.fk_sender_id
+            username = User.objects.get(id=mail_obj.fk_sender_id).username
+            data['sendto'] = username
             data['termcode'] = mail_obj.termcode
             data['section'] = mail_obj.section
             data['subject'] = "RE: "+mail_obj.subject
