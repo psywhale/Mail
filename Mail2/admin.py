@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import *
 
 class RouteAdmin(admin.ModelAdmin):
-    list_display = ['fk_to', 'read', 'fk_mail']
+    list_display = ['to', 'read', 'fk_mail']
 
 class MailAdmin(admin.ModelAdmin):
     list_display = ['fk_sender', 'subject', 'created']

@@ -24,7 +24,7 @@ class Attachment(models.Model):
         return self.filename
 
 class Route(models.Model):
-    to = models.CharField(max_length=300)
+    to = models.CharField(max_length=300, default="")
     read = models.BooleanField(default=False)
     fk_mail = models.ForeignKey(Mail)
 
