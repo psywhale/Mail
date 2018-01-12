@@ -1,5 +1,11 @@
-<form action="." method="post">
+<form id="auditclass" action="." method="post">
     {% csrf_token %}
-    {{  form.audit_class }}
+    <label for="terms">Section and Termcode?</label>
+    <select name="terms" onchange="$('auditclass').submit()">
+        {% for termcode in audit_class %}
+        <option value="{{ termcode }}">{{ termcode }}</option>
+        {% endfor %}
+    </select>
+
 
 </form>

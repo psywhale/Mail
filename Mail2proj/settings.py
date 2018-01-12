@@ -25,7 +25,7 @@ SECRET_KEY = '!_$c0q!5a)878#%x+lc7jylsg5k!ze(3jw^+=+o7xqoe@rd-k0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['brian-ms-7a70','127.0.0.1']
+ALLOWED_HOSTS = ['brian-ms-7a70','127.0.0.1','mail2.wosc.edu']
 
 
 # Application definition
@@ -71,6 +71,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Mail2proj.wsgi.application'
 
+LTI = {
+    'title' : 'Mail2',
+    'launch_url' : 'https://mail2.wosc.edu/launch/',
+    'secure_launch' : 'demo_url',
+    'extensions' : {},
+    'description' : 'Course Mail 2',
+    'key': 'woscCourseMail2',
+    'secret': '6246ttka4fefljvlps984hd71td11q5m',
+    'signature_method': 'HMAC-SHA1'
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases

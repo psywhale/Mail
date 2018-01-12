@@ -7,12 +7,12 @@ from .forms import ReplyForm, ComposeForm, AuditClassForm, AuditUserForm
 from django.core.exceptions import PermissionDenied
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
 from django.db.models import Q
-import simplejson as json
+import simplejson as json, re
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-
+from LTI.lti import LtiLaunch
 from pprint import pprint
-
+from django.contrib.auth import login
 # Create your views here.
 
 
@@ -53,6 +53,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
                     mail['has_attachment'] = False
                 email.append(mail)
         context['email'] = email
+        context['session'] = self.request.session
         # context['courses'] = courses
         return context
 
@@ -97,6 +98,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
                 mail['has_attachment'] = False
             email.append(mail)
         context['email'] = email
+        context['session'] = self.request.session
         #dprint(email)
         # context['courses'] = courses
         return context
@@ -129,9 +131,8 @@ class ComposeView(LoginRequiredMixin, FormView):
             context['sn'] = self.kwargs['sn']
         else:
             context['sn'] = 'False'
-
+        context['session'] = self.request.session
         return context
-
 
 
 class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
@@ -208,7 +209,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         else:
             # todo raise error
             print("oh noes")
-
+        context['session'] = self.request.session
         return context
 
 
@@ -279,7 +280,7 @@ class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AuditView, self).get_context_data(**kwargs)
-
+        context['session'] = self.request.session
         return context
 
 
@@ -289,12 +290,13 @@ class AuditViewClass(AuditView, FormView):
     def get_initial(self, **kwargs):
         initial = super(AuditViewClass, self).get_initial()
         data = []
-        dataqs = Mail.objects.values('section','termcode').annotate().distinct('section','termcode')
+        dataqs = Mail.objects.values('section','termcode').annotate().distinct()
         for row in dataqs:
             data.append(row["section"] + "-" + row["termcode"])
         dprint(data)
-        initial = data
-        return initial
+        initial["audit_class"] = data
+        dprint(initial)
+        return data
 
 
 class AuditViewUser(AuditView, FormView):
@@ -352,6 +354,7 @@ class LabelView(LoginRequiredMixin, TemplateView):
                 email.append(mail)
             context['email'] = email
             context['courses'] = courses
+        context['session'] = self.request.session
         return context
 
 class ListUnreadView(View):
@@ -374,6 +377,40 @@ class ListUnreadView(View):
             unread_count = Route.objects.filter(fk_mail__in=mails, read=False, fk_to=request.user.id).count()
             results[i] = {"course": course, "count": unread_count }
         return HttpResponse(json.dumps(results),content_type="application/json")
+
+class Launch(LtiLaunch):
+
+    def post(self, request, *args, **kwargs):
+
+        # flushing the session prevents conflicting sessions when the open multiple tabs/windows.
+        self.request.session.flush()
+        # Returns tp if valid LTI user
+        tp = self.is_lti_valid(request)
+        if tp is not None:
+            # Get the user or add them if they do not currently exist
+            user = self.get_or_add_user(tp)
+            params = tp.to_params()
+            m = {}
+
+            # get the course number from the course title if this is a Moodle integration
+            #m = re.search("\[[(a-zA-Z0-9)]+\]", params['context_title'])
+            if m:
+                self.request.session['refering_course'] = m
+            self.request.session['refering_course_id'] = params['context_id']
+            if self.is_instructor(tp):
+                login(request, user)
+                self.request.session['usertype'] = 'instructor'
+                return redirect("IndexView")
+
+            if self.is_student(tp):
+                login(request, user)
+                self.request.session['usertype'] = 'student'
+                return redirect("IndexView")
+            else:
+                return HttpResponse("You must be an instructor or student.")
+        else:
+            return HttpResponse("INVALID")
+
 
 
 # for debugging
