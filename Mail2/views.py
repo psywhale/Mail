@@ -397,12 +397,12 @@ class Launch(LtiLaunch):
             if self.is_instructor(tp):
                 login(request, user)
                 self.request.session['usertype'] = 'instructor'
-                return redirect("index")
+                return redirect("IndexView")
 
             if self.is_student(tp):
                 login(request, user)
                 self.request.session['usertype'] = 'student'
-                return redirect("index")
+                return redirect("IndexView")
             else:
                 return HttpResponse("You must be an instructor or student.")
         else:
