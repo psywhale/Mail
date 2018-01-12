@@ -394,8 +394,10 @@ class Launch(LtiLaunch):
 
             # get the course number from the course title if this is a Moodle integration
             #m = re.search("\[[(a-zA-Z0-9)]+\]", params['context_title'])
+
             if m:
                 self.request.session['refering_course'] = m
+            self.request.session['refering_section_code'] = params['context_label']
             self.request.session['refering_course_id'] = params['context_id']
             if self.is_instructor(tp):
                 login(request, user)
