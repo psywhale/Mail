@@ -27,7 +27,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
         # Creating a context with the proper information.
         # Don't know of an easier way to do this.
 
-        routes = Route.objects.filter(fk_to=self.request.user)
+        routes = Route.objects.filter(to=self.request.user.username)
 
         email = []
         courses = []
@@ -84,7 +84,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             mail['id'] = usermail.id
             mail['subject'] = usermail.subject
             mail['read'] = route.read
-            mail['to'] = route.fk_to
+            mail['to'] = route.to
             mail['termcode'] = usermail.termcode
             mail['section'] = usermail.section
             mail['date'] = str(usermail.created.month)+"/"+str(usermail.created.day)+"/"+str(usermail.created.year)
@@ -119,7 +119,7 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_msg.section = self.request.POST['section']
         new_msg.fk_sender = self.request.user
         new_msg.save()
-        new_route.fk_to = User.objects.get(username=self.request.POST['sendto'])
+        new_route.to = self.request.POST['sendto']
         new_route.fk_mail = new_msg
         new_route.save()
         return super(ComposeView, self).form_valid(form)
@@ -144,7 +144,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     def test_func(self, user):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']))
-        return self.request.user == route.fk_to
+        return self.request.user.username == route.to
 
     def get(self, request, *args, **kwargs):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']))
@@ -173,7 +173,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         new_msg.section = self.request.POST['section']
         new_msg.fk_sender = self.request.user
         new_msg.save()
-        new_route.fk_to = User.objects.get(id=self.request.POST['sendto'])
+        new_route.to =self.request.POST['sendto']
         new_route.fk_mail = new_msg
         new_route.save()
         return super(ReplyView, self).form_valid(form)
@@ -200,7 +200,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                 'termcode': m.termcode,
                 'section': m.section,
                 'fk_sender': m.fk_sender,
-                'to': r.fk_to,
+                'to': r.to,
                 'created': m.created,
             }
 
@@ -225,7 +225,7 @@ class OutboxReplyView(ReplyView):
             mail_obj = Mail.objects.get(id=self.kwargs['id'])
             router = Route.objects.get(fk_mail=mail_obj)
             data = {}
-            data['sendto'] = router.fk_to.id
+            data['sendto'] = router.to
             data['termcode'] = mail_obj.termcode
             data['section'] = mail_obj.section
             data['subject'] = "RE: "+mail_obj.subject
@@ -242,7 +242,7 @@ class ArchiveMailView(LoginRequiredMixin, View):
 
         if Mail.objects.filter(id=request.POST['message_id']).exists():
             message = Mail.objects.get(id=request.POST['message_id'])
-            if request.user.id == Route.objects.get(fk_mail=message).fk_to.id:
+            if request.user.username == Route.objects.get(fk_mail=message).to:
                 message.archived = True
                 message.save()
                 return redirect("/")
@@ -261,7 +261,7 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
         if Mail.objects.filter(id=request.POST['message_id']).exists():
             message = Mail.objects.get(id=request.POST['message_id'])
             route = Route.objects.get(fk_mail=message)
-            if request.user.id == route.fk_to.id:
+            if request.user.username == route.to:
                 route.read = False
                 route.save()
                 message.archived = False
@@ -323,10 +323,10 @@ class LabelView(LoginRequiredMixin, TemplateView):
         section = termcoderaw[0].lower()
 
 
-        routes = Route.objects.filter(fk_to=self.request.user)
+        routes = Route.objects.filter(to=self.request.user.username)
 
         allmailincourse = Mail.objects.filter(termcode=termcode, section=section)
-        allmailincourse_senttouser = allmailincourse.filter(route__fk_to=self.request.user)
+        allmailincourse_senttouser = allmailincourse.filter(route__to=self.request.user.username)
 
         email = []
         courses = []
@@ -374,7 +374,7 @@ class ListUnreadView(View):
             section, termcode = course.split("-")
             # print("section={},termcode={}".format(section,termcode));
             mails = Mail.objects.filter(termcode=termcode, section=section)
-            unread_count = Route.objects.filter(fk_mail__in=mails, read=False, fk_to=request.user.id).count()
+            unread_count = Route.objects.filter(fk_mail__in=mails, read=False, to=request.user.username).count()
             results[i] = {"course": course, "count": unread_count }
         return HttpResponse(json.dumps(results),content_type="application/json")
 
