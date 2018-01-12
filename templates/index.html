@@ -87,6 +87,12 @@
                 <div class="tab-pane fade in active" id="home">
                     <div class="list-group">
 
+                    {% if not email %}
+                        <a href="{% url "reply" message.id %}" class="list-group-item">
+                            Lorem ipsum dolor sit amet, pro nullam facilisi an, per iuvaret conclusionemque te. Te audire dolorem nominavi sea, ut ubique dignissim intellegam per. His cu noluisse accusata quaerendum. Molestie deseruisse et eam. Ad accumsan recteque mediocritatem eum, qui aeterno consequat te, ut sed omnis dolore. At vix clita atomorum, at nec mazim nihil liberavisse. Scripta labores quaestio te nec. Mel an sapientem evertitur, est quis maluisset definiebas ut. Purto audiam omittam pro te, ad ius voluptua deserunt constituto. Vix natum regione detracto no, pri ne lorem vocibus volutpat. Errem ceteros duo te. Usu ei nulla platonem accommodare. Ne tollit malorum per, eius mundi ornatus per cu. Qui no delectus salutatus conclusionemque, ei suscipiantur signiferumque duo. Unum rationibus suscipiantur cu mea, vel ei paulo inimicus. Quo cu putent equidem dolorum. Quis saepe luptatum vix et, mea ad tempor malorum menandri. Nullam everti intellegebat nec ne. Vix torquatos maiestatis no. Ex sonet sadipscing cum, probo erant detracto ex quo. Solum dolorem ex cum. Paulo decore nostrum usu ut. Feugait constituam pri eu, graeci semper doctus ei mea, debet dictas cum id. Ea quas intellegam vix, euismod fastidii electram an sed. Eu consulatu posidonium scribentur vix, id clita essent veritus qui.
+                        </a>
+                    {% endif %}
+
                         {% for message in email|dictsortreversed:"timestamp" %}
 {#                    {% for message in email %}#}
                         <a href="{% url "reply" message.id %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %} {% if message.read == False %} unread-mail{% endif %}"
@@ -136,7 +142,7 @@
 
                 <div class="well">
                     <span style="color:red">
-                        (({{ session.usertype }} - {{ session.refering_course_id }} - {{ session.refering_section_code }}))
+                        (({{ session.usertype }} - {{ session.refering_course_id }} - {{ session.refering_section_code }} ))
                         <br />
                         {{ email }}
                         <br />
