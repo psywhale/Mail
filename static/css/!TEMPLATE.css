@@ -87,7 +87,8 @@ input#id_subject { width:60%; border-radius: 8px; padding:6px 12px }
 }
 /* COMPOSE SECTION*/
 .compose-section-subject { font-weight: 900; font-size: 14px; padding: 0 12px 12px; margin-top: -4px}
-#id_course_list, #id_sendto { min-width:40%; border-radius: 8px; padding:6px 12px; font-size:14px; max-height: 6em; }
+#id_course_list, #id_sendto, .compose_inputs { min-width:40%; border-radius: 8px; padding:6px 12px; font-size:14px; max-height: 6em; }
+.compose-section-subject .glyphicon { font-size: 22px }
 .compose #id_content { width:98% !important; height: 80px }
 .cke, .cke_top, .cke_inner, .cke_bottom, .cke_wysiwyg { border-radius: 8px; }
 #id_course_list { max-width: 90%; }
