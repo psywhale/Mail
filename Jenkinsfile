@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                docker.build('build-image')
+
 
             }
         }
