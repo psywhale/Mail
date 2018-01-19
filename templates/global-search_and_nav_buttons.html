@@ -1,10 +1,12 @@
 {% block topright %}
             <!-- Split button -->
-            <a type="button" class="btn btn-default" href="{{ request.META.HTTP_REFERER }}" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox">
+            <a type="button" class="btn btn-default" href="{{ request.META.HTTP_REFERER }}" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox" style="margin-left:-10px">
                 <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;&nbsp;Back
             </a>
             <!-- Single button -->
-    {% if "/or/" in request.path %} <a type="button" class="btn btn-default sentmailbox-indicator2" href='{% url 'outbox' %}'>SENT MAILBOX</a>{% endif %}
+    {% if "/or/" in request.path %}
+        <a type="button" class="btn btn-default sentmailbox-indicator2" href='{% url 'outbox' %}'>SENT MAILBOX</a>
+    {% endif %}
     {% if not "/or/" in request.path %}
         {% if not "/compose/" in request.path %}
             <form action="{% url 'archivemail' %}" method="POST" id="archive" style="display:inline-block">
@@ -23,10 +25,10 @@
             </form>
         {% endif %}
     {% endif %}
-            <div class="input-group" style="width: 33%; float: right;">
-                <input type="text" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">
-                <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Go!</button>
-                </span>
-            </div>
+        <div class="input-group searchBox">
+            <input type="text" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">
+            <span class="input-group-btn">
+            <button class="btn btn-secondary" type="button">Go!</button>
+            </span>
+        </div>
 {% endblock %}

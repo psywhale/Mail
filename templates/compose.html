@@ -12,6 +12,13 @@
             {% include 'global-logo.html' %}
         </div>
         <div class="col-sm-8 col-md-9 search-area">
+            <div class="breadcrumbsed">
+                {% if sn == "True" %}
+                    {{ sn }}
+                {% else %}
+                    Compose New Message
+                {% endif %}
+            </div>
             {% include 'global-search_and_nav_buttons.html' %}
         </div>
     </div>
@@ -43,41 +50,24 @@
                                 <div id="selected_instructors"></div>
                             </select>
                         </div>
-
-                        <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:">
-                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                            <input type="text" name="INSERT INSTRUCTOR NAME" id="id_instructor" class="compose_inputs" value="INSERT INSTRUCTOR NAME" disabled />
-                        </div>
                     {% else %}
                         <div class="compose-section-subject" title="Course" style="padding-top: 10px">
                             <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
                             <input type="text" name="{{ sn }}" id="id_course" class="compose_inputs" value="{{ sn }}" disabled />
                         </div>
-                        {% if session.usertype == "student" %}
-                            <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:">
-                                <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                                <input type="text" name="INSERT INSTRUCTOR NAME" id="id_instructor" class="compose_inputs" value="INSERT INSTRUCTOR NAME" disabled />
-                            </div>
-                        {% endif %}
                     {% endif %}
-
-                    {% if session.usertype == "instructor" %}
-                        <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none;">
+                        {{ instructor }}
+                        <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="#display:none;">
                             <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
                             <select name="sendto" id="id_sendto" multiple>
-{#                                    <option value disabled selected> &nbsp; --- Select a Student --- &nbsp; </option>#}
                                 <div id="selected_students"></div>
+                                <option value="{{ instructor }}">{{ instructor }}</option>
+                                {% for names in instructor %}
+                                    <option value="{{ instructor }}">{{ names }}</option>
+                                {% endfor %}
                             </select>
                             <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>
                         </div>
-                    {% elif session.usertype == "student" %}
-                        <div class="compose-section-subject" id="show_instructor_div" title="Students in selected course:" style="display:none;">
-                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                            <select name="sendto" id="id_sendto" disabled>
-                                <option value="INSERT_INSTRUCTOR_NAME" disabled selected> INSERT INSTRUCTOR NAME </option>
-                            </select>
-                        </div>
-                    {% endif %}
 
                     <div class="compose-section-subject" >
                         <div style="float:right" >

@@ -1,0 +1,16 @@
+{% block debuginfo %}
+            <div class="row-md-12">
+                <div class="well">
+                    <span style="color:red">
+                        <h2>DEBUG MODE</h2>
+                        SESSION == (( {{ session.usertype }} - {{ session.refering_course_id }} - {{ session.refering_section_code }} ))
+                        <br />
+                        EMAIL == {{ email }}
+                        <br />
+                        INSTRUCTOR/STUDENT == {{ instructor }}
+                        <br />
+                        ------ {% now "jS F Y H:i" %} ------
+                    </span>
+                </div>
+            </div>
+{% endblock %}

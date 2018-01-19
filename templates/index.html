@@ -12,22 +12,43 @@
             {% include 'global-logo.html' %}
         </div>
         <div class="col-sm-8 col-md-9 search-area">
-            <div class="input-group" style="width: 33%; float: right;">
+            <div class="breadcrumbsed">
+                {% if sn %}
+                    {{ sn }}
+                {% else %}
+                    CMail2 Inbox
+                {% endif %}
+            </div>
+            <div class="input-group searchBox">
                 <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
                 <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button">Go!</button>
                 </span>
             </div>
-            <button type="button" class="btn btn-default" style=" margin: 6px 15px 0 -9px; padding: 0px 11px;">
+{#            {% if  email %}#}
+            <button type="button" class="btn btn-default" style=" margin: 6px 15px 0 -9px; padding: 0px 11px;" title="Select All">
                 <div class="checkbox" style="margin: 3px -3px;">
                     <label>
                         <input type="checkbox" id="checkall" style="margin: 7px 0 0 -16px;">
                     </label>
                 </div>
             </button>
+            <div class="btn-group" style="display:none; padding: 3px; margin: 0 10px -6px -20px;">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    More <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Archive selected</a></li>
+                    <li><a href="#">Mark selected as read</a></li>
+                    <li><a href="#">Mark selected as unread</a></li>
+                    <li class="divider"></li>
+                    <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>
+                </ul>
+            </div>
+{#            {% endif %}#}
             <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" onClick="location.reload();" style="padding: 5px; margin: 0 10px -6px -6px;">
                 &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
-            <!-- Split button -->
+            {% if  email %}
             <div class="btn-group paginated">
                 <div class="text-muted"><b>1</b>–<b>50</b> of <b>INFINITY</b>  </div>
                 <div class="btn-group btn-group-sm">
@@ -38,30 +59,8 @@
                         <span class="glyphicon glyphicon-chevron-right"></span>
                     </button>
                 </div>
-                <!-- <h1>{{ session.usertype }}</h1> -->
-{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
-{#                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>#}
-{#                </button>#}
-{#                <ul class="dropdown-menu" role="menu">#}
-{#                    <li><a href="#">All</a></li>#}
-{#                    <li><a href="#">None</a></li>#}
-{#                    <li><a href="#">Read</a></li>#}
-{#                    <li><a href="#">Unread</a></li>#}
-{#                </ul>#}
             </div>
-            <!-- Single button -->
-{#            <div class="btn-group">#}
-{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
-{#                    More <span class="caret"></span>#}
-{#                </button>#}
-{#                <ul class="dropdown-menu" role="menu">#}
-{#                    <li><a href="#">Archive selected</a></li>#}
-{#                    <li><a href="#">Mark selected as read</a></li>#}
-{#                    <li><a href="#">Mark selected as unread</a></li>#}
-{#                    <li class="divider"></li>#}
-{#                    <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>#}
-{#                </ul>#}
-{#            </div>#}
+            {% endif %}
         </div>
     </div>
     <hr>
@@ -70,28 +69,37 @@
 {% include 'global-left_course_menu.html' %}
 
         <div class="col-sm-8 col-md-9 main-mail-section">
-{#            <div class="pull-right">#}
-{##}
-{#            </div>#}
-            <!-- Nav tabs -->
-{#            <ul class="nav nav-tabs">#}
-{#                <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-inbox">#}
-{#                </span>{{ message.section }}</a></li>#}
-{#                <li><a href="#profile" data-toggle="tab"><span class="glyphicon glyphicon-user"></span>#}
-{#                    </a></li>#}
-{#                <li><a href="#settings" data-toggle="tab"><span class="glyphicon glyphicon-plus no-margin">#}
-{#                </span></a></li>#}
-{#            </ul>#}
-            <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
                     <div class="list-group">
 
                     {% if not email %}
-                        <a href="#" class="list-group-item">
-                            <h2>Welcome to Course Mail2</h2>
-                            Lorem ipsum dolor sit amet, pro nullam facilisi an, per iuvaret conclusionemque te. Te audire dolorem nominavi sea, ut ubique dignissim intellegam per. His cu noluisse accusata quaerendum. Molestie deseruisse et eam. Ad accumsan recteque mediocritatem eum, qui aeterno consequat te, ut sed omnis dolore. At vix clita atomorum, at nec mazim nihil liberavisse. Scripta labores quaestio te nec. Mel an sapientem evertitur, est quis maluisset definiebas ut. Purto audiam omittam pro te, ad ius voluptua deserunt constituto. Vix natum regione detracto no, pri ne lorem vocibus volutpat. Errem ceteros duo te. Usu ei nulla platonem accommodare. Ne tollit malorum per, eius mundi ornatus per cu. Qui no delectus salutatus conclusionemque, ei suscipiantur signiferumque duo. Unum rationibus suscipiantur cu mea, vel ei paulo inimicus. Quo cu putent equidem dolorum. Quis saepe luptatum vix et, mea ad tempor malorum menandri. Nullam everti intellegebat nec ne. Vix torquatos maiestatis no. Ex sonet sadipscing cum, probo erant detracto ex quo. Solum dolorem ex cum. Paulo decore nostrum usu ut. Feugait constituam pri eu, graeci semper doctus ei mea, debet dictas cum id. Ea quas intellegam vix, euismod fastidii electram an sed. Eu consulatu posidonium scribentur vix, id clita essent veritus qui.
-                        </a>
+                        {% if not "/label/" in request.path %}
+                            <div href="#" class="list-group-item">
+                                <h2>Welcome to Course Mail2</h2>
+                                <p style=font-weight:bold>
+                                    This is your introduction to Course Mail2 for Moodle:
+                                    <br />
+                                    You currently do not have any email to view.
+                                </p>
+                                <p>
+
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, pro nullam facilisi an, per iuvaret conclusionemque te. Te audire dolorem nominavi sea, ut ubique dignissim intellegam per. His cu noluisse accusata quaerendum. Molestie deseruisse et eam. Ad accumsan recteque mediocritatem eum, qui aeterno consequat te, ut sed omnis dolore. At vix clita atomorum, at nec mazim nihil liberavisse. Scripta labores quaestio te nec. Mel an sapientem evertitur, est quis maluisset definiebas ut. Purto audiam omittam pro te, ad ius voluptua deserunt constituto. Vix natum regione detracto no, pri ne lorem vocibus volutpat. Errem ceteros duo te. Usu ei nulla platonem accommodare. Ne tollit malorum per, eius mundi ornatus per cu. Qui no delectus salutatus conclusionemque, ei suscipiantur signiferumque duo. Unum rationibus suscipiantur cu mea, vel ei paulo inimicus. Quo cu putent equidem dolorum. Quis saepe luptatum vix et, mea ad tempor malorum menandri. Nullam everti intellegebat nec ne. Vix torquatos maiestatis no. Ex sonet sadipscing cum, probo erant detracto ex quo. Solum dolorem ex cum. Paulo decore nostrum usu ut. Feugait constituam pri eu, graeci semper doctus ei mea, debet dictas cum id. Ea quas intellegam vix, euismod fastidii electram an sed. Eu consulatu posidonium scribentur vix, id clita essent veritus qui.
+                                </p>
+                            </div>
+                        {% else %}
+                            <div href="#" class="list-group-item">
+                                <h2>Course Mail2</h2>
+                                <p style=font-weight:bold>
+                                    You currently do not have any email for this course: <br /><span style="font-size: 20px">{{ sn }}</span>.
+                                </p>
+                                <p>
+
+                                </p>
+                            </div>
+                        {% endif %}
                     {% endif %}
 
                         {% for message in email|dictsortreversed:"timestamp" %}
@@ -138,21 +146,7 @@
                 <div class="tab-pane fade in" id="settings">
                     This tab is empty.</div>
             </div>
-
-            <div class="row-md-12">
-
-                <div class="well">
-                    <span style="color:red">
-                        <h2>DEBUG MODE</h2>
-                        SESSION == (( {{ session.usertype }} - {{ session.refering_course_id }} - {{ session.refering_section_code }} ))
-                        <br />
-                        EMAIL == {{ email }}
-                        <br />
-                        ------ {% now "jS F Y H:i" %} ------
-                    </span>
-                </div>
-
-            </div>
+{% include 'global-debug.html' %}
         </div>
     </div>
 </div>
