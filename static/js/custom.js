@@ -120,3 +120,34 @@ function getCourses(){
         }
     });
 }
+
+
+
+<!-- ##### Refreshing sidebar images ##### -->
+var theImages = new Array();
+
+  theImages[0] = '/static/images/mail/1.jpg';
+  theImages[1] = '/static/images/mail/2.jpg';
+  theImages[2] = '/static/images/mail/3.jpg';
+  theImages[3] = '/static/images/mail/4.jpg';
+  theImages[4] = '/static/images/mail/5.jpg';
+  theImages[5] = '/static/images/mail/6.jpg';
+  theImages[6] = '/static/images/mail/7.jpg';
+  theImages[7] = '/static/images/mail/8.jpg';
+  theImages[8] = '/static/images/mail/9.jpg';
+  theImages[9] = '/static/images/mail/10.jpg';
+  theImages[10] = '/static/images/mail/11.jpg';
+
+var j = 0;
+var p = theImages.length - 1;
+var preBuffer = new Array();
+for (i = 0; i < p; i++){
+   preBuffer[i] = new Image();
+   preBuffer[i].src = theImages[i];
+}
+var whichImage = Math.floor((Math.random()* p) + 1);
+  console.log("Image #:" + p);
+
+function showImage(){
+document.write('<img style="max-width:98%; border-radius:8px; border: 2px outset #888" alt="No Mail Fun!" class="rotateimages" src="'+theImages[whichImage]+'">');
+}
