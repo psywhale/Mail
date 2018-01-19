@@ -12,6 +12,13 @@
             {% include 'global-logo.html' %}
         </div>
         <div class="col-sm-8 col-md-9 search-area">
+            <div class="breadcrumbsed">
+                {% if sn %}
+                    Label: {{ sn }}
+                {% else %}
+                    Label: Sent Mailbox
+                {% endif %}
+            </div>
             <div class="input-group" style="width: 33%; float: right;">
                 <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
                 <span class="input-group-btn">
