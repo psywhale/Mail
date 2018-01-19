@@ -132,10 +132,7 @@ class ComposeView(LoginRequiredMixin, FormView):
         context = super(ComposeView, self).get_context_data(**kwargs)
         if 'sn' in self.kwargs:
             context['sn'] = self.kwargs['sn']
-            r = requests.get("https://moodle.wosc.edu/wosc/rest.php?rest_key=HkHO25shu0i3Tq24iCknrB1mnpOY" \
-                             "&action=get_instructor&section="+self.kwargs['sn'])
-            getinstructor = r.json()
-            context['instructor'] = getinstructor['username']
+
         else:
             context['sn'] = 'False'
 
