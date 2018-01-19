@@ -88,11 +88,12 @@ input#id_subject { width:93%; border-radius: 8px; padding:6px 12px }
 }
 /* COMPOSE SECTION*/
 .compose-section-subject { font-weight: 900; font-size: 14px; padding: 0 12px 12px; margin-top: -4px}
-#id_course_list, #id_sendto, .compose_inputs { width:55%; border-radius: 8px; padding:6px 12px; font-size:14px; height: 3.5em; }
+#id_course_list, #id_sendto, .compose_inputs { width:55%; border-radius: 8px; padding:6px 12px; font-size:14px;  }
+#id_sendto { height: 4em; }
 .compose-section-subject .glyphicon { font-size: 22px }
 .compose #id_content { width:98% !important; height: 80px }
 .cke, .cke_top, .cke_inner, .cke_bottom, .cke_wysiwyg { border-radius: 8px; }
-select#id_sendto option { font-size: 20px; }
+select#id_sendto option { font-size: 20px; overflow: hidden !important; height: auto !important; }
 /*select#id_sendto option:first-of-type { font-size: 18px; }*/
 
 
