@@ -458,6 +458,45 @@ class OutboxTest(myTestCase):
 
         self.assertTrue(exists)
 
+    def test_can_see_sent_email(self):
+        mailmsg = Mail.objects.create(content='Test REPLY',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Frank"),
+                                      termcode="172s",
+                                      section="21231",
+                                      )
+        Route.objects.create(to='Ned',
+                             read=False,
+                             fk_mail=mailmsg)
+
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/outbox/')
+        exists = False
+        for message in reslogin.context['email']:
+            if message['subject'] == "test timestamp for Ned":
+                exists = True
+        self.assertTrue(exists)
+
+    def can_see_sent_email_even_if_usr_no_exist(self):
+        mailmsg = Mail.objects.create(content='Test REPLY',
+                                      subject='test timestamp for Ned',
+                                      fk_sender=User.objects.get(username="Frank"),
+                                      termcode="172s",
+                                      section="21231",
+                                      )
+        Route.objects.create(to='Narkles',
+                             read=False,
+                             fk_mail=mailmsg)
+
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        reslogin = c.get('/outbox/')
+        exists = False
+        for message in reslogin.context['email']:
+            if message['subject'] == "test timestamp for Ned":
+                exists = True
+        self.assertTrue(exists)
 
 class OutboxReplyTest(myTestCase):
 

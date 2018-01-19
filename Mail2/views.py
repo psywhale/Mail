@@ -82,7 +82,6 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             # if message.section not in courses:
             #     courses.append(message.section)
             #if usermail.fk_sender is self.request.user:
-            pprint(route.to)
             if User.objects.filter(username=route.to).exists():
                 tofields = User.objects.get(username=route.to)
                 mail['to'] = tofields.get_full_name()
