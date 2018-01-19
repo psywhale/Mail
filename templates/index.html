@@ -14,9 +14,9 @@
         <div class="col-sm-8 col-md-9 search-area">
             <div class="breadcrumbsed">
                 {% if sn %}
-                    {{ sn }}
+                    Label: {{ sn }}
                 {% else %}
-                    CMail2 Inbox
+                    Label: CMail2 Inbox
                 {% endif %}
             </div>
             <div class="input-group searchBox">
@@ -25,7 +25,7 @@
                 <button class="btn btn-secondary" type="button">Go!</button>
                 </span>
             </div>
-{#            {% if  email %}#}
+            {% if  email %}
             <button type="button" class="btn btn-default" style=" margin: 6px 15px 0 -9px; padding: 0px 11px;" title="Select All">
                 <div class="checkbox" style="margin: 3px -3px;">
                     <label>
@@ -45,22 +45,22 @@
                     <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>
                 </ul>
             </div>
-{#            {% endif %}#}
+            {% endif %}
             <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" onClick="location.reload();" style="padding: 5px; margin: 0 10px -6px -6px;">
                 &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
-            {% if  email %}
-            <div class="btn-group paginated">
-                <div class="text-muted"><b>1</b>–<b>50</b> of <b>INFINITY</b>  </div>
-                <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </button>
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </button>
-                </div>
-            </div>
-            {% endif %}
+{#            {% if  email %}#}
+{#            <div class="btn-group paginated">#}
+{#                <div class="text-muted"><b>1</b>–<b>50</b> of <b>INFINITY</b>  </div>#}
+{#                <div class="btn-group btn-group-sm">#}
+{#                    <button type="button" class="btn btn-default">#}
+{#                        <span class="glyphicon glyphicon-chevron-left"></span>#}
+{#                    </button>#}
+{#                    <button type="button" class="btn btn-default">#}
+{#                        <span class="glyphicon glyphicon-chevron-right"></span>#}
+{#                    </button>#}
+{#                </div>#}
+{#            </div>#}
+{#            {% endif %}#}
         </div>
     </div>
     <hr>
