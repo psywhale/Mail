@@ -105,6 +105,7 @@ function getCourses(){
                         $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list ' + course.shortname + '" id="' + course.shortname + '" title="' + course.fullname + '"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
                     }
                     else {
+                        $('#past-course-dropdown').show();
                         $('#past-courses').html($('#past-courses').html() + '<li class="past-course-list"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
                         $('#past-courses-compose').html($('#past-courses-compose').html() + '<li class="past-course-compose-list"><a href="/compose/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
                     }

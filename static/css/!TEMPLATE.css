@@ -34,6 +34,7 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 .nav-pills>li>a>.badge { position: absolute; margin-left: -30px; top: 6px; }
 .nav>li>a:focus, .nav>li>a:hover { background-color: #d3f5d9; }
 .active-course a:focus, .active-course a:hover { background-color:darkgreen !important; color: white !important; }
+.breadcrumbsed { color: #cecece; font-size: 16px; position: absolute; top:-40px; left:8px }
 .container-fluid {
     padding-right: 15px;
     padding-left: 15px;
@@ -160,14 +161,18 @@ tr.hover {
     width:40%;
     border:1px dotted #ddd
 }
+.searchBox { width: 60%; float: right; margin-top: 4px; padding-top: 1px; }
 
-
+@media (max-width: 410px) and (max-width: 767px) {
+    .subject { width: 17% }
+}
 
 @media (max-width: 767px) {
     ul.nav.nav-pills.nav-stacked {
         width: 100%;
     }
     .subject { width: 35% }
+    .searchBox { width: 55% !important; }
     .name { max-width: 20%; }
     .tab-content .badge { #float:none }
     .activities {
@@ -188,9 +193,6 @@ tr.hover {
     }
 }
 
-@media (max-width: 410px) and (max-width: 767px) {
-    .subject { width: 17% }
-}
 
 @media (min-width: 768px) and (max-width: 996px) {
     /*div.row:first-of-type {*/
@@ -200,7 +202,7 @@ tr.hover {
     .activities {
         margin: -10px auto 35px !important
     }
-
+    .searchBox { width: 50% !important; }
     .supervisor-text:after {
         content: "Supervisor"
     }
@@ -210,7 +212,7 @@ tr.hover {
     /*div.row:first-of-type {*/
         /*width: 60% !important;*/
     /*}*/
-
+    .searchBox { width: 55% !important; }
     .supervisor-text:after {
         content: "Supervisor"
     }
