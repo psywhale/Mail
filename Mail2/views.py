@@ -82,12 +82,15 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             # if message.section not in courses:
             #     courses.append(message.section)
             #if usermail.fk_sender is self.request.user:
-            tofields = User.objects.get(username=route.to).get_full_name()
-
+            pprint(route.to)
+            if User.objects.filter(username=route.to).exists():
+                tofields = User.objects.get(username=route.to)
+                mail['to'] = tofields.get_full_name()
+            else:
+                mail['to'] = route.to
             mail['id'] = usermail.id
             mail['subject'] = usermail.subject
             mail['read'] = route.read
-            mail['to'] = tofields
             mail['termcode'] = usermail.termcode
             mail['section'] = usermail.section
             mail['date'] = str(usermail.created.month)+"/"+str(usermail.created.day)+"/"+str(usermail.created.year)
