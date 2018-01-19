@@ -58,8 +58,8 @@ ul.nav.nav-pills.nav-stacked { #width: 108%; }
 /*  REPLY VIEW */
 .reply-section-subject { font-weight: 900; font-size: 18px; padding: 10px 12px 6px; }
 #id_content { width:98% !important; height: 50px; border-radius: 8px; padding:4px 12px }
-input#id_subject { width:45%; border-radius: 8px; padding:6px 12px }
-.mail-content { padding: 20px 30px; min-height: 80px;  }
+input#id_subject { width:93%; border-radius: 8px; padding:6px 12px }
+.mail-content { padding: 20px 30px; min-height: 80px; height: 3.5em;  }
 .cke_editable {  }
 .nav-stacked>li+li {
     overflow: inherit;
@@ -88,11 +88,10 @@ input#id_subject { width:45%; border-radius: 8px; padding:6px 12px }
 }
 /* COMPOSE SECTION*/
 .compose-section-subject { font-weight: 900; font-size: 14px; padding: 0 12px 12px; margin-top: -4px}
-#id_course_list, #id_sendto, .compose_inputs, #id_subject { min-width:45%; border-radius: 8px; padding:6px 12px; font-size:14px; height: 3.5em; }
+#id_course_list, #id_sendto, .compose_inputs { width:55%; border-radius: 8px; padding:6px 12px; font-size:14px; height: 3.5em; }
 .compose-section-subject .glyphicon { font-size: 22px }
 .compose #id_content { width:98% !important; height: 80px }
 .cke, .cke_top, .cke_inner, .cke_bottom, .cke_wysiwyg { border-radius: 8px; }
-#id_course_list { max-width: 90%; }
 select#id_sendto option { font-size: 20px; }
 /*select#id_sendto option:first-of-type { font-size: 18px; }*/
 
@@ -162,11 +161,15 @@ tr.hover {
 }
 .searchBox { width: 60%; float: right; margin-top: 4px; padding-top: 1px; }
 
+
+
 @media (max-width: 410px) and (max-width: 767px) {
     .subject { width: 17% }
 }
 
 @media (max-width: 767px) {
+    input, select { width:93%; }
+    .tab-content .glyphicon { display:none }
     ul.nav.nav-pills.nav-stacked {
         width: 100%;
     }
@@ -199,6 +202,7 @@ tr.hover {
         /*width: 76% !important;*/
     /*}*/
     .subject { width: 25% }
+    input#id_subject { width:90%; }
     .activities {
         margin: -10px auto 35px !important
     }
