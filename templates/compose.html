@@ -13,8 +13,8 @@
         </div>
         <div class="col-sm-8 col-md-9 search-area">
             <div class="breadcrumbsed">
-                {% if sn == "True" %}
-                    Label: {{ sn }}
+                {% if sn in request.path %}
+                    New Message for: {{ sn }}
                 {% else %}
                     Compose New Message
                 {% endif %}
@@ -50,30 +50,32 @@
                                 <div id="selected_instructors"></div>
                             </select>
                         </div>
+                        <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="display:none;">
+                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" style=" float: left;  margin-top: 10px;"></span>&nbsp;&nbsp;&nbsp;
+                            <select name="sendto" id="id_sendto" multiple>
+                                <div id="selected_students"></div>
+                            </select>
+{#                            <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>#}
+                        </div>
                     {% else %}
                         <div class="compose-section-subject" title="Course" style="padding-top: 10px">
                             <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                            <input type="text" name="{{ sn }}" id="id_course" class="compose_inputs" value="{{ sn }}" disabled />
+                            <input type="text" name="{{ sn }}" id="id_course_list" class="compose_inputs" value="{{ sn }}" readonly />
                         </div>
-                    {% endif %}
-                        {{ instructor }}
-                        <div class="compose-section-subject" id="show_students_div" title="Students in selected course:" style="#display:none;">
-                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
+                        <div class="compose-section-subject" id="show_students_div" title="Students in selected course:">
+                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" style=" float: left;  margin-top: 10px;"></span>&nbsp;&nbsp;&nbsp;
                             <select name="sendto" id="id_sendto" multiple>
                                 <div id="selected_students"></div>
-{#                                <option value="{{ instructor }}">{{ instructor }}</option>#}
-{#                                {% for names in instructor %}#}
-{#                                    <option value="{{ instructor }}">{{ names }}</option>#}
-{#                                {% endfor %}#}
                             </select>
-                            <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>
+{#                            <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>#}
                         </div>
+                    {% endif %}
 
                     <div class="compose-section-subject" >
-                        <div style="float:right" >
-                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                            <span class="current-date"></span>
-                        </div>
+{#                        <div style="float:right" >#}
+{#                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;#}
+{#                            <span class="current-date"></span>#}
+{#                        </div>#}
                         <span class="glyphicon glyphicon-share-alt" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
                         <input id="id_subject" name='subject' type="text" placeholder="Subject Line..." />
                     </div>
@@ -88,6 +90,7 @@
                             </div>
                         </div>
                         <br />
+                        <a href="http://www.wiris.com/editor/demo/en/mathml-latex" target="_blank">Math Tool Helper</a>
                         <button class="btn btn-success sendmailbutton" style="float:right;">
                             <span class="glyphicon glyphicon-send" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
                             Send Message
@@ -98,9 +101,6 @@
                         {{ error }}
                     {% endfor %}
                 {% endif %}
-{#                {% for hidden in form.hidden_fields %}#}
-{#                    {{ hidden }}#}
-{#                {% endfor %}#}
                 </form>
                 </div>
             </div>
