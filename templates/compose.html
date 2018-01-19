@@ -14,7 +14,7 @@
         <div class="col-sm-8 col-md-9 search-area">
             <div class="breadcrumbsed">
                 {% if sn == "True" %}
-                    {{ sn }}
+                    Label: {{ sn }}
                 {% else %}
                     Compose New Message
                 {% endif %}
@@ -61,10 +61,10 @@
                             <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
                             <select name="sendto" id="id_sendto" multiple>
                                 <div id="selected_students"></div>
-                                <option value="{{ instructor }}">{{ instructor }}</option>
-                                {% for names in instructor %}
-                                    <option value="{{ instructor }}">{{ names }}</option>
-                                {% endfor %}
+{#                                <option value="{{ instructor }}">{{ instructor }}</option>#}
+{#                                {% for names in instructor %}#}
+{#                                    <option value="{{ instructor }}">{{ names }}</option>#}
+{#                                {% endfor %}#}
                             </select>
                             <button type="button" id="select_all" name="select_all" value="Select All" class="btn btn-warning2" data-toggle="modal" data-target="#myModal" style="margin-top:-20px">Select All</button>
                         </div>
