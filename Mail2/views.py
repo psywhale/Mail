@@ -13,6 +13,7 @@ from django.utils.decorators import method_decorator
 from LTI.lti import LtiLaunch
 from pprint import pprint
 from django.contrib.auth import login
+import requests
 # Create your views here.
 
 
@@ -131,8 +132,13 @@ class ComposeView(LoginRequiredMixin, FormView):
         context = super(ComposeView, self).get_context_data(**kwargs)
         if 'sn' in self.kwargs:
             context['sn'] = self.kwargs['sn']
+            r = requests.get("https://moodle.wosc.edu/wosc/rest.php?rest_key=HkHO25shu0i3Tq24iCknrB1mnpOY" \ 
+                             "&action=get_instructor&section="+self.kwargs['sn'])
+            getinstructor = r.json()
+            context['instructor'] = getinstructor['username']
         else:
             context['sn'] = 'False'
+
         context['session'] = self.request.session
         return context
 
