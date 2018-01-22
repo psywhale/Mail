@@ -75,7 +75,7 @@
 
                     {% if not email %}
                         {% if not "/label/" in request.path %}
-                            <div href="#" class="list-group-item">
+                            <div href="#" class="list-group-item" style="text-align:center;">
                                 <h2>Welcome to Course Mail2</h2>
                                 <p style=font-weight:bold>
                                     This is your introduction to Course Mail2 for Moodle:
@@ -90,7 +90,7 @@
 {#                                </p>#}
                             </div>
                         {% else %}
-                            <div href="#" class="list-group-item">
+                            <div href="#" class="list-group-item" style="text-align:center;">
                                 <h2>Course Mail2</h2>
                                 <p style=font-weight:bold>
                                     You currently do not have any email for this course: <br /><span style="font-size: 20px">{{ sn }}</span>.
