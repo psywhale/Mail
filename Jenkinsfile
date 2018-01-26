@@ -15,6 +15,9 @@ pipeline {
             agent {dockerfile true}
             steps {
                checkout scm
+               sh 'python -m venv /tmp/venv'
+               sh '. /tmp/venv/bin/activate'
+               sh 'pip install -r requirements.txt'
                sh 'python manage.py jenkins --enable-coverage'
                }
         }
