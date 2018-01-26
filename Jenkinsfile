@@ -12,7 +12,7 @@ pipeline {
 
         stage('test') {
             steps {
-                sh '/tmp/venv/bin/activate && python manage.py jenkins --enable-coverage'
+                sh './python manage.py jenkins --enable-coverage'
             }
 
         }
