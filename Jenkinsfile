@@ -14,9 +14,10 @@ pipeline {
         stage('Build') {
             agent {dockerfile true}
             steps {
+               slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}
                checkout scm
-               sh 'python -m venv /tmp/venv'
-               sh '/tmp/venv/bin/activate'
+               sh 'python -m venv venv'
+               sh 'venv/bin/activate'
                sh 'pip install -r requirements.txt'
                sh 'python manage.py jenkins --enable-coverage'
                }
