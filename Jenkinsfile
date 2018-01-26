@@ -10,13 +10,8 @@ pipeline {
                }
         }
 
-        stage('test') {
-            steps {
-              sh 'pwd'
 
-            }
 
-        }
 
 
     }
