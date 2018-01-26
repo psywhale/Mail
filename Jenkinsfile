@@ -1,28 +1,27 @@
 pipeline {
-    agent any
+    agent {docker 'maxsum:build'}
     stages {
         stage('Cleanup') {
-            step([$class: 'WsCleanup'])
+            steps{[$class: 'WsCleanup']}
         }
         stage('Checkout SCM') {
-            checkout scm
+            steps {
+               checkout scm
+               }
         }
-        def pythonImage
-        stage('build docker image') {
 
-            pythonImage = docker.build("maxsum:build")
-        }
         stage('test') {
-
-            slackSend "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-            pythonImage.inside {
-               sh '. /tmp/venv/bin/activate && python manage.py jenkins --enable-coverage'
+            steps {
+                sh '. /tmp/venv/bin/activate && python manage.py jenkins --enable-coverage'
             }
 
         }
 
         stage('collect test results') {
-            junit 'reports/junit.xml'
+            steps {
+                junit 'reports/junit.xml'
+            }
+
         }
     }
 
