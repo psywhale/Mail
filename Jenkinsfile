@@ -3,7 +3,7 @@ pipeline {
     stages {
 
         stage('Clean') {
-            agent any
+            agent {dockerfile true}
             steps {
                 deleteDir()
             }
