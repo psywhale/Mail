@@ -29,7 +29,6 @@ hr { margin-top: 5px;margin-bottom: 10px; }
 a.list-group-item:focus, a.list-group-item:hover { border-left: 4px dotted #c6e8c6; background-color: #f6fff6 }
 .list-group-item.active>.badge, .nav-pills>.active>a>.badge { color: white; background-color: #767676; }
 .nav-pills>li>a { padding: 5px 10px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-ul.nav.nav-pills.nav-stacked { #width: 108%; }
 .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover { color: inherit; background-color: inherit; font-weight: 900 }
 .nav-pills>li>a>.badge { position: absolute; margin-left: -30px; top: 6px; }
 .nav>li>a:focus, .nav>li>a:hover { background-color: #d3f5d9; }
@@ -173,6 +172,7 @@ tr.hover {
     .tab-content .glyphicon { display:none }
     ul.nav.nav-pills.nav-stacked {
         width: 100%;
+        margin-bottom: 10px !important;
     }
     .subject { width: 35% }
     .searchBox { width: 55% !important; }

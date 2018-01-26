@@ -102,7 +102,7 @@ function getCourses(){
                 try {
                     myTC = info[1];
                     if (termCode == info[1].toLowerCase()) {
-                        $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list ' + course.shortname + '" id="' + course.shortname + '" title="' + course.fullname + '"><a href="/label/' + course.shortname + '/"> ' + course.fullname + '</a></li>');
+                        $('#current-courses').html($('#current-courses').html() + '<li class="current-course-list ' + course.shortname + '" id="' + course.shortname + '" title="' + course.fullname + ' (Course ID: ' + course.shortname + ')"><a href="/label/' + course.shortname + '/"> ' + course.fullname + ' (Course ID: ' + course.shortname + ')</a></li>');
                     }
                     else {
                         $('#past-course-dropdown').show();
