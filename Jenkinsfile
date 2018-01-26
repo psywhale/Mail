@@ -11,20 +11,26 @@ node {
         pythonImage = docker.build("maxsum:build")
     }
     stage('test') {
-        try {
-               slackSend "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-               pythonImage.inside {
-                    sh '. /tmp/venv/bin/activate && python manage.py jenkins --enable-coverage'
-                    }
-            } catch(err) {
-                slackSend color:"error", message:"${err}"
-            }
 
+        slackSend "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        pythonImage.inside {
+           sh '. /tmp/venv/bin/activate && python manage.py jenkins --enable-coverage'
         }
+
+    }
 
 
     stage('collect test results') {
         junit 'reports/junit.xml'
+    }
+    post{
+        success {
+            slackSend color:"good",message:"Build SUCCESS- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        }
+        failure {
+            slackSend color:"error",message:"Build FAILED- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        }
+
     }
 
 
