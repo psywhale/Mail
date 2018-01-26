@@ -19,7 +19,7 @@ pipeline {
                sh 'pwd'
 
 
-               sh 'sudo pip install -r requirements.txt'
+               sh 'pip install -r requirements.txt'
                sh 'python manage.py jenkins --enable-coverage'
                }
         }
