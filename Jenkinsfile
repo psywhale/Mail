@@ -22,7 +22,7 @@ node {
 
         }
 
-    }
+
     stage('collect test results') {
         junit 'reports/junit.xml'
     }
