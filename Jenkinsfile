@@ -2,12 +2,14 @@ pipeline {
     agent none
     stages {
 
+/*
         stage('Clean') {
             agent {dockerfile true}
             steps {
                 deleteDir()
             }
         }
+        */
 
         stage('Build') {
             agent {dockerfile true}
