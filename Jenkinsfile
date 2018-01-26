@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent {dockerfile true}
     stages {
 
 /*
@@ -12,7 +12,7 @@ pipeline {
         */
 
         stage('Build') {
-            agent {dockerfile true}
+
             steps {
                slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
