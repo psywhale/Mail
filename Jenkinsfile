@@ -14,5 +14,9 @@ node {
             sh '. /tmp/venv/bin/activate && python manage.py jenkins --enable-coverage'
         }
     }
+    stage('collect test results') {
+        junit 'reports/junit.xml'
+    }
+
 
 }
