@@ -1,16 +1,19 @@
 pipeline {
-    agent {dockerfile true}
+    agent none
     stages {
 
-        stage('Checkout SCM') {
+        stage('Build') {
+            agent {dockerfile true}
             steps {
                checkout scm
+               sh 'python manage.py jenkins --enable-coverage'
                }
         }
 
         stage('test') {
             steps {
-                sh './python manage.py jenkins --enable-coverage'
+                pwd
+
             }
 
         }
