@@ -18,8 +18,8 @@ pipeline {
                checkout scm
                sh 'pwd'
 
-               sh 'python -m venv venv'
-               sh 'venv/bin/activate && pip install -r requirements.txt && python manage.py jenkins --enable-coverage'
+               sh 'python -m venv /tmp/venv'
+               sh '/tmp/venv/bin/activate && pip install -r requirements.txt && python manage.py jenkins --enable-coverage'
                //sh 'pip install -r requirements.txt'
                //sh 'python manage.py jenkins --enable-coverage'
                }
