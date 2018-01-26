@@ -14,7 +14,7 @@ pipeline {
         stage('Build') {
             agent {dockerfile true}
             steps {
-               slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}
+               slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
                sh 'python -m venv venv'
                sh 'venv/bin/activate'
