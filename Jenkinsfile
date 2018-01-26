@@ -2,7 +2,7 @@ pipeline {
     agent {docker 'maxsum:build'}
     stages {
         stage('Cleanup') {
-            steps{[$class: 'WsCleanup']}
+            steps{cleanWs()}
         }
         stage('Checkout SCM') {
             steps {
