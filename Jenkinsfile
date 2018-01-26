@@ -1,5 +1,5 @@
 pipeline {
-    agent {docker 'maxsum:build'}
+    agent {dockerfile true}
     stages {
         stage('Cleanup') {
             steps{cleanWs()}
