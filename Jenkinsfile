@@ -19,9 +19,9 @@ pipeline {
                sh 'pwd'
 
                sh 'python -m venv venv'
-               sh 'venv/bin/activate'
-               sh 'pip install -r requirements.txt'
-               sh 'python manage.py jenkins --enable-coverage'
+               sh 'venv/bin/activate && pip install -r requirements.txt && python manage.py jenkins --enable-coverage'
+               //sh 'pip install -r requirements.txt'
+               //sh 'python manage.py jenkins --enable-coverage'
                }
         }
 
