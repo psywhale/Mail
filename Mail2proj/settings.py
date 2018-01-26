@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Mail2.apps.Mail2Config',
+    'django_jenkins',
+
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Mail2proj.urls'
+
+JENKINS_TASKS = (
+
+)
 
 TEMPLATES = [
     {
