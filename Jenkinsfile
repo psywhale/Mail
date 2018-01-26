@@ -16,6 +16,8 @@ pipeline {
             steps {
                slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
+               sh 'pwd'
+
                sh 'python -m venv venv'
                sh 'venv/bin/activate'
                sh 'pip install -r requirements.txt'
