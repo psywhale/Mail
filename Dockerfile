@@ -3,7 +3,6 @@ FROM django
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip
 RUN python -m venv /tmp/venv && \
     . /tmp/venv/bin/activate && \
     pip install -r requirements.txt
