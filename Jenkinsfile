@@ -25,7 +25,7 @@ pipeline {
         }
 
         stage('Test') {
-            agent {dockerfile true}
+
             steps {
                 junit 'reports/junit.xml'
 
