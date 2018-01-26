@@ -1,9 +1,7 @@
 pipeline {
     agent {dockerfile true}
     stages {
-        stage('Cleanup') {
-            steps{cleanWs()}
-        }
+
         stage('Checkout SCM') {
             steps {
                checkout scm
@@ -17,16 +15,14 @@ pipeline {
 
         }
 
-        stage('collect test results') {
-            steps {
-                junit 'reports/junit.xml'
-            }
 
-        }
     }
 
 
     post{
+        always {
+            junit 'reports/junit.xml'
+        }
         success {
             slackSend color:"good",message:"Build SUCCESS- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
         }
