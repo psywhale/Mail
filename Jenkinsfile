@@ -11,10 +11,8 @@ node {
     }
     stage('test') {
         pythonImage.inside {
-            sh '. /tmp/venv/bin/activate && python manage.py test'
+            sh '. /tmp/venv/bin/activate && python manage.py jenkins --enable-coverage > /tmp/'
         }
     }
-    stage('collect test results') {
-        junit 'build/results.xml'
-    }
+
 }
