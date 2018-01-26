@@ -11,7 +11,7 @@ node {
     }
     stage('test') {
         pythonImage.inside {
-            sh '. /tmp/venv/bin/activate && python manage.py jenkins --enable-coverage > /tmp/'
+            sh '. /tmp/venv/bin/activate && python manage.py jenkins --enable-coverage'
         }
     }
 
