@@ -1,14 +1,12 @@
-FROM   django
+FROM django
 
-RUN apt-get update \
-    && apt-get upgrade \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /tmp/app
 
-WORKDIR /usr/src/app
-
-COPY requirements.txt ./
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-COPY . .
+RUN python -m venv /tmp/venv && \
+    . /tmp/venv/bin/activate && \
+    pip install -r requirements.txt
 
 EXPOSE 8000
 CMD ["python","manage.py","makemigrations"]
