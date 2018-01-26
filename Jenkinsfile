@@ -5,7 +5,7 @@ pipeline {
         stage('Clean') {
             agent any
             steps {
-                cleanWs()
+                deleteDir()
             }
         }
 
