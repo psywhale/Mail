@@ -55,6 +55,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'Mail2proj.urls'
 
 JENKINS_TASKS = (
+    'django_jenkins.tasks.run_pylint',
+    'django_jenkins.tasks.run_pep8',
 
 )
 
