@@ -7,6 +7,12 @@ import datetime
 
 # Create your tests here.
 
+class JenkinsTest(TestCase):
+    def test_what_if_fail(self):
+        self.assertEqual(1,3)
+
+
+
 class myTestCase(TestCase):
 
     def setUp(self):
