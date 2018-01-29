@@ -20,15 +20,22 @@ pipeline {
 
 
                sh 'pip install -r requirements.txt'
-               sh 'python manage.py jenkins --enable-coverage'
+
                }
         }
 
         stage('Test') {
 
             steps {
-                junit 'reports/junit.xml'
+                sh 'python manage.py jenkins --enable-coverage'
 
+
+            }
+        }
+
+        stage('Reports') {
+            steps {
+                junit 'reports/junit.xml'
             }
         }
 
