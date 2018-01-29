@@ -47,6 +47,9 @@ pipeline {
 
 
     post{
+        always {
+            junit 'reports/junit.xml'
+        }
 
         success {
             slackSend color:"good",message:"Build SUCCESS- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
