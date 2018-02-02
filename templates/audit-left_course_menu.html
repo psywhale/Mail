@@ -1,15 +1,24 @@
 {% block leftcoursemenu %}
         <div class="col-sm-4 col-md-3">
-            <a href="{% url 'audit' %}" class="btn btn-danger btn-sm btn-block" role="button"><i class="glyphicon glyphicon-question-sign"></i> Audit</a>
-            <hr>
-            <ul class="nav nav-pills nav-stacked" id="current-courses">
-                <li id="auditclass" class=""><a href="{% url 'auditclass' %}"> By Class </a>
+            <ul class="nav nav-pills nav-stacked">
+                <li id="auditclass" style="font-weight: bold;">
+                    <a href="{% url 'auditclass' %}">
+                        {% if "/class" in request.path %}
+                            <span class="glyphicon glyphicon-ok"></span><span style="color:green; font-weight: bolder;">Audting By Class</span>
+                        {% else %}
+                            <span>Audt By Class</span>
+                        {% endif %}
+                    </a>
                 </li>
-            <li id="audituser" class=""><a href="{% url 'audituser' %}"> By User </a>
+                <li id="audituser" style="font-weight: bold;">
+                    <a href="{% url 'audituser' %}">
+                        {% if "/user" in request.path %}
+                            <span class="glyphicon glyphicon-ok"></span><span style="color:green; font-weight: bolder;">Audting By User</span>
+                        {% else %}
+                            <span>Audt By User</span>
+                        {% endif %}
+                    </a>
                 </li>
-
-
-
             </ul>
 
         </div>
