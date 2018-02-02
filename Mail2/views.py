@@ -210,6 +210,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                 'fk_sender': m.fk_sender,
                 'to': r.to,
                 'created': m.created,
+                'timestamp': m.created.timestamp(),
             }
 
             context['mail'] = info
