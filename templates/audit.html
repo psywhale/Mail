@@ -1,4 +1,4 @@
-{% extends "audit_base.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
 {% load tz %}
 {% block content %}
@@ -11,56 +11,21 @@
         <div class="col-sm-4 col-md-3">
             {% include 'global-logo.html' %}
         </div>
-        <div class="col-sm-8 col-md-9">
-            <div class="input-group" style="width: 33%; float: right;">
+        <div class="col-sm-8 col-md-9 search-area">
+            <div class="breadcrumbsed">
+                    Label: Audit Home
+            </div>
+            <div class="input-group searchBox">
                 <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
                 <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button">Go!</button>
                 </span>
             </div>
-            <!-- Split button -->
-            <div class="btn-group">
-                <span class="text-muted"><b>1</b>–<b>50</b> of <b>160</b></span>
-                <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </button>
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </button>
-                </div>
-{#                <button type="button" class="btn btn-default">#}
-{#                    <div class="checkbox" style="margin: 0;">#}
-{#                        <label>#}
-{#                            <input type="checkbox" class="check" id="checkAll">#}
-{#                        </label>#}
-{#                    </div>#}
-{#                </button>#}
-{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
-{#                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>#}
-{#                </button>#}
-{#                <ul class="dropdown-menu" role="menu">#}
-{#                    <li><a href="#">All</a></li>#}
-{#                    <li><a href="#">None</a></li>#}
-{#                    <li><a href="#">Read</a></li>#}
-{#                    <li><a href="#">Unread</a></li>#}
-{#                </ul>#}
-            </div>
-{#            <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" href="/">#}
-{#                &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>#}
-            <!-- Single button -->
-{#            <div class="btn-group">#}
-{#                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
-{#                    More <span class="caret"></span>#}
-{#                </button>#}
-{#                <ul class="dropdown-menu" role="menu">#}
-{#                    <li><a href="#">Archive selected</a></li>#}
-{#                    <li><a href="#">Mark selected as read</a></li>#}
-{#                    <li><a href="#">Mark selected as unread</a></li>#}
-{#                    <li class="divider"></li>#}
-{#                    <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>#}
-{#                </ul>#}
-{#            </div>#}
+            {% if "/audit/user" in request.path or "/audit/class" in request.path %}
+                <a type="button" class="btn btn-default" href="{% url 'audit' %}" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox" style="margin-left:-10px">
+                    <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;&nbsp;Back
+                </a>
+            {% endif %}
         </div>
     </div>
     <hr>
@@ -69,76 +34,41 @@
 {% include 'audit-left_course_menu.html' %}
 
         <div class="col-sm-8 col-md-9 main-mail-section">
-{#            <div class="pull-right">#}
-{##}
-{#            </div>#}
-            <!-- Nav tabs -->
-{#            <ul class="nav nav-tabs">#}
-{#                <li class="active"><a href="#home" data-toggle="tab"><span class="glyphicon glyphicon-inbox">#}
-{#                </span>{{ message.section }}</a></li>#}
-{#                <li><a href="#profile" data-toggle="tab"><span class="glyphicon glyphicon-user"></span>#}
-{#                    </a></li>#}
-{#                <li><a href="#settings" data-toggle="tab"><span class="glyphicon glyphicon-plus no-margin">#}
-{#                </span></a></li>#}
-{#            </ul>#}
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
-                    <div class="list-group">
-                    {% csrf_token %}
+                    <div class="list-group" style="padding:20px">
 
-                    {% if "/user" in request.path %}
-                        {% include 'audit_form_user.html' %}
-                    {% elif "/class" in request.path %}
-                        {% include 'audit_form_class.html' %}
-                    {% else %}
-                        <div>Choose type of search on the left</div>
-                    {% endif %}
+                    <form action="." method="get">
+                        {% csrf_token %}
+                        {{ form }}
 
+                        {% if "/user" in request.path %}
+                            {% include 'audit_form_user.html' %}
 
+                        {% elif "/class" in request.path %}
+                            {% include 'audit_form_class.html' %}
 
+                        {% else %}
 
-
-                        {% for message in email|dictsortreversed:"timestamp" %}
-{#                    {% for message in email %}#}
-                        <a href="{% url "reply" message.id %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" class="check">
-                                </label>
+                            <h4 style="text-align: center; margin:20px 0">
+                                Welcome, Please choose from the following choices:
+                            </h4>
+                            <div class="list-group" style="margin-right: 8px;">
+                              <a href="{% url 'auditclass' %}" class="list-group-item " style="border-top: 1px solid #ddd;">
+                                <h4 class="list-group-item-heading">By Class</h4>
+                                <p class="list-group-item-text">Filter audit results by all courses.</p>
+                              </a>
+                              <a href="{% url 'audituser' %}" class="list-group-item ">
+                                <h4 class="list-group-item-heading">By User</h4>
+                                <p class="list-group-item-text">Filter audit results by all users.</p>
+                              </a>
                             </div>
-                            <span class="name {% if message.read == False %} unread-mail{% endif %}"> {{ message.from.first_name }} {{ message.from.last_name }}</span>
-                            <span class="section {{ message.section }} {% if message.read == False %} unread-mail{% endif %}">{{ message.section }}</span>
-                            <span class="subject text-muted" style="font-size: 11px;"> - {{ message.subject }}</span>
-                            <span class="date badge {% if message.read == False %} unread-mail{% endif %}">
-                                {% now "Y-m-d" as todays_date %}
-                                {% if todays_date >= message.date|date:"Y-m-d" %}
-                                   {{ message.date }}
-                                {% else %}
-                                    {{ message.timestamp }} Today
-                                {% endif %}
-                            </span>
-                            <span class="pull-right">
-                                {% if message.has_attachment %}
-                                    <span class="glyphicon glyphicon-paperclip" style="margin: 5px 14px 0 0 !important;">
-                                {% endif %}
-                            </span>
-                        </span>
-                        </a>
-                        {% endfor %}
-
+                        {% endif %}
+                    </form>
 
                     </div>
                 </div>
-                <div class="tab-pane fade in" id="profile">
-                    <div class="list-group">
-                        <div class="list-group-item">
-                            <span class="text-center">This tab is empty.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade in" id="settings">
-                    This tab is empty.</div>
             </div>
 
             <div class="row-md-12">
@@ -152,5 +82,7 @@
     </div>
 </div>
 
+<style>
+</style>
 
 {% endblock %}
