@@ -1,9 +1,4 @@
 
-    var d = new Date();
-    var n = d.getTimezoneOffset();
-
-
-
 
 // {#    ------- THIS IS BUTTONTS & MAIL FUNCTIONS --------#}
     $("#checkAll").click(function () {
@@ -54,6 +49,14 @@ function calculateCurrentTermCode(){
 	return year+semester;
 }
 
+
+// {#    ------- THIS IS CURRENT TIME --------#}
+function calculateCurrentTime(){
+	var date = new Date();
+    var offset = date.getTimezoneOffset();
+
+    alert(offset);
+}
 
 // {#    ------- THIS IS Check all checkboxes --------#}
 
