@@ -152,5 +152,5 @@ var whichImage = Math.floor((Math.random()* p) + 1);
   console.log("Image #:" + p);
 
 function showImage(){
-document.write('<img style="max-width:98%; border-radius:8px; border: 2px outset #888" alt="No Mail Fun!" class="rotateimages" src="'+theImages[whichImage]+'">');
+document.write('<img style="max-width:98%; border-radius:8px; border: 2px outset #888; width:100%; max-width:300px" alt="No Mail Fun!" class="rotateimages" src="'+theImages[whichImage]+'">');
 }

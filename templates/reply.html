@@ -42,7 +42,7 @@
 
                     <div style="padding:12px" title="Sent by ({{ mail.fk_sender }}) on this date: &nbsp; {{ mail.created }}">
                         <div style="float:right; margin: 10px 5px 0 0">
-                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp; <span class="calculatedtime">{{ mail.timestamp }}</span>
+                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp; <span class="calculatedtime">{{ mail.timestamp }}</span>
                         </div>
                         <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>
                         &nbsp;&nbsp; <strong>SENT FROM:</strong> {{ mail.fk_sender.first_name }} {{ mail.fk_sender.last_name }} ({{ mail.fk_sender }})
