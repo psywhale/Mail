@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse,redirect
 from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
+from django.db.models import Count
 from django.contrib.auth.models import User
 from Mail2proj.settings import DEBUG
 from .forms import ReplyForm, ComposeForm, AuditClassForm, AuditUserForm
@@ -284,7 +285,7 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
 
 
 class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
-    group_required = u"Auditors"
+    group_required = u"Auditor"
     template_name = 'audit.html'
 
     def get_context_data(self, **kwargs):
@@ -296,16 +297,24 @@ class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
 class AuditViewClass(AuditView, FormView):
     form_class = AuditClassForm
 
-    def get_initial(self, **kwargs):
+    def get_initial(self,**kwargs):
         initial = super(AuditViewClass, self).get_initial()
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(AuditViewClass, self).get_context_data(**kwargs)
         data = []
-        dataqs = Mail.objects.values('section','termcode').annotate().distinct()
-        for row in dataqs:
-            data.append(row["section"] + "-" + row["termcode"])
-        dprint(data)
-        initial["audit_class"] = data
-        dprint(initial)
-        return data
+        dataqs = Mail.objects.values('termcode').annotate(num_termcodes=Count('termcode'))
+       # for row in dataqs:
+       #     data.append(row["section"] + "-" + row["termcode"])
+        dprint(str(dataqs.query))
+        for flasdfc in dataqs:
+
+            dprint(flasdfc)
+
+        context['audit_termcodes'] = dataqs
+        dprint(context)
+        return context
 
 
 class AuditViewUser(AuditView, FormView):
