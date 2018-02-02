@@ -62,13 +62,14 @@
                             <span class="name"> {{ message.to|capfirst }} </span>
                             <span class="section {{ message.section }}">{{ message.section }}</span>
                             <span class="subject text-muted"> - {{ message.subject }}</span>
-                            <span class="date badge">
-                                {% now "Y-m-d" as todays_date %}
-                                {% if todays_date >= message.date|date:"Y-m-d" %}
-                                   {{ message.date }}
-                                {% else %}
-                                    {{ message.timestamp }} Today
-                                {% endif %}
+                            <span class="date badge justthedateplease">
+{#                                {% now "Y-m-d" as todays_date %}#}
+{#                                {% if todays_date >= message.date|date:"Y-m-d" %}#}
+{#                                   {{ message.date }}#}
+{#                                {% else %}#}
+{#                                    {{ message.timestamp }} Today#}
+{#                                {% endif %}#}
+                                {{ message.timestamp }}
                             </span>
                             <span class="pull-right">
                                 {% if message.has_attachment %}

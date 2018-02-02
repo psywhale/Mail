@@ -115,13 +115,14 @@
                             <span class="{% cycle 'red' 'green' 'blue' %} section s{{ message.section }}">{{ message.section }}</span>
                             <span class="subject text-muted"> &nbsp; {{ message.subject }}</span>
 
-                            <span class="date badge">
-                                {% now "Y-m-d" as todays_date %}
-                                {% if todays_date >= message.date|date:"Y-m-d" %}
-                                   {{ message.date }}
-                                {% else %}
-                                    {{ message.timestamp }} Today
-                                {% endif %}
+                            <span class="date badge justthedateplease">
+{#                                {% now "Y-m-d" as todays_date %}#}
+{#                                {% if todays_date >= message.date|date:"Y-m-d" %}#}
+{#                                   {{ message.date }}#}
+{#                                {% else %}#}
+{#                                    {{ message.timestamp }} Today#}
+{#                                {% endif %}#}
+                                {{ message.timestamp }}
                             </span>
                                 {% if message.has_attachment %}
                                     <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!">
