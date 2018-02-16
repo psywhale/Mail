@@ -311,8 +311,15 @@ class AuditViewClass(AuditView, FormView):
         for flasdfc in dataqs:
 
             dprint(flasdfc)
+        if 'termcode' in self.kwargs:
+            courseqs = Mail.objects.filter(termcode=self.kwargs['termcode']).values('section').annotate(num_sections=Count('section'))
+        else:
+            courseqs = Mail.objects.filter(termcode="173s").values('section').annotate(
+                num_sections=Count('section'))
+
 
         context['audit_termcodes'] = dataqs
+        context['audit_class_list_for_term'] = courseqs
         dprint(context)
         return context
 

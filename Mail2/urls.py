@@ -11,6 +11,7 @@ urlpatterns= [
     url(r'^listunread/$', ListUnreadView.as_view(), name='listunread'),
     url(r'^audit/$', AuditView.as_view(), name='audit'),
     url(r'^audit/class$', AuditViewClass.as_view(), name='auditclass'),
+    url(r'^audit/class/(?P<termcode>[0-9]{2}[1-3][sS]+)/$', AuditViewClass.as_view(), name='auditclass'),
     url(r'^audit/user$', AuditViewUser.as_view(), name='audituser'),
     url(r'^archive/$', ArchiveMailView.as_view(), name='archivemail'),
     url(r'^munread/$', MarkMailUnreadView.as_view(), name='markunread'),
