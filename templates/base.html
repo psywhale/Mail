@@ -154,6 +154,28 @@ $('#munread-btn').click(function () {
     $( ".compose .reply_editor" ).attr("placeholder", "Click here to Compose...");
     $("#id_instructor").prop("selectedIndex", 0);
 
+
+
+
+    var d = new Date();
+    var n = d.getTimezoneOffset();
+
+    $('.calculatedtime').each(
+        function () {
+            var createdTime = new Date($(this).html() * 1000);
+{#            console.log(createdTime.toLocaleDateString() + " " + createdTime.toLocaleTimeString());#}
+            $(this).html(createdTime.toLocaleString());
+        }
+    )
+
+    $('.justthedateplease').each(
+        function () {
+            var createdTime = new Date($(this).html() * 1000);
+{#            console.log(createdTime.toLocaleDateString() + " " + createdTime.toLocaleTimeString());#}
+            $(this).html(createdTime.toLocaleDateString());
+        }
+    )
+
 </script>
 
 

@@ -75,7 +75,7 @@
 
                     {% if not email %}
                         {% if not "/label/" in request.path %}
-                            <div href="#" class="list-group-item" style="text-align:center;">
+                            <div href="#" class="list-group-item" style="text-align:center; background: rgba(255,255,255,.5);">
                                 <h2>Welcome to Course Mail2</h2>
                                 <p style=font-weight:bold>
                                     This is your introduction to Course Mail2 for Moodle:
@@ -83,14 +83,14 @@
                                     You currently do not have any email to view.
                                 </p>
                                 <p style="text-align:center">
-                                    <img src="/static/images/mail/0.jpg" />
+                                    <img src="/static/images/mail/0.jpg" style="width:100%; max-width:300px" />
                                 </p>
 {#                                <p>#}
 {#                                    Lorem ipsum dolor sit amet, pro nullam facilisi an, per iuvaret conclusionemque te. Te audire dolorem nominavi sea, ut ubique dignissim intellegam per. His cu noluisse accusata quaerendum. Molestie deseruisse et eam. Ad accumsan recteque mediocritatem eum, qui aeterno consequat te, ut sed omnis dolore.#}
 {#                                </p>#}
                             </div>
                         {% else %}
-                            <div href="#" class="list-group-item" style="text-align:center;">
+                            <div href="#" class="list-group-item" style="text-align:center; background: rgba(255,255,255,.5);">
                                 <h2>Course Mail2</h2>
                                 <p style=font-weight:bold>
                                     You currently do not have any email for this course: <br /><span style="font-size: 20px">{{ sn }}</span>.
@@ -115,19 +115,18 @@
                             <span class="{% cycle 'red' 'green' 'blue' %} section s{{ message.section }}">{{ message.section }}</span>
                             <span class="subject text-muted"> &nbsp; {{ message.subject }}</span>
 
-                            <span class="date badge">
-                                {% now "Y-m-d" as todays_date %}
-                                {% if todays_date >= message.date|date:"Y-m-d" %}
-                                   {{ message.date }}
-                                {% else %}
-                                    {{ message.timestamp }} Today
-                                {% endif %}
+                            <span class="date badge justthedateplease">
+{#                                {% now "Y-m-d" as todays_date %}#}
+{#                                {% if todays_date >= message.date|date:"Y-m-d" %}#}
+{#                                   {{ message.date }}#}
+{#                                {% else %}#}
+{#                                    {{ message.timestamp }} Today#}
+{#                                {% endif %}#}
+                                {{ message.timestamp }}
                             </span>
                                 {% if message.has_attachment %}
                                     <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!">
                                 {% endif %}
-{#                            <span class="pull-right">#}
-{#                            </span>#}
                         </span>
                         </a>
 
@@ -146,7 +145,9 @@
                 <div class="tab-pane fade in" id="settings">
                     This tab is empty.</div>
             </div>
-{% include 'global-debug.html' %}
+
+{#            {% include 'global-debug.html' %}#}
+
         </div>
     </div>
 </div>

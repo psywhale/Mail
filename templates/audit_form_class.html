@@ -1,11 +1,17 @@
-<form id="auditclass" action="." method="post">
+<form id="auditclass" action="." method="get">
     {% csrf_token %}
-    <label for="terms">Section and Termcode?</label>
+    <label for="terms">Termcode?</label>
     <select name="terms" onchange="$('auditclass').submit()">
-        {% for termcode in audit_class %}
-        <option value="{{ termcode }}">{{ termcode }}</option>
+        {% for term in audit_termcodes %}
+
+        <option value="{{ term.termcode }}">{{ term.termcode }}</option>
         {% endfor %}
     </select>
+<ul>
+    {% for class in audit_class_list_for_term %}
+    <li>{{ class.section }}</li>
+    {% endfor %}
 
+</ul>
 
 </form>

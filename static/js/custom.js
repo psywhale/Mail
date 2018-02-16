@@ -1,9 +1,4 @@
 
-    var d = new Date();
-    var n = d.getTimezoneOffset();
-
-
-
 
 // {#    ------- THIS IS BUTTONTS & MAIL FUNCTIONS --------#}
     $("#checkAll").click(function () {
@@ -54,6 +49,14 @@ function calculateCurrentTermCode(){
 	return year+semester;
 }
 
+
+// {#    ------- THIS IS CURRENT TIME --------#}
+function calculateCurrentTime(){
+	var date = new Date();
+    var offset = date.getTimezoneOffset();
+
+    alert(offset);
+}
 
 // {#    ------- THIS IS Check all checkboxes --------#}
 
@@ -149,5 +152,5 @@ var whichImage = Math.floor((Math.random()* p) + 1);
   console.log("Image #:" + p);
 
 function showImage(){
-document.write('<img style="max-width:98%; border-radius:8px; border: 2px outset #888" alt="No Mail Fun!" class="rotateimages" src="'+theImages[whichImage]+'">');
+document.write('<img style="max-width:98%; border-radius:8px; border: 2px outset #888; width:100%; max-width:300px" alt="No Mail Fun!" class="rotateimages" src="'+theImages[whichImage]+'">');
 }
