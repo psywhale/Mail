@@ -49,10 +49,11 @@ class IndexView(LoginRequiredMixin,TemplateView):
                 mail['timestamp'] = message.created.timestamp()
                 #pprint(mail['date'])
                 mail['from'] = message.fk_sender
-                if Attachment.objects.filter(fk_mail=message):
-                    mail['has_attachment'] = True
-                else:
-                    mail['has_attachment'] = False
+                mail['attachments'] = Attachment.objects.filter(m2m_mail=message)
+                # if Attachment.objects.filter(fk_mail=message):
+                #     mail['has_attachment'] = True
+                # else:
+                #     mail['has_attachment'] = False
                 email.append(mail)
         context['email'] = email
         context['session'] = self.request.session
@@ -98,10 +99,11 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             mail['timestamp'] = usermail.created.timestamp()
             #pprint(mail['date'])
             mail['from'] = usermail.fk_sender
-            if Attachment.objects.filter(fk_mail=usermail):
-                mail['has_attachment'] = True
-            else:
-                mail['has_attachment'] = False
+            mail['attachments'] = Attachment.objects.filter(m2m_mail=usermail)
+            # if Attachment.objects.filter(fk_mail=usermail):
+            #     mail['has_attachment'] = True
+            # else:
+            #     mail['has_attachment'] = False
             email.append(mail)
         context['email'] = email
         context['session'] = self.request.session
@@ -372,10 +374,10 @@ class LabelView(LoginRequiredMixin, TemplateView):
                 mail['timestamp'] = message.created.timestamp()
                 # pprint(mail['date'])
                 mail['from'] = message.fk_sender
-                if Attachment.objects.filter(fk_mail=message):
-                    mail['has_attachment'] = True
-                else:
-                    mail['has_attachment'] = False
+                # if Attachment.objects.filter(fk_mail=message):
+                #     mail['has_attachment'] = True
+                # else:
+                #     mail['has_attachment'] = False
                 email.append(mail)
             context['email'] = email
             context['courses'] = courses
