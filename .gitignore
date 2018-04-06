@@ -60,6 +60,8 @@ reports/
 .media/
 local_settings.py
 
+
+
 # Flask stuff:
 instance/
 .webassets-cache
@@ -164,3 +166,4 @@ db.sqlite3
 
 .idea/inspectionProfiles/
 /db.cnf
+/Mail2/migrations/
