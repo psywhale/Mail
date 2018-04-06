@@ -22,7 +22,7 @@
             {% include 'global-search_and_nav_buttons.html' %}
         </div>
     </div>
-    <hr>
+    <hr style="border-top:1px solid #d4d4d4">
     <div class="row">
 
         {% include 'global-left_course_menu.html' %}
@@ -72,10 +72,6 @@
                     {% endif %}
 
                     <div class="compose-section-subject" >
-{#                        <div style="float:right" >#}
-{#                            <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;#}
-{#                            <span class="current-date"></span>#}
-{#                        </div>#}
                         <span class="glyphicon glyphicon-share-alt" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
                         <input id="id_subject" name='subject' type="text" placeholder="Subject Line..." />
                     </div>
@@ -86,6 +82,8 @@
                                 {% autoescape off %}
                                     {{ form.content }}
                                 {% endautoescape %}
+
+                            {{ form.attachment }}
 
                             </div>
                         </div>
@@ -161,6 +159,7 @@ function listClasses(){
 
     $('#id_course_list').on('change', function () {
         $('#show_instructor_div').slideDown();
+        $('#id_sendto option').prop('selected', true);
     });
 
     $('#select_all').click(function() {

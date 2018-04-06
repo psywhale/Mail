@@ -59,6 +59,8 @@
                         {% autoescape off %}
                             {{ mail.content }}
                         {% endautoescape %}
+
+                    {{ form.attachement }}
                     </div>
                     <br />
                     <div class="container-fluid">
@@ -67,7 +69,7 @@
                                 {% if message.attachments %}
                                     <div class="attachements">
                                         {% for attachment in message.attachments %}
-                                            {% if attachment.filename =< '.jpg' %}
+                                            {% if attachment.filename is attachment.image %}
                                                 <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!"></span>
                                                 <a href="{{ attachment.filepath }}">
                                                     <img src="{{ attachment.filepath }}" alt="{{ attachment.filename }}" />
