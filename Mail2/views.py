@@ -14,6 +14,7 @@ from django.utils.decorators import method_decorator
 from LTI.lti import LtiLaunch
 from pprint import pprint
 from django.contrib.auth import login
+from hashlib import sha1
 import requests
 # Create your views here.
 
@@ -130,7 +131,24 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_route.to = self.request.POST['sendto']
         new_route.fk_mail = new_msg
         new_route.save()
+        if 'attachment' in self.request.FILES:
+            file = self.request.FILES['attachment']
+
+            fp = open('/tmp/'+file.name,'w+b')
+            for chunk in file.chunks():
+                fp.write(chunk)
+            fp.close()
+
+            fp = open('/tmp/'+file.name,'rb')
+            hash_of_file = hash_file(fp)
+
+
+
+
+
         return super(ComposeView, self).form_valid(form)
+
+
 
     def get_context_data(self, **kwargs):
 
@@ -439,6 +457,27 @@ class Launch(LtiLaunch):
                 return HttpResponse("You must be an instructor or student.")
         else:
             return HttpResponse("INVALID")
+
+
+
+def hash_file(fp, buffer_size=65536):
+    '''
+    hash a file contents with sha1
+    :param fp: file pointer to file opened in rb
+    :param buffer_size: 65536 by default
+    :return: sha1 hexdigest
+    '''
+
+
+    hash = sha1()
+
+    while 1:
+        data = fp.read(buffer_size)
+        if not data:
+            break
+        sha1.update(data)
+
+    return sha1.hexdigest()
 
 
 
