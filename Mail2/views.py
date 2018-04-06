@@ -49,6 +49,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
                 mail['timestamp'] = message.created.timestamp()
                 #pprint(mail['date'])
                 mail['from'] = message.fk_sender
+                mail['attachments'] = Attachment.objects.filter(m2m_mail=message)
                 # if Attachment.objects.filter(fk_mail=message):
                 #     mail['has_attachment'] = True
                 # else:
@@ -98,6 +99,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             mail['timestamp'] = usermail.created.timestamp()
             #pprint(mail['date'])
             mail['from'] = usermail.fk_sender
+            mail['attachments'] = Attachment.objects.filter(m2m_mail=usermail)
             # if Attachment.objects.filter(fk_mail=usermail):
             #     mail['has_attachment'] = True
             # else:
