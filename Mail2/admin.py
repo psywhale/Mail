@@ -8,7 +8,7 @@ class MailAdmin(admin.ModelAdmin):
     list_display = ['fk_sender', 'subject', 'created']
 
 class AttachmentAdmin(admin.ModelAdmin):
-    list_display = ['filename', 'fk_mail']
+    list_display = ['filename', 'hashedname']
 
 
 # Register your models here.
