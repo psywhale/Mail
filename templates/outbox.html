@@ -41,7 +41,7 @@
 {#            </div>#}
         </div>
     </div>
-    <hr>
+    <hr style="border-top:1px solid #d4d4d4">
     <div class="row">
 
 {% include 'global-left_course_menu.html' %}
@@ -72,7 +72,7 @@
                                 {{ message.timestamp }}
                             </span>
                             <span class="pull-right">
-                                {% if message.has_attachment %}
+                                {% if message.attachments %}
                                     <span class="glyphicon glyphicon-paperclip">
                                 {% endif %}
                             </span>
