@@ -8,6 +8,7 @@ class ReplyForm(forms.Form):
     subject = forms.CharField(widget=forms.HiddenInput)
     termcode = forms.CharField(widget=forms.HiddenInput)
     section = forms.CharField(widget=forms.HiddenInput)
+    attachment = forms.FileField(widget=forms.FileInput)
 
 
 class ComposeForm(ReplyForm):
