@@ -36,10 +36,10 @@ class myTestCase(TestCase):
                              read=False,
                              fk_mail=mailmsg)
 
-        Attachment.objects.create(filepath='/mnt/maildata',
-                                  filename='tatadfa.doc',
-                                  fk_mail=mailmsg
-                                  )
+        # Attachment.objects.create(filepath='/mnt/maildata',
+        #                           filename='tatadfa.doc',
+        #                           fk_mail=mailmsg
+        #                           )
         # Messsage for frank that does not have an attachment
         mailmsg = Mail.objects.create(content='Test message for frank',
                                       subject='No Attachment for frank',
@@ -62,10 +62,10 @@ class myTestCase(TestCase):
                              read=False,
                              fk_mail=mailmsg)
 
-        Attachment.objects.create(filepath='/mnt/maildata',
-                                  filename='tatadfa2.doc',
-                                  fk_mail=mailmsg
-                                  )
+        # Attachment.objects.create(filepath='/mnt/maildata',
+        #                           filename='tatadfa2.doc',
+        #                           fk_mail=mailmsg
+        #                           )
 
         # A Message to frank that is read
         mailmsg = Mail.objects.create(content='Test Message 4',
@@ -79,10 +79,10 @@ class myTestCase(TestCase):
                              read=True,
                              fk_mail=mailmsg)
 
-        Attachment.objects.create(filepath='/mnt/maildata',
-                                  filename='tatadfa3.doc',
-                                  fk_mail=mailmsg
-                                  )
+        # Attachment.objects.create(filepath='/mnt/maildata',
+        #                           filename='tatadfa3.doc',
+        #                           fk_mail=mailmsg
+        #                           )
 
 class MarkMailUnreadTest(myTestCase):
 
@@ -186,15 +186,15 @@ class InboxTest(myTestCase):
                 exists = True
         self.assertFalse(exists)
 
-    def test_can_see_attachments(self):
-        c = Client()
-        res = c.login(username='Frank', password='whatevs')
-        reslogin = c.get('/')
-        exists = False
-        for message in reslogin.context['email']:
-            if message['has_attachment']:
-                exists = True
-        self.assertTrue(exists)
+    # def test_can_see_attachments(self):
+    #     c = Client()
+    #     res = c.login(username='Frank', password='whatevs')
+    #     reslogin = c.get('/')
+    #     exists = False
+    #     for message in reslogin.context['email']:
+    #         if message['has_attachment']:
+    #             exists = True
+    #     self.assertTrue(exists)
 
     def test_email_has_right_date(self):
         mailmsg = Mail.objects.create(content='Test timestamp',
