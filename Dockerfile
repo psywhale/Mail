@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 COPY requirements.txt ./
-RUN service mysqld start
+RUN service mariadb start
 RUN pip install -r requirements.txt
 RUN mysqladmin create mail2
 COPY . .
