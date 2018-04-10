@@ -18,8 +18,9 @@ pipeline {
                checkout scm
                sh 'pwd'
                sh 'ls -l /var/lib'
-               sh 'mysql_install_db'
+               sh 'mysql_install_db --user=mysql'
                sh 'service mysql start'
+               sh 'cat /var/log/syslog'
                sh 'mysqladmin -uroot create mail2'
 
 
