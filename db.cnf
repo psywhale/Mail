@@ -1,7 +1,0 @@
-[client]
-#host = brian-ms-7a70.campus.wosc.edu
-host = 172.22.8.217
-database = mail2
-user = t3tr15block
-password = straightpieceplz
-default-character-set = utf8

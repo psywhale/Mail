@@ -27,7 +27,8 @@ pipeline {
         stage('Test') {
 
             steps {
-                sh 'python manage.py jenkins --enable-coverage'
+                sh 'mv jenkinsdb.cnf db.cnf'
+                sh 'python manage.py jenkins --noinput --enable-coverage'
 
 
             }
