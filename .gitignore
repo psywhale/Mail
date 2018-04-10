@@ -1,4 +1,4 @@
-db.cnf
+db*.cnf
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -164,8 +164,6 @@ fabric.properties
 # no db
 db.sqlite3
 
-.idea/inspectionProfiles/
-/db.cnf
 /Mail2/migrations/*_auto_*.py
 /Mail2/migrations/0001_initial.py
 !/Mail2/migrations/
