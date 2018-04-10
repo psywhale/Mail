@@ -27,7 +27,7 @@ pipeline {
         stage('Test') {
 
             steps {
-                sh 'python manage.py jenkins --enable-coverage'
+                sh 'python manage.py jenkins --noinput --enable-coverage'
 
 
             }
