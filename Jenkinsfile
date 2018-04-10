@@ -19,6 +19,7 @@ pipeline {
                sh 'pwd'
                sh 'service mysql start'
                sh 'mysqladmin create mail2'
+               sh 'mysql_install_db'
 
 
                sh 'pip install -r requirements.txt'
