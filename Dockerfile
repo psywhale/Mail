@@ -10,7 +10,7 @@ FROM python:3.4
 
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    apt-get install -y \
     --no-install-recommends mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
