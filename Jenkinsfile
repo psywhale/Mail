@@ -17,9 +17,10 @@ pipeline {
                slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
                sh 'pwd'
+               sh 'mysql_install_db'
                sh 'service mysql start'
                sh 'mysqladmin create mail2'
-               sh 'mysql_install_db'
+
 
 
                sh 'pip install -r requirements.txt'
