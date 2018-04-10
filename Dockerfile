@@ -1,10 +1,7 @@
 FROM mariadb:latest
 
-ENV MYSQL_ROOT_PASSWORD: testjenkins
-
-RUN mysqladmin -p testjenkins create mail2
-
-
+ENV MYSQL_ROOT_PASSWORD testjenkins
+ENV MYSQL_DATABASE mail2
 EXPOSE 3306
 
 
