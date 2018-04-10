@@ -4,10 +4,11 @@ ENV MYSQL_ROOT_PASSWORD testjenkins
 ENV MYSQL_DATABASE mail2
 EXPOSE 3306
 
+CMD ["mysqlq"]
+
 
 
 FROM python:3.4
-
 
 RUN apt-get update && \
     apt-get install -y \
