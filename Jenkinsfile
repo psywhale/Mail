@@ -14,12 +14,13 @@ pipeline {
         stage('Build') {
 
             steps {
-               slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+               //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
                sh 'pwd'
+               sh 'ls -l /var/lib'
                sh 'mysql_install_db'
                sh 'service mysql start'
-               sh 'mysqladmin create mail2'
+               sh 'mysqladmin -uroot create mail2'
 
 
 
@@ -51,7 +52,7 @@ pipeline {
             slackSend color:"good",message:"Build SUCCESS- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
         }
         failure {
-            slackSend color:"error",message:"Build FAILED- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+            //slackSend color:"error",message:"Build FAILED- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
             emailext attachLog: true, body: 'BUILD FAILED', recipientProviders: [[$class: 'CulpritsRecipientProvider']], subject: 'Build Fails'
         }
 
