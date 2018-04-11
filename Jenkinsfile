@@ -7,23 +7,33 @@ node {
 
 
         }
-        docker.image('python:3.4').inside("--link ${c.id}:db") {
+        docker.image('ubuntu:xenial').inside("--link ${c.id}:db") {
 
             stage('Build') {
 
                //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
 
-
+               sh 'apt-get update'
+               sh 'apt-get upgrade -y'
+               sh 'apt-get -y install python3-dev pip3 virtualenv'
+               sh 'pip3 install --upgrade pip'
+               sh 'virtualenv -p python3.5 /tmp/venv'
+               sh 'source /tmp/venv/bin/activate'
                sh 'pip install --no-cache-dir -r requirements.txt'
+               sh 'deactivate'
 
 
             }
             stage('Test') {
                 sh 'whoami'
 
+
                 sh 'mv jenkinsdb.cnf db.cnf'
+                sh 'source /tmp/venv/bin/activate'
                 sh 'python manage.py jenkins --noinput --enable-coverage'
+                sh 'deactivate'
+
                 }
 
             }
