@@ -13,6 +13,7 @@ node {
 
                //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
+               sh 'whoami'
                sh 'pip install -r requirements.txt'
 
 
