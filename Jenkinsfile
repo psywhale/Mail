@@ -1,4 +1,5 @@
 node {
+    checkout scm
 
     def mypython = docker.build("mypython")
 
@@ -14,7 +15,7 @@ node {
             stage('Build') {
 
                //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
-               checkout scm
+
 
 
 
