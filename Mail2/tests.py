@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from .models import Mail
 from .models import Route
-#from .models import Attachment
+from .models import Attachment
 
 #from django.core.management import call_command
 import simplejson as json
