@@ -31,7 +31,7 @@ node {
                 sh 'mv jenkinsdb.cnf db.cnf'
                 sh 'cat db.cnf'
 
-                sh 'python manage.py jenkins --noinput --enable-coverage'
+                sh 'python manage.py jenkins -v3 --noinput --enable-coverage'
 
 
                 }
