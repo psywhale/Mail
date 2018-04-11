@@ -4,8 +4,6 @@ node {
 
         stage('Build') {
 
-
-            steps {
                //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
 
@@ -13,11 +11,11 @@ node {
 
                sh 'pip install -r requirements.txt'
 
-               }
+
         }
         stage('Test') {
 
-            steps {
+
                 docker.image('mariadb:10.3').withRun('-e "MYSQL_ROOT_PASSWORD=jenkinstest" -p 3306:3306') {
                 c ->
                 sh 'while ! mysqladmin ping -h 0.0.0.0 --silent; do sleep 1;done'
@@ -29,7 +27,7 @@ node {
                 }
 
             }
-        }
+
 
 
 
