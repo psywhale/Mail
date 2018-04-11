@@ -14,8 +14,8 @@ node {
                //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
 
-               sh 'sudo apt-get update&&apt-get upgrade -y'
-               sh 'sudo pip install -r requirements.txt'
+
+               sh 'sudo pip install --no-cache-dir -r requirements.txt'
 
 
             }
