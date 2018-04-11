@@ -29,7 +29,7 @@ node {
 
 
                 sh 'mv jenkinsdb.cnf db.cnf'
-                sh 'cat db.cnf'
+
                 sh 'python manage.py makemigrations'
                 sh 'python manage.py migrate'
                 sh 'python manage.py jenkins -v3 --noinput --enable-coverage'
