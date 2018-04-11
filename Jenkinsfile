@@ -1,6 +1,6 @@
 node {
 
-    stages {
+
 
         stage('Build') {
 
@@ -31,9 +31,9 @@ node {
             }
         }
 
-    }
 
 
+/*
     post {
         always {
             junit 'reports/junit.xml'
@@ -49,7 +49,7 @@ node {
         }
 
     }
-
+*/
 
 
 }
