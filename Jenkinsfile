@@ -1,27 +1,13 @@
 pipeline {
-    agent {dockerfile true}
+    agent { dockerfile true }
     stages {
 
-/*
-        stage('Clean') {
-            agent {dockerfile true}
-            steps {
-                deleteDir()
-            }
-        }
-        */
-
         stage('Build') {
+
 
             steps {
                //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
-               sh 'pwd'
-               sh 'ls -l /var/lib'
-               sh 'mysql_install_db --user=mysql'
-               sh 'service mysql start'
-               sh 'cat /var/log/syslog'
-               sh 'mysqladmin -uroot create mail2'
 
 
 
@@ -29,13 +15,18 @@ pipeline {
 
                }
         }
-
         stage('Test') {
 
             steps {
+                docker.image('mariadb:10.3').withRun('-e "MYSQL_ROOT_PASSWORD=jenkinstest" -p 3306:3306') {
+                c ->
+                sh 'while ! mysqladmin ping -h 0.0.0.0 --silent; do sleep 1;done'
+                sh 'mysqladmin -uroot -pjenkinstest create mail2'
+
+
                 sh 'mv jenkinsdb.cnf db.cnf'
                 sh 'python manage.py jenkins --noinput --enable-coverage'
-
+                }
 
             }
         }
