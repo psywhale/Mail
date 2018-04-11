@@ -1,33 +1,30 @@
 node {
 
+    docker.image('mysql:5').withRun('-e "MYSQL_ROOT_PASSWORD=jenkinstest"') { c ->
+        docker.image('mysql:5').inside("--link ${c.id}:db") {
+            /* Wait until mysql service is up */
+            sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+            sh 'mysqladmin -uroot -pjenkinstest create mail2'
 
+        }
+        docker.image('python:3.4').inside("--link ${c.id}:db") {
 
-        stage('Build') {
+            stage('Build') {
 
                //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
-
-
-
                sh 'pip install -r requirements.txt'
 
 
-        }
-        stage('Test') {
-
-
-                docker.image('mariadb:10.3').withRun('-e "MYSQL_ROOT_PASSWORD=jenkinstest" -p 3306:3306') {
-                c ->
-                sh 'while ! mysqladmin ping -h 0.0.0.0 --silent; do sleep 1;done'
-                sh 'mysqladmin -uroot -pjenkinstest create mail2'
-
+            }
+            stage('Test') {
 
                 sh 'mv jenkinsdb.cnf db.cnf'
                 sh 'python manage.py jenkins --noinput --enable-coverage'
                 }
 
             }
-
+    }
 
 
 
