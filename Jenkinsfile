@@ -14,9 +14,8 @@ node {
                //slackSend "Build started - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                checkout scm
 
-               sh 'apt-get update'
-               sh 'apt-get upgrade -y'
-               sh 'apt-get -y install python3-dev pip3 virtualenv'
+
+               sh 'apt-get update && apt-get -y install python3-dev pip3 virtualenv'
                sh 'pip3 install --upgrade pip'
                sh 'virtualenv -p python3.5 /tmp/venv'
                sh 'source /tmp/venv/bin/activate'
