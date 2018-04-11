@@ -1,5 +1,5 @@
 node {
-    agent { dockerfile true }
+
     stages {
 
         stage('Build') {
