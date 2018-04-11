@@ -2,5 +2,5 @@
 host = db
 database = mail2
 user = root
-password = testjenkins
+password = jenkinstest
 default-character-set = utf8
