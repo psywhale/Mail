@@ -1,10 +1,10 @@
 node {
 
-    docker.image('mysql:5').withRun('-e "MYSQL_ROOT_PASSWORD=jenkinstest"') { c ->
+    docker.image('mysql:5').withRun('-e "MYSQL_ROOT_PASSWORD=jenkinstest" -e "MYSQL_DATABASE=mail2" ') { c ->
         docker.image('mysql:5').inside("--link ${c.id}:db") {
             /* Wait until mysql service is up */
             sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
-            sh 'mysqladmin -uroot -pjenkinstest create mail2'
+
 
         }
         docker.image('python:3.4').inside("--link ${c.id}:db") {
