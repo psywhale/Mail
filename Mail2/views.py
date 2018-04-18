@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
 from django.db.models import Count
 from django.contrib.auth.models import User
-from Mail2proj.settings import DEBUG
+from Mail2proj.settings import DEBUG, MEDIA_ROOT
 from .forms import ReplyForm, ComposeForm, AuditClassForm, AuditUserForm
 from django.core.exceptions import PermissionDenied
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
@@ -15,7 +15,7 @@ from LTI.lti import LtiLaunch
 from pprint import pprint
 from django.contrib.auth import login
 from hashlib import sha1
-import requests
+import os
 # Create your views here.
 
 
@@ -134,14 +134,16 @@ class ComposeView(LoginRequiredMixin, FormView):
         if 'attachment' in self.request.FILES:
             file = self.request.FILES['attachment']
 
-            fp = open('/tmp/'+file.name,'w+b')
+            fp = open('/tmp/'+self.request.session.session_key,'w+b')
             for chunk in file.chunks():
                 fp.write(chunk)
             fp.close()
 
-            fp = open('/tmp/'+file.name,'rb')
+            fp = open('/tmp/'+self.request.session.session_key,'rb')
             hash_of_file = hash_file(fp)
-
+            if not os.path.isfile(MEDIA_ROOT+hash_of_file):
+                os.rename('/tmp/'+self.request.session.session_key,
+                          MEDIA_ROOT+hash_of_file)
 
 
 
