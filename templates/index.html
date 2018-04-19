@@ -95,6 +95,19 @@
                                 <p style=font-weight:bold>
                                     You currently do not have any email for this course: <br /><span style="font-size: 20px">{{ sn }}</span>.
                                 </p>
+                                {% if not "/label/" in request.path %}
+                                    <p style="margin: 30px;">
+                                        <a href="{% url 'compose' %}" class="btn btn-danger" style="font-size: 18px;">
+                                            <i class="glyphicon glyphicon-edit"></i> Compose a Message
+                                        </a>
+                                    </p>
+                                {% else %}
+                                    <p style="margin: 30px;">
+                                        <a href="{% url 'compose' sn %}" class="btn btn-danger" style="font-size: 18px;">
+                                            <i class="glyphicon glyphicon-edit"></i> Compose a Message for  {{ sn }}
+                                        </a>
+                                    </p>
+                                {% endif %}
                                 <p style="text-align:center">
                                     <script language="JavaScript">showImage();</script>
                                 </p>
