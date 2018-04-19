@@ -295,7 +295,7 @@
 						{
 							var data = JSON.parse( ajax.responseText );
 							var html = $('#attachmentsDiv').html()
-							$('#attachmentsDiv').html(html + '<input type="hidden" id="id_attachments" name="attachments" value="'+ data.attachment_id +'"><p>' + data.filename +'</p>\n')
+							$('#attachmentsDiv').html(html + '<li id="attachment-id-\' + data.attachment_id + \'" style="padding:6px 0"><input type="hidden" id="id_attachments" name="attachments" value="'+ data.attachment_id +'"><b>' + data.filename +'</b></li>\n')
 							form.classList.add( data.success == true ? 'is-success' : 'is-error' );
 							if( !data.success ) errorMsg.textContent = data.error;
 						}
