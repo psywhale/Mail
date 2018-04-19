@@ -16,7 +16,7 @@ from LTI.lti import LtiLaunch
 from pprint import pprint
 from django.contrib.auth import login
 from hashlib import sha1
-import os
+import os, tempfile
 # Create your views here.
 
 
@@ -427,18 +427,19 @@ class FileUpload(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
 
         file = self.request.FILES['attachment']
-        fp = open('/tmp/' + self.request.session.session_key, 'w+b')
+        tempdir = tempfile.gettempdir() + '/'
+        fp = open(tempdir + self.request.session.session_key, 'w+b')
         for chunk in file.chunks():
             fp.write(chunk)
         fp.close()
 
-        fp = open('/tmp/' + self.request.session.session_key, 'rb')
+        fp = open(tempdir + self.request.session.session_key, 'rb')
         hash_of_file = hash_file(fp)
         fp.close()
 
         if not os.path.isfile(MEDIA_ROOT + hash_of_file):
             # move temp file to media
-            os.rename('/tmp/' + self.request.session.session_key,
+            os.rename(tempdir + self.request.session.session_key,
                       MEDIA_ROOT + hash_of_file)
         new_attachment = Attachment()
         new_attachment.filename = file.name
