@@ -2,7 +2,7 @@ from django.conf.urls import url
 from .views import IndexView,ReplyView, \
     LabelView, ListUnreadView, ArchiveMailView, MarkMailUnreadView,\
     ComposeView, OutboxView, OutboxReplyView,AuditView,AuditViewClass,\
-    AuditViewUser, Launch
+    AuditViewUser, Launch, FileUpload
 
 urlpatterns= [
     url(r'^$',IndexView.as_view(), name='IndexView'),
@@ -21,4 +21,5 @@ urlpatterns= [
     url(r'^outbox/$', OutboxView.as_view(), name='outbox'),
     url(r'^or/(?P<id>[0-9]+)/$', OutboxReplyView.as_view(), name='outboxreply'),
     url(r'^launch/', Launch.as_view(), name='launch'),
+    url(r'^upload/', FileUpload.as_view(), name='upload')
 ]
