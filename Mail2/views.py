@@ -221,6 +221,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             m = Mail.objects.get(id=self.kwargs['id'])
+            context['attachments'] = Attachment.objects.filter(m2m_mail=m)
             r = Route.objects.get(fk_mail=m)
             info= {
                 'id': m.id,

@@ -68,7 +68,7 @@
                         {% for attachment in attachments %}
                             <li style="padding:0">
                                 <a href="{% url 'download' attachment.id %}" class="btn btn-info">
-                                    {{ attachment.filename }}
+                                    <span class="glyphicon glyphicon-paperclip"></span> {{ attachment.filename }}
                                 </a>
                             </li>
                         {% endfor %}
@@ -101,10 +101,10 @@
                         <div class="row" style="margin:-2px 0 !important;">
                             <div class="col-lg-12 nopadding compose" style="border: 1px solid #d1d1d1; border-top: 0; border-radius: 0 0 9px 9px; padding:10px;margin-bottom:10px">
                                 <div class="col-sm-6">
-                                    <div id="attachmentsDiv"></div>
-{#                                    <span class="btn btn-info" style="max-width: 210px; padding-top: 5px; padding-bottom: 5px;">#}
-{#                                        {{ form.attachment }}#}
-{#                                    </span>#}
+                                    <div>
+                                        <h4>Attachment(s):</h4>
+                                        <ul id="attachmentsDiv" style="list-style:none; padding:0"></ul>
+                                    </div>
                                 </div>
                                 <div class="col-sm-6" style="text-align: right;">
                                     <p>
@@ -295,7 +295,7 @@
 						{
 							var data = JSON.parse( ajax.responseText );
 							var html = $('#attachmentsDiv').html()
-							$('#attachmentsDiv').html(html + '<li id="attachment-id-\' + data.attachment_id + \'" style="padding:6px 0"><input type="hidden" id="id_attachments" name="attachments" value="'+ data.attachment_id +'"><b>' + data.filename +'</b></li>\n')
+							$('#attachmentsDiv').html(html + '<li id="attachment-id-' + data.attachment_id + '" style="padding:6px 0" title="Successfully attached ' + data.filename +'"><input type="hidden" id="id_attachments" name="attachments" value="'+ data.attachment_id +'"><b><span class="glyphicon glyphicon-paperclip"></span> ' + data.filename +'</b></li>\n')
 							form.classList.add( data.success == true ? 'is-success' : 'is-error' );
 							if( !data.success ) errorMsg.textContent = data.error;
 						}
