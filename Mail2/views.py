@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
 from django.db.models import Count
 from django.contrib.auth.models import User
-from Mail2proj.settings import DEBUG, MEDIA_ROOT
+from Mail2proj.settings import DEBUG, MEDIA_ROOT,MAX_UPLOAD_SIZE
 from .forms import ReplyForm, ComposeForm, AuditClassForm, AuditUserForm
 from django.core.exceptions import PermissionDenied
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
@@ -427,8 +427,7 @@ class FileUpload(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
 
         file = self.request.FILES['attachment']
-        tempdir = tempfile.gettempdir() + '/'
-        fp = open(tempdir + self.request.session.session_key, 'w+b')
+        fp = open('/tmp/' + self.request.session.session_key, 'w+b')
         for chunk in file.chunks():
             fp.write(chunk)
         fp.close()
