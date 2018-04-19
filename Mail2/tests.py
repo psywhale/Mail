@@ -1,6 +1,10 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from .models import Mail, Attachment, Route
+from .models import Mail
+from .models import Route
+from .models import Attachment
+
+#from django.core.management import call_command
 import simplejson as json
 from pprint import pprint
 import datetime
@@ -10,6 +14,8 @@ import datetime
 # class JenkinsTest(TestCase):
 #     def test_what_if_fail(self):
 #         self.assertEqual(1,3)
+
+#call_command('flush','--noinput')
 
 
 
