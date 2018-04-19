@@ -11,12 +11,7 @@ class ReplyForm(forms.Form):
     termcode = forms.CharField(widget=forms.HiddenInput)
     section = forms.CharField(widget=forms.HiddenInput)
     attachments = forms.CharField(widget=forms.HiddenInput)
-    def clean(self):
-        self.check_file()
-        return self.cleaned_data
 
-    def check_file(self):
-        content = self.cleaned_data["attachments"]
 
 
 
