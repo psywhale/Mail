@@ -11,6 +11,7 @@ class ReplyForm(forms.Form):
     attachment = forms.FileField(widget=forms.FileInput,required=False)
 
 
+
 class ComposeForm(ReplyForm):
     sendto = forms.CharField(widget=forms.Select(), initial="")
     subject = forms.CharField(widget=forms.TextInput(), max_length=510)

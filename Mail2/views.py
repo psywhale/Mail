@@ -119,6 +119,9 @@ class ComposeView(LoginRequiredMixin, FormView):
     success_url = "/"
     raise_exception = True
 
+    def form_invalid(self, form):
+        pprint(form.errors)
+        return super(ComposeView, self).form_invalid(form)
 
     def form_valid(self, form):
         new_msg = Mail()

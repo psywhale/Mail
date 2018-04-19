@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'coverage',
     'Mail2.apps.Mail2Config',
     'django_jenkins',
 

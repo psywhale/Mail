@@ -533,13 +533,117 @@ class OutboxReplyTest(myTestCase):
         resout = c.get('/or/'+str(mailmsg.id)+"/")
         self.assertEqual(resout.status_code, 200)
 
+class ComposeViewTest(myTestCase):
+
+    def test_form_valid(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        user = User.objects.get(username="Frank")
+        to_user = User.objects.get(username="Ned")
+        data = {
+            "content":"This is the test content",
+            "subject":"this is a test subject",
+            "termcode":"173s",
+            "section":"3000",
+            "fk_sender": user.id,
+            "sendto": to_user.id
+        }
+        res = c.post('/compose/',data)
+        self.assertEqual(res.url, '/')
+
+    def test_form_invalid(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        user = User.objects.get(username="Frank")
+        to_user = User.objects.get(username="Ned")
+        data = {
+            "content":"This is the test content",
+            "subject":"this is a test subject",
+            "termcode":"173s",
+            "section":"3000",
+            "fk_sender": user.id,
+        }
+
+        res = c.post('/compose/', data)
+        self.assertFormError(res, 'form', 'sendto', 'This field is required.')
 
 
+    def test_form_valid_with_attachment(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        user = User.objects.get(username="Frank")
+        to_user = User.objects.get(username="Ned")
+        fp = open('README.md', 'rb')
+        data = {
+            "content":"This is the test content",
+            "subject":"this is a test subject",
+            "termcode":"173s",
+            "section":"3000",
+            "fk_sender": user.id,
+            "sendto": to_user.id,
+            "attachment": fp
+        }
+        res = c.post('/compose/',data)
+        self.assertEqual(res.url, '/')
 
+
+class ReplyViewTest(myTestCase):
+
+    def test_form_valid(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        user = User.objects.get(username="Frank")
+        to_user = User.objects.get(username="Ned")
+        data = {
+            "content":"This is the test content",
+            "subject":"this is a test subject",
+            "termcode":"173s",
+            "section":"3000",
+            "fk_sender": user.id,
+            "sendto": to_user.id
+        }
+        res = c.post('/reply/',data)
+        self.assertEqual(res.url, '/')
+
+    def test_form_invalid(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        user = User.objects.get(username="Frank")
+        to_user = User.objects.get(username="Ned")
+        data = {
+            "content":"This is the test content",
+            "subject":"this is a test subject",
+            "termcode":"173s",
+            "section":"3000",
+            "fk_sender": user.id,
+        }
+
+        res = c.post('/compose/', data)
+        self.assertFormError(res, 'form', 'sendto', 'This field is required.')
+
+
+    def test_form_valid_with_attachment(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        user = User.objects.get(username="Frank")
+        to_user = User.objects.get(username="Ned")
+        fp = open('README.md', 'rb')
+        data = {
+            "content":"This is the test content",
+            "subject":"this is a test subject",
+            "termcode":"173s",
+            "section":"3000",
+            "fk_sender": user.id,
+            "sendto": to_user.id,
+            "attachment": fp
+        }
+        res = c.post('/compose/',data)
+        self.assertEqual(res.url, '/')
 
 
 
 #------------------------------------------------------
+
 def allUnique(x):
     seen = set()
     return not any(i in seen or seen.add(i) for i in x)

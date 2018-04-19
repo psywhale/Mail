@@ -59,41 +59,51 @@
                         {% autoescape off %}
                             {{ mail.content }}
                         {% endautoescape %}
-
-                    {{ form.attachement }}
                     </div>
                     <br />
+                    {% if message.attachments %}
+                        <div class="attachements">
+                            {% for attachment in message.attachments %}
+                                {% if attachment.filename is attachment.image %}
+                                    <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!"></span>
+                                    <a href="{{ attachment.filepath }}">
+                                        <img src="{{ attachment.filepath }}" alt="{{ attachment.filename }}" />
+                                    </a>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!"></span>
+                                    <a href="{{ attachment.filepath }}">
+                                        {{ attachment.filename }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-12 nopadding">
-                                {% if message.attachments %}
-                                    <div class="attachements">
-                                        {% for attachment in message.attachments %}
-                                            {% if attachment.filename is attachment.image %}
-                                                <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!"></span>
-                                                <a href="{{ attachment.filepath }}">
-                                                    <img src="{{ attachment.filepath }}" alt="{{ attachment.filename }}" />
-                                                </a>
-                                            {% else %}
-                                                <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!"></span>
-                                                <a href="{{ attachment.filepath }}">
-                                                    {{ attachment.filename }}
-                                                </a>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
                                 <hr />
                                 <div style="font-size: 11px; font-style: italic; padding:8px 8px 0">REPLY TO: &nbsp; {{ mail.to.first_name }} {{ mail.to.last_name }}</div>
                                 {{ form.content }}
                             </div>
                         </div>
-                        <br />
-                        <a href="http://www.wiris.com/editor/demo/en/mathml-latex" target="_blank">Math Tool Helper</a>
-                        <button class="btn btn-success sendmailbutton" style="float:right;#display:none">
-                            <span class="glyphicon glyphicon-send" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
-                            Send Message
-                        </button>
+                        <div class="row" style="margin:-2px 0 !important;">
+                            <div class="col-lg-12 nopadding compose" style="text-align: center;border: 1px solid #d1d1d1; border-top: 0; border-radius: 0 0 9px 9px;">
+                                <div class="col-sm-4">
+                                    <span class="btn btn-info" style="max-width: 210px; padding-top: 5px; padding-bottom: 5px;">
+                                        {{ form.attachment }}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="http://www.wiris.com/editor/demo/en/mathml-latex" target="_blank" class="btn2 btn-warning2" style="width: 210px;">Math Tool Helper</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success sendmailbutton" style="width: 210px;">
+                                        <span class="glyphicon glyphicon-send" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
+                                        Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
