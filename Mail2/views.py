@@ -451,7 +451,8 @@ class FileUpload(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
 
         file = self.request.FILES['attachment']
-        fp = open('/tmp/' + self.request.session.session_key, 'w+b')
+        tempdir = tempfile.gettempdir() + '/'
+        fp = open(tempdir + self.request.session.session_key, 'w+b')
         for chunk in file.chunks():
             fp.write(chunk)
         fp.close()
