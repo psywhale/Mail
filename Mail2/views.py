@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse,redirect
+from django.shortcuts import render, HttpResponse,redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
@@ -420,6 +420,30 @@ class ListUnreadView(View):
             unread_count = Route.objects.filter(fk_mail__in=mails, read=False, to=request.user.username).count()
             results[i] = {"course": course, "count": unread_count }
         return HttpResponse(json.dumps(results),content_type="application/json")
+
+
+class DownloadView(UserPassesTestMixin, View):
+
+    def test_func(self, user):
+        attachment = get_object_or_404(Attachment, id=self.kwargs['pk'])
+        mails = attachment.m2m_mail.all()
+        for mail in mails:
+            if mail.fk_sender == user:
+                return True
+            else:
+                routes = Route.objects.filter(fk_mail=mail)
+                for route in routes:
+                    if route.to == user.username:
+                        return True
+        return False
+
+    def get(self, request, **kwargs):
+
+        attachment = get_object_or_404(Attachment, pk=self.kwargs['pk'])
+        file = open(attachment.filepath, 'rb')
+        response = HttpResponse(file.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
+        return response
 
 
 class FileUpload(LoginRequiredMixin, View):
