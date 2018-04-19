@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse,redirect
+from django.http import JsonResponse
 from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
 from django.db.models import Count
@@ -135,36 +136,11 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_route.to = self.request.POST['sendto']
         new_route.fk_mail = new_msg
         new_route.save()
-
-        if 'attachment' in self.request.FILES:
-
-            file = self.request.FILES['attachment']
-            pprint(self.request.FILES)
-
-            fp = open('/tmp/'+self.request.session.session_key,'w+b')
-            for chunk in file.chunks():
-                fp.write(chunk)
-            fp.close()
-
-            fp = open('/tmp/'+self.request.session.session_key,'rb')
-            hash_of_file = hash_file(fp)
-            fp.close()
-
-
-            if not os.path.isfile(MEDIA_ROOT+hash_of_file):
-                # move temp file to media
-                os.rename('/tmp/'+self.request.session.session_key,
-                          MEDIA_ROOT+hash_of_file)
-            new_attachment = Attachment()
-            new_attachment.filename = file.name
-            new_attachment.filepath = MEDIA_ROOT+hash_of_file
-            new_attachment.hashedname = hash_of_file
-            new_attachment.save()
-            new_attachment.m2m_mail.add(new_msg)
-            new_attachment.save()
-
-
-
+        attachments = self.request.POST.getlist('attachments')
+        for item in attachments:
+            attachment = Attachment.objects.get(id=item)
+            attachment.m2m_mail.add(new_msg)
+            attachment.save()
 
         return super(ComposeView, self).form_valid(form)
     
@@ -287,7 +263,6 @@ class OutboxReplyView(ReplyView):
         return initial
 
 
-
 class ArchiveMailView(LoginRequiredMixin, View):
     raise_exception = True
     #TODO make redirect to prev page not /
@@ -325,7 +300,6 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
                 raise PermissionDenied
         else:
             raise PermissionDenied
-
 
 
 class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
@@ -374,7 +348,6 @@ class AuditViewUser(AuditView, FormView):
     def get_initial(self, **kwargs):
         data = super(AuditViewUser, self).get_initial()
         return data
-
 
 
 class LabelView(LoginRequiredMixin, TemplateView):
@@ -426,6 +399,7 @@ class LabelView(LoginRequiredMixin, TemplateView):
         context['session'] = self.request.session
         return context
 
+
 class ListUnreadView(View):
 
     @method_decorator(csrf_exempt)
@@ -446,6 +420,34 @@ class ListUnreadView(View):
             unread_count = Route.objects.filter(fk_mail__in=mails, read=False, to=request.user.username).count()
             results[i] = {"course": course, "count": unread_count }
         return HttpResponse(json.dumps(results),content_type="application/json")
+
+
+class FileUpload(LoginRequiredMixin, View):
+
+    def post(self, *args, **kwargs):
+
+        file = self.request.FILES['attachment']
+        fp = open('/tmp/' + self.request.session.session_key, 'w+b')
+        for chunk in file.chunks():
+            fp.write(chunk)
+        fp.close()
+
+        fp = open('/tmp/' + self.request.session.session_key, 'rb')
+        hash_of_file = hash_file(fp)
+        fp.close()
+
+        if not os.path.isfile(MEDIA_ROOT + hash_of_file):
+            # move temp file to media
+            os.rename('/tmp/' + self.request.session.session_key,
+                      MEDIA_ROOT + hash_of_file)
+        new_attachment = Attachment()
+        new_attachment.filename = file.name
+        new_attachment.filepath = MEDIA_ROOT + hash_of_file
+        new_attachment.hashedname = hash_of_file
+        new_attachment.save()
+        res = {"success": True, "error": "", "filename": file.name, "attachment_id": new_attachment.id }
+        return JsonResponse(res)
+
 
 class Launch(LtiLaunch):
 
