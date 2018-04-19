@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
 from django.db.models import Count
 from django.contrib.auth.models import User
-from Mail2proj.settings import DEBUG
+from Mail2proj.settings import DEBUG, MEDIA_ROOT
 from .forms import ReplyForm, ComposeForm, AuditClassForm, AuditUserForm
 from django.core.exceptions import PermissionDenied
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
@@ -15,7 +15,7 @@ from LTI.lti import LtiLaunch
 from pprint import pprint
 from django.contrib.auth import login
 from hashlib import sha1
-import requests
+import os
 # Create your views here.
 
 
@@ -119,6 +119,7 @@ class ComposeView(LoginRequiredMixin, FormView):
     success_url = "/"
     raise_exception = True
 
+
     def form_valid(self, form):
         new_msg = Mail()
         new_route = Route()
@@ -131,22 +132,42 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_route.to = self.request.POST['sendto']
         new_route.fk_mail = new_msg
         new_route.save()
-        if 'attachment' in self.request.FILES:
-            file = self.request.FILES['attachment']
 
-            fp = open('/tmp/'+file.name,'w+b')
+        if 'attachment' in self.request.FILES:
+
+            file = self.request.FILES['attachment']
+            pprint(self.request.FILES)
+
+            fp = open('/tmp/'+self.request.session.session_key,'w+b')
             for chunk in file.chunks():
                 fp.write(chunk)
             fp.close()
 
-            fp = open('/tmp/'+file.name,'rb')
+            fp = open('/tmp/'+self.request.session.session_key,'rb')
             hash_of_file = hash_file(fp)
+            fp.close()
 
+
+            if not os.path.isfile(MEDIA_ROOT+hash_of_file):
+                # move temp file to media
+                os.rename('/tmp/'+self.request.session.session_key,
+                          MEDIA_ROOT+hash_of_file)
+            new_attachment = Attachment()
+            new_attachment.filename = file.name
+            new_attachment.filepath = MEDIA_ROOT+hash_of_file
+            new_attachment.hashedname = hash_of_file
+            new_attachment.save()
+            new_attachment.m2m_mail.add(new_msg)
+            new_attachment.save()
 
 
 
 
         return super(ComposeView, self).form_valid(form)
+    
+    def form_invalid(self, form):
+        pprint(form.errors)
+        return super(ComposeView, self).form_invalid(form)
 
 
 
@@ -475,9 +496,9 @@ def hash_file(fp, buffer_size=65536):
         data = fp.read(buffer_size)
         if not data:
             break
-        sha1.update(data)
+        hash.update(data)
 
-    return sha1.hexdigest()
+    return hash.hexdigest()
 
 
 
