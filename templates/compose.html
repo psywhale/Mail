@@ -83,16 +83,26 @@
                                     {{ form.content }}
                                 {% endautoescape %}
 
-                            {{ form.attachment }}
-
                             </div>
                         </div>
-                        <br />
-                        <a href="http://www.wiris.com/editor/demo/en/mathml-latex" target="_blank">Math Tool Helper</a>
-                        <button class="btn btn-success sendmailbutton" style="float:right;">
-                            <span class="glyphicon glyphicon-send" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
-                            Send Message
-                        </button>
+                       <div class="row" style="margin:-2px 0 !important;">
+                            <div class="col-lg-12 nopadding compose" style="text-align: center;border: 1px solid #d1d1d1; border-top: 0; border-radius: 0 0 9px 9px;">
+                                <div class="col-sm-4">
+                                    <span class="btn btn-info" style="max-width: 210px; padding-top: 5px; padding-bottom: 5px;">
+                                        {{ form.attachment }}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="http://www.wiris.com/editor/demo/en/mathml-latex" target="_blank" class="btn btn-warning" style="width: 210px;">Math Tool Helper</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success sendmailbutton" style="width: 210px;">
+                                        <span class="glyphicon glyphicon-send" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
+                                        Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 {% if form.errors %}
                     {% for error in errors %}
