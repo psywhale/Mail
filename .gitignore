@@ -169,3 +169,5 @@ db.sqlite3
 !/Mail2/migrations/
 !/Mail2/migrations/__init__.py
 /media/*
+/htmlcov/
+
