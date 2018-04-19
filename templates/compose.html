@@ -37,7 +37,7 @@
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
 
-                <form action='.'  method="post">
+                <form action='.'  method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" value="{{ sn }}" name="termcode" id="id_termcode">
                 <input type="hidden" value="{{ sn }}" name="section" id="id_section">
