@@ -171,3 +171,5 @@ db.sqlite3
 /media/*
 /htmlcov/
 
+!/media/gitadd
+db.cnf
