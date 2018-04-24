@@ -16,6 +16,7 @@ from LTI.lti import LtiLaunch
 from pprint import pprint
 from django.contrib.auth import login
 from hashlib import sha1
+import magic
 import os, tempfile
 # Create your views here.
 
@@ -442,6 +443,7 @@ class DownloadView(UserPassesTestMixin, View):
 
         attachment = get_object_or_404(Attachment, pk=self.kwargs['pk'])
         file = open(attachment.filepath, 'rb')
+        mime = magic.from_file(attachment.filepath)
         response = HttpResponse(file.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
         return response
