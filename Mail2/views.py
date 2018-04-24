@@ -244,6 +244,10 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         context['session'] = self.request.session
         return context
 
+    def form_invalid(self, form):
+        return super(ReplyView, self).form_invalid(form)
+
+
 
 class OutboxReplyView(ReplyView):
 
