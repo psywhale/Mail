@@ -25,7 +25,7 @@ SECRET_KEY = '!_$c0q!5a)878#%x+lc7jylsg5k!ze(3jw^+=+o7xqoe@rd-k0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['brian-ms-7a70','127.0.0.1','mail2.wosc.edu']
+ALLOWED_HOSTS = ['brian-ms-7a70','127.0.0.1','mail2.wosc.edu', 'localhost']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'coverage',
     'Mail2.apps.Mail2Config',
     'django_jenkins',
 
@@ -151,3 +152,14 @@ MEDIA_URL = '/media/'
 #Moodle Custom Rest API Key
 
 MOODLE_REST_KEY = 'HkHO25shu0i3Tq24iCknrB1mnpOY'
+
+# Attachment Size
+# 2.5MB - 2621440
+# 5MB - 5242880
+# 10MB - 10485760
+# 20MB - 20971520
+# 50MB - 5242880
+# 100MB 104857600
+# 250MB - 214958080
+# 500MB - 429916160
+MAX_UPLOAD_SIZE = "10485760"

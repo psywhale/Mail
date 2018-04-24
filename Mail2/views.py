@@ -1,9 +1,10 @@
-from django.shortcuts import render, HttpResponse,redirect
+from django.shortcuts import render, HttpResponse,redirect, get_object_or_404
+from django.http import JsonResponse
 from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
 from django.db.models import Count
 from django.contrib.auth.models import User
-from Mail2proj.settings import DEBUG
+from Mail2proj.settings import DEBUG, MEDIA_ROOT,MAX_UPLOAD_SIZE
 from .forms import ReplyForm, ComposeForm, AuditClassForm, AuditUserForm
 from django.core.exceptions import PermissionDenied
 from braces.views import LoginRequiredMixin, UserPassesTestMixin,GroupRequiredMixin
@@ -15,7 +16,7 @@ from LTI.lti import LtiLaunch
 from pprint import pprint
 from django.contrib.auth import login
 from hashlib import sha1
-import requests
+import os, tempfile
 # Create your views here.
 
 
@@ -119,6 +120,10 @@ class ComposeView(LoginRequiredMixin, FormView):
     success_url = "/"
     raise_exception = True
 
+    def form_invalid(self, form):
+        pprint(form.errors)
+        return super(ComposeView, self).form_invalid(form)
+
     def form_valid(self, form):
         new_msg = Mail()
         new_route = Route()
@@ -131,22 +136,17 @@ class ComposeView(LoginRequiredMixin, FormView):
         new_route.to = self.request.POST['sendto']
         new_route.fk_mail = new_msg
         new_route.save()
-        if 'attachment' in self.request.FILES:
-            file = self.request.FILES['attachment']
-
-            fp = open('/tmp/'+file.name,'w+b')
-            for chunk in file.chunks():
-                fp.write(chunk)
-            fp.close()
-
-            fp = open('/tmp/'+file.name,'rb')
-            hash_of_file = hash_file(fp)
-
-
-
-
+        attachments = self.request.POST.getlist('attachments')
+        for item in attachments:
+            attachment = Attachment.objects.get(id=item)
+            attachment.m2m_mail.add(new_msg)
+            attachment.save()
 
         return super(ComposeView, self).form_valid(form)
+    
+    def form_invalid(self, form):
+        pprint(form.errors)
+        return super(ComposeView, self).form_invalid(form)
 
 
 
@@ -221,6 +221,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             m = Mail.objects.get(id=self.kwargs['id'])
+            context['attachments'] = Attachment.objects.filter(m2m_mail=m)
             r = Route.objects.get(fk_mail=m)
             info= {
                 'id': m.id,
@@ -263,7 +264,6 @@ class OutboxReplyView(ReplyView):
         return initial
 
 
-
 class ArchiveMailView(LoginRequiredMixin, View):
     raise_exception = True
     #TODO make redirect to prev page not /
@@ -301,7 +301,6 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
                 raise PermissionDenied
         else:
             raise PermissionDenied
-
 
 
 class AuditView(LoginRequiredMixin,GroupRequiredMixin,TemplateView):
@@ -350,7 +349,6 @@ class AuditViewUser(AuditView, FormView):
     def get_initial(self, **kwargs):
         data = super(AuditViewUser, self).get_initial()
         return data
-
 
 
 class LabelView(LoginRequiredMixin, TemplateView):
@@ -402,6 +400,7 @@ class LabelView(LoginRequiredMixin, TemplateView):
         context['session'] = self.request.session
         return context
 
+
 class ListUnreadView(View):
 
     @method_decorator(csrf_exempt)
@@ -422,6 +421,59 @@ class ListUnreadView(View):
             unread_count = Route.objects.filter(fk_mail__in=mails, read=False, to=request.user.username).count()
             results[i] = {"course": course, "count": unread_count }
         return HttpResponse(json.dumps(results),content_type="application/json")
+
+
+class DownloadView(UserPassesTestMixin, View):
+
+    def test_func(self, user):
+        attachment = get_object_or_404(Attachment, id=self.kwargs['pk'])
+        mails = attachment.m2m_mail.all()
+        for mail in mails:
+            if mail.fk_sender == user:
+                return True
+            else:
+                routes = Route.objects.filter(fk_mail=mail)
+                for route in routes:
+                    if route.to == user.username:
+                        return True
+        return False
+
+    def get(self, request, **kwargs):
+
+        attachment = get_object_or_404(Attachment, pk=self.kwargs['pk'])
+        file = open(attachment.filepath, 'rb')
+        response = HttpResponse(file.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
+        return response
+
+
+class FileUpload(LoginRequiredMixin, View):
+
+    def post(self, *args, **kwargs):
+
+        file = self.request.FILES['attachment']
+        tempdir = tempfile.gettempdir() + '/'
+        fp = open(tempdir + self.request.session.session_key, 'w+b')
+        for chunk in file.chunks():
+            fp.write(chunk)
+        fp.close()
+
+        fp = open(tempdir + self.request.session.session_key, 'rb')
+        hash_of_file = hash_file(fp)
+        fp.close()
+
+        if not os.path.isfile(MEDIA_ROOT + hash_of_file):
+            # move temp file to media
+            os.rename(tempdir + self.request.session.session_key,
+                      MEDIA_ROOT + hash_of_file)
+        new_attachment = Attachment()
+        new_attachment.filename = file.name
+        new_attachment.filepath = MEDIA_ROOT + hash_of_file
+        new_attachment.hashedname = hash_of_file
+        new_attachment.save()
+        res = {"success": True, "error": "", "filename": file.name, "attachment_id": new_attachment.id }
+        return JsonResponse(res)
+
 
 class Launch(LtiLaunch):
 
@@ -475,9 +527,9 @@ def hash_file(fp, buffer_size=65536):
         data = fp.read(buffer_size)
         if not data:
             break
-        sha1.update(data)
+        hash.update(data)
 
-    return sha1.hexdigest()
+    return hash.hexdigest()
 
 
 
