@@ -10,7 +10,7 @@ class ReplyForm(forms.Form):
     subject = forms.CharField(widget=forms.HiddenInput, required=False)
     termcode = forms.CharField(widget=forms.HiddenInput)
     section = forms.CharField(widget=forms.HiddenInput)
-    attachments = forms.CharField(widget=forms.HiddenInput)
+    attachments = forms.CharField(widget=forms.HiddenInput, required=False)
 
 
 
