@@ -245,6 +245,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         return context
 
     def form_invalid(self, form):
+        pprint(form.errors)
         return super(ReplyView, self).form_invalid(form)
 
 
