@@ -444,6 +444,7 @@ class DownloadView(UserPassesTestMixin, View):
         attachment = get_object_or_404(Attachment, pk=self.kwargs['pk'])
         file = open(attachment.filepath, 'rb')
         mime = magic.from_file(attachment.filepath)
+        pprint(mime)
         response = HttpResponse(file.read(), content_type=mime)
         response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
         return response
