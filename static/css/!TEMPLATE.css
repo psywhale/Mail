@@ -43,7 +43,7 @@ a.list-group-item:focus, a.list-group-item:hover { border-left: 4px dotted #c6e8
 .btn-group .text-muted { margin:4px 10px 0; display: inline-block; }
 .search-area { margin: 22px 0 0}
 .paginated { margin: 7px 0 0}
-.main-mail-section { background: white url(https://www.wosc.edu/img/seal651.png) no-repeat center center }
+.main-mail-section { background: white url(https://www.wosc.edu/img/seal651.png) no-repeat center center; border-left: 1px solid #efefef; }
 .tab-content .badge { background: transparent; color: inherit; font-weight: inherit }
 .nav .badge { z-index: 999; position: absolute; top: 6px; left: -20px; background-color: #006300; }
 .nav .badge div { text-align:center }
