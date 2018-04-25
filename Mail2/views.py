@@ -451,7 +451,7 @@ class DownloadView(UserPassesTestMixin, View):
         mime = magic.from_file(attachment.filepath)
         pprint(mime)
         response = HttpResponse(file.read(), content_type=mime)
-        response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
+        response['Content-Disposition'] = 'attachment; filename={}'.format(attachment.filename)
         return response
 
 
