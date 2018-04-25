@@ -568,32 +568,49 @@ class ComposeViewTest(myTestCase):
         self.assertFormError(res, 'form', 'sendto', 'This field is required.')
 
 
-    def test_form_valid_with_attachment(self):
-        c = Client()
-        res = c.login(username='Frank', password='whatevs')
-        user = User.objects.get(username="Frank")
-        to_user = User.objects.get(username="Ned")
-        fp = open('README.md', 'rb')
-        data = {
-            "content":"This is the test content",
-            "subject":"this is a test subject",
-            "termcode":"173s",
-            "section":"3000",
-            "fk_sender": user.id,
-            "sendto": to_user.id,
-            "attachment": fp
-        }
-        res = c.post('/compose/',data)
-        self.assertEqual(res.url, '/')
+    # def test_form_valid_with_attachment(self):
+    #     c = Client()
+    #     res = c.login(username='Frank', password='whatevs')
+    #     user = User.objects.get(username="Frank")
+    #     to_user = User.objects.get(username="Ned")
+    #     fp = open('README.md', 'rb')
+    #     data = {
+    #         "content":"This is the test content",
+    #         "subject":"this is a test subject",
+    #         "termcode":"173s",
+    #         "section":"3000",
+    #         "fk_sender": user.id,
+    #         "sendto": to_user.id,
+    #         "attachments": fp
+    #     }
+    #     res = c.post('/compose/',data)
+    #     self.assertEqual(res.url, '/')
 
 
 class ReplyViewTest(myTestCase):
+
+
+    def test_user_can_view_proper_reply(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        msg = Route.objects.filter(to="Frank")[0].fk_mail
+        res = c.get('/reply/{}/'.format(msg.id))
+        self.assertEqual(res.status_code, 200)
+
+    def test_user_cannot_view_others(self):
+        c = Client()
+        res = c.login(username='Frank', password='whatevs')
+        msg = Route.objects.filter(to="Ned")[0].fk_mail
+        res = c.get('/reply/{}/'.format(msg.id))
+        self.assertEqual(res.status_code, 403)
+
 
     def test_form_valid(self):
         c = Client()
         res = c.login(username='Frank', password='whatevs')
         user = User.objects.get(username="Frank")
         to_user = User.objects.get(username="Ned")
+        msg = Route.objects.filter(to="Frank")[0].fk_mail
         data = {
             "content":"This is the test content",
             "subject":"this is a test subject",
@@ -602,7 +619,7 @@ class ReplyViewTest(myTestCase):
             "fk_sender": user.id,
             "sendto": to_user.id
         }
-        res = c.post('/reply/',data)
+        res = c.post('/reply/{}/'.format(msg.id),data)
         self.assertEqual(res.url, '/')
 
     def test_form_invalid(self):
@@ -610,6 +627,7 @@ class ReplyViewTest(myTestCase):
         res = c.login(username='Frank', password='whatevs')
         user = User.objects.get(username="Frank")
         to_user = User.objects.get(username="Ned")
+        msg = Route.objects.filter(to="Frank")[0].fk_mail
         data = {
             "content":"This is the test content",
             "subject":"this is a test subject",
@@ -618,27 +636,8 @@ class ReplyViewTest(myTestCase):
             "fk_sender": user.id,
         }
 
-        res = c.post('/compose/', data)
+        res = c.post('/reply/{}/'.format(msg.id), data)
         self.assertFormError(res, 'form', 'sendto', 'This field is required.')
-
-
-    def test_form_valid_with_attachment(self):
-        c = Client()
-        res = c.login(username='Frank', password='whatevs')
-        user = User.objects.get(username="Frank")
-        to_user = User.objects.get(username="Ned")
-        fp = open('README.md', 'rb')
-        data = {
-            "content":"This is the test content",
-            "subject":"this is a test subject",
-            "termcode":"173s",
-            "section":"3000",
-            "fk_sender": user.id,
-            "sendto": to_user.id,
-            "attachment": fp
-        }
-        res = c.post('/compose/',data)
-        self.assertEqual(res.url, '/')
 
 
 
