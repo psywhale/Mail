@@ -173,7 +173,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     def test_func(self, user):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']))
-        return self.request.user.username == route.to
+        return self.request.user.username.lower() == route.to.lower()
 
     def get(self, request, *args, **kwargs):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']))
@@ -451,7 +451,7 @@ class DownloadView(UserPassesTestMixin, View):
         mime = magic.from_file(attachment.filepath)
         pprint(mime)
         response = HttpResponse(file.read(), content_type=mime)
-        response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
+        response['Content-Disposition'] = 'attachment; filename={}'.format(attachment.filename)
         return response
 
 
