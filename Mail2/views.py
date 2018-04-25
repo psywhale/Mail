@@ -206,11 +206,11 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         new_route.to =self.request.POST['sendto']
         new_route.fk_mail = new_msg
         new_route.save()
-        # attachments = self.request.POST.getlist('attachments')
-        # for item in attachments:
-        #     attachment = Attachment.objects.get(id=item)
-        #     attachment.m2m_mail.add(new_msg)
-        #     attachment.save()
+        attachments = self.request.POST.getlist('attachments')
+        for item in attachments:
+            attachment = Attachment.objects.get(id=item)
+            attachment.m2m_mail.add(new_msg)
+            attachment.save()
         return super(ReplyView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
