@@ -11,7 +11,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="https://www.wosc.edu/img/APPS-seal-M.ico">
+    <link rel="icon" href="{% static 'images/mail2.png' %}">
 
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -33,7 +33,7 @@
 </head>
 <body>
 
-    <div class="user-logged-in"><i>Logged in as</i> {{ user.first_name }} {{ user.last_name }}</div>
+    <div class="user-logged-in"><i>Logged in as</i> {% if not user.first_name or not user.last_name %}{{ user.username }}{% else %}{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}{% endif %}</div>
     {% block content %}
     {% endblock %}
 
