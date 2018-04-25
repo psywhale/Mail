@@ -59,7 +59,13 @@
                                     <input type="checkbox" class="check">
                                 </label>
                             </div>
-                            <span class="name"> {{ message.to|capfirst }} </span>
+                            <span class="name">
+                                {% if not message.to.first_name or not message.to.last_name %}
+                                    {{ message.to }}
+                                {% else %}
+                                    {{ message.to.first_name|capfirst }} {{ message.to.last_name|capfirst }}
+                                {% endif %}
+                            </span>
                             <span class="section {{ message.section }}">{{ message.section }}</span>
                             <span class="subject text-muted"> - {{ message.subject }}</span>
                             <span class="date badge justthedateplease">
