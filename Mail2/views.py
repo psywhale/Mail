@@ -394,6 +394,7 @@ class LabelView(LoginRequiredMixin, TemplateView):
                 mail['time'] = str(message.created.hour) + ":" + str(message.created.minute) + ":" + str(
                     message.created.second)
                 mail['timestamp'] = message.created.timestamp()
+                mail['attachments'] = Attachment.objects.filter(m2m_mail=message)
                 # pprint(mail['date'])
                 mail['from'] = message.fk_sender
                 # if Attachment.objects.filter(fk_mail=message):
