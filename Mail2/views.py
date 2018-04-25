@@ -87,11 +87,11 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             # if message.section not in courses:
             #     courses.append(message.section)
             #if usermail.fk_sender is self.request.user:
-            if User.objects.filter(username=route.to).exists():
-                tofields = User.objects.get(username=route.to)
-                mail['to'] = tofields.get_full_name()
-            else:
-                mail['to'] = route.to
+            # if User.objects.filter(username=route.to).exists():
+            #     tofields = User.objects.get(username=route.to)
+            #     mail['to'] = tofields.get_full_name()
+            # else:
+            mail['to'] = route.to
             mail['id'] = usermail.id
             mail['subject'] = usermail.subject
             mail['read'] = route.read
@@ -173,7 +173,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     def test_func(self, user):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']))
-        return self.request.user.username == route.to
+        return self.request.user.username.lower() == route.to.lower()
 
     def get(self, request, *args, **kwargs):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']))
@@ -394,6 +394,7 @@ class LabelView(LoginRequiredMixin, TemplateView):
                 mail['time'] = str(message.created.hour) + ":" + str(message.created.minute) + ":" + str(
                     message.created.second)
                 mail['timestamp'] = message.created.timestamp()
+                mail['attachments'] = Attachment.objects.filter(m2m_mail=message)
                 # pprint(mail['date'])
                 mail['from'] = message.fk_sender
                 # if Attachment.objects.filter(fk_mail=message):
@@ -451,7 +452,7 @@ class DownloadView(UserPassesTestMixin, View):
         mime = magic.from_file(attachment.filepath)
         pprint(mime)
         response = HttpResponse(file.read(), content_type=mime)
-        response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
+        response['Content-Disposition'] = 'attachment; filename={}'.format(attachment.filename)
         return response
 
 
