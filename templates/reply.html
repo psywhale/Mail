@@ -193,6 +193,15 @@
 
 
 {#    alert("{{ mail.created|localtime }}");#}
+// ####  Begin Drag and Drop Uploading
+
+{#(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);#}
+{##}
+{#function mySubmit(url){#}
+{#    top.tinymce.activeEditor.windowManager.getParams().oninsert(url);#}
+{#    top.tinymce.activeEditor.windowManager.close();#}
+{#}#}
+{##}
 
 	'use strict';
 
@@ -322,7 +331,7 @@
 							form.classList.add( data.success == true ? 'is-success' : 'is-error' );
 							if( !data.success ) errorMsg.textContent = data.error;
 						}
-						else alert( 'Error. Please, contact the web developer!' );
+						else alert( 'Error. Please, contact the Mail2 developer!' );
 					};
 
 					ajax.onerror = function()
