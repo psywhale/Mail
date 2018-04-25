@@ -87,11 +87,11 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             # if message.section not in courses:
             #     courses.append(message.section)
             #if usermail.fk_sender is self.request.user:
-            if User.objects.filter(username=route.to).exists():
-                tofields = User.objects.get(username=route.to)
-                mail['to'] = tofields.get_full_name()
-            else:
-                mail['to'] = route.to
+            # if User.objects.filter(username=route.to).exists():
+            #     tofields = User.objects.get(username=route.to)
+            #     mail['to'] = tofields.get_full_name()
+            # else:
+            mail['to'] = route.to
             mail['id'] = usermail.id
             mail['subject'] = usermail.subject
             mail['read'] = route.read
@@ -103,6 +103,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             #pprint(mail['date'])
             mail['from'] = usermail.fk_sender
             mail['attachments'] = Attachment.objects.filter(m2m_mail=usermail)
+            mail['to'] = usermail.
             # if Attachment.objects.filter(fk_mail=usermail):
             #     mail['has_attachment'] = True
             # else:
