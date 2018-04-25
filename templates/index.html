@@ -124,7 +124,13 @@
                                     <input type="checkbox" class="check" id="message-id-{{ message.id }}">
                                 </label>
                             </div>
-                            <span class="name"> {{ message.from.first_name }} {{ message.from.last_name }}</span>
+                            <span class="name">
+                                {% if not message.from.first_name or not message.from.last_name %}
+                                    {{ message.from.username }}
+                                {% else %}
+                                    {{ message.from.first_name|capfirst }} {{ message.from.last_name|capfirst }}
+                                {% endif %}
+                            </span>
                             <span class="{% cycle 'red' 'green' 'blue' %} section s{{ message.section }}">{{ message.section }}</span>
                             <span class="subject text-muted"> &nbsp; {{ message.subject }}</span>
 
