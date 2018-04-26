@@ -71,7 +71,7 @@
         <div class="col-sm-8 col-md-9 main-mail-section">
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
-                    <div class="list-group">
+                    <div class="list-group" id="emailList">
 
                     {% if not email %}
                         {% if not "/label/" in request.path %}
@@ -114,44 +114,6 @@
                             </div>
                         {% endif %}
                     {% endif %}
-
-                        {% for message in email|dictsortreversed:"timestamp" %}
-{#                    {% for message in email %}#}
-                        <a href="{% url "reply" message.id %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %} {% if message.read == False %} unread-mail{% endif %}"
-                           title="MAIL FROM: {{ message.from.first_name }} {{ message.from.last_name }} in {{ message.section }}. SUBJECT: {{ message.subject }}.">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" class="check" id="message-id-{{ message.id }}">
-                                </label>
-                            </div>
-                            <span class="name">
-                                {% if not message.from.first_name or not message.from.last_name %}
-                                    {{ message.from.username }}
-                                {% else %}
-                                    {{ message.from.first_name|capfirst }} {{ message.from.last_name|capfirst }}
-                                {% endif %}
-                            </span>
-                            <span class="{% cycle 'red' 'green' 'blue' %} section s{{ message.section }}">{{ message.section }}</span>
-                            <span class="subject text-muted"> &nbsp; {{ message.subject }}</span>
-
-                            <span class="date badge justthedateplease">
-{#                                {% now "Y-m-d" as todays_date %}#}
-{#                                {% if todays_date >= message.date|date:"Y-m-d" %}#}
-{#                                   {{ message.date }}#}
-{#                                {% else %}#}
-{#                                    {{ message.timestamp }} Today#}
-{#                                {% endif %}#}
-                                {{ message.timestamp }}
-                            </span>
-                                {% if message.attachments %}
-                                    <span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!">
-                                {% endif %}
-                        </span>
-                        </a>
-
-                        {% endfor %}
-
-
                     </div>
                 </div>
                 <div class="tab-pane fade in" id="profile">
@@ -171,7 +133,23 @@
     </div>
 </div>
 
+<script type="text/javascript" src="{% static 'js/emailList.js' %}"></script>
 <script>
+
+$.get("/listEmail/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+            displayEmail(data, $('#emailList'));
+            });
+
+setInterval(function(){
+        $.get("/listEmail/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+            displayEmail(data, $('#emailList'));
+            })
+        }, 5000);
+    {#setTimeout(function() { clearInterval(intervalID);},)#}
+
+
+
+
 
   $('.main-mail-section:empty').html(function() {
       return "NON Yet!";

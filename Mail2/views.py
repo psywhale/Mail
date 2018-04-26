@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse,redirect, get_object_or_404
+from django.shortcuts import render, HttpResponse,redirect, get_object_or_404, reverse
 from django.http import JsonResponse
 from django.views.generic import TemplateView, FormView, View
 from .models import Route, Mail, Attachment
@@ -207,10 +207,12 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         new_route.fk_mail = new_msg
         new_route.save()
         attachments = self.request.POST.getlist('attachments')
+        pprint(attachments)
         for item in attachments:
-            attachment = Attachment.objects.get(id=item)
-            attachment.m2m_mail.add(new_msg)
-            attachment.save()
+            if item != "":
+                attachment = Attachment.objects.get(id=item)
+                attachment.m2m_mail.add(new_msg)
+                attachment.save()
         return super(ReplyView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -413,6 +415,44 @@ class LabelView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class GetEmailListView(View):
+
+    # @method_decorator(csrf_exempt)
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super(GetEmailListView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        routes = Route.objects.filter(to=self.request.user)
+        messages = []
+        for route in routes:
+            mail = route.fk_mail
+            sender = {}
+            sender['username'] = mail.fk_sender.username
+            if mail.fk_sender.first_name is not None:
+                sender['first_name'] = mail.fk_sender.first_name
+            else:
+                sender['first_name'] = ""
+            if mail.fk_sender.last_name is not None:
+                sender['last_name'] = mail.fk_sender.last_name
+            else:
+                sender['last_name'] = ""
+            message = {
+                'id': mail.id,
+                'read': route.read,
+                'from': sender,
+                'timestamp': str(mail.created),
+                'section':  mail.section,
+                'subject': mail.subject,
+                }
+            if Attachment.objects.filter(m2m_mail=mail).exists():
+                message['attachments'] = True
+            else:
+                message['attachments'] = False
+            messages.append(message)
+        return HttpResponse(json.dumps(messages), content_type="application/json")
+
+
+
 class ListUnreadView(View):
 
     @method_decorator(csrf_exempt)
@@ -432,7 +472,7 @@ class ListUnreadView(View):
             mails = Mail.objects.filter(termcode=termcode, section=section)
             unread_count = Route.objects.filter(fk_mail__in=mails, read=False, to=request.user.username).count()
             results[i] = {"course": course, "count": unread_count }
-        return HttpResponse(json.dumps(results),content_type="application/json")
+        return HttpResponse(json.dumps(results), content_type="application/json")
 
 
 class DownloadView(UserPassesTestMixin, View):
