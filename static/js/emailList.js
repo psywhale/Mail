@@ -38,7 +38,7 @@ $.each(messages, function(index, message){
         html = html + message.from.username;
     }
     else {
-        html = html + message.from.first_name.charAt(0).toUpperCase() + message.from.first_name.substr(1,name.length) + " " + message.from.last_name.charAt(0).toUpperCase() + message.from.last_name.substr(1,name.length);
+        html = html + message.from.first_name.charAt(0).toUpperCase() + message.from.first_name.substr(1,message.first_name.length) + " " + message.from.last_name.charAt(0).toUpperCase() + message.from.last_name.substr(1,message.last_name.length);
     }
     html = html + '</span><span class="section s'+ message.section +'">'+ message.section +'</span>';
     html = html + '   <span class="subject text-muted"> &nbsp; '+ message.subject +'</span>\n' +
