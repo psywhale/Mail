@@ -45,7 +45,7 @@ function calculateCurrentTermCode(){
 		var year = date.getYear() - 100;
 		var semester = "2s";
 	}
-    console.log(year+semester);
+    console.log(year.toString()+semester.toString());
 	return year+semester;
 
 }
