@@ -48,7 +48,7 @@ function calculateCurrentTermCode(){
 	        var semester = "3s";
         }
     }
-    
+
 	if((month >= 8) && (month <= 12)){
 		var year = date.getYear() - 100;
 		var semester = "2s";
