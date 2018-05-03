@@ -37,16 +37,25 @@ function calculateCurrentTermCode(){
 		var year = date.getYear() - 100;
 		var semester = "1s";
 	}
-	if((month == 5) && (day >= 20)){
-		var year = date.getYear() - 100;
-		var semester = "1s";
-	}
+
+	if(month == 5){
+	    if  (day >= 20){
+		    var year = date.getYear() - 100;
+		    var semester = "1s";
+	    }
+	    else {
+	        var year = date.getYear() - 101;
+	        var semester = "3s";
+        }
+    }
+    
 	if((month >= 8) && (month <= 12)){
 		var year = date.getYear() - 100;
 		var semester = "2s";
 	}
-
+    console.log(year.toString()+semester.toString());
 	return year+semester;
+
 }
 
 

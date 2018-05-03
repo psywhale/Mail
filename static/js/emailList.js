@@ -1,9 +1,5 @@
 
 
-
-
-
-
 function displayEmail(messages, messageDiv){
     //
     // Json String need to have the following info:
@@ -23,13 +19,13 @@ var html = "";
     // loop through json
 $.each(messages, function(index, message){
 
-    console.log(message.from.username);
+    console.log(message.read);
     html = html + ' <a href="/reply/'+ message.id +'/" class="list-group-item message-ID-'+ message.id;
     if (message.read){
-        html = html + " read";
+        html = html + ' read"';
     }
     else {
-        html = html + " unread-mail";
+        html = html + ' unread-mail"';
     }
     html = html + 'title="MAIL FROM: ' + message.from.first_name + " " + message.from.last_name + 'in ' + message.section +'. SUBJECT: '+ message.subject +'.">';
     html = html + '<div class="checkbox">\n' +

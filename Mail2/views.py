@@ -440,7 +440,8 @@ class GetEmailListView(View):
                 'id': mail.id,
                 'read': route.read,
                 'from': sender,
-                'timestamp': str(mail.created),
+                # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
+                'timestamp': mail.created.strftime("%m/%d/%Y"),
                 'section':  mail.section,
                 'subject': mail.subject,
                 }
