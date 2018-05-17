@@ -222,10 +222,10 @@ function listClasses(){
 
     $('#id_course_list').on('change', function () {
         $('#show_instructor_div').slideDown();
-        $("select").multipleSelect({
-            placeholder: "Select a Recipient"
-        });
-{#        $('#id_sendto option').prop('selected', true);#}
+{#        $("#id_sendto").multipleSelect({#}
+{#            placeholder: "Select a Recipient"#}
+{#        });#}
+        $('#id_sendto option').prop('selected', true);
     });
 
     $('#select_all').click(function() {
@@ -252,7 +252,7 @@ function listStudents(){
                     }
                     catch (e) {}
                 });
-                $("select").multipleSelect({
+                $("#id_sendto").multipleSelect({
                     placeholder: "Select a Recipient"
                 });
 {#                $('#id_sendto option').prop('selected', true);#}
