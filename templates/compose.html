@@ -70,7 +70,7 @@
                             <input type="text" name="{{ sn }}" id="id_course_list" class="compose_inputs" value="{{ sn }}" readonly />
                         </div>
                         <div class="compose-section-subject" id="show_students_div">
-                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" style=" float: left;  margin-top: 10px;"></span>&nbsp;&nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" style=" float: left;  margin-top: 6px;"></span>&nbsp;&nbsp;&nbsp;
                             <select name="sendto" id="id_sendto" multiple>
                                 <div id="selected_students"></div>
                             </select>
@@ -163,9 +163,11 @@
 
 {#<script src="https://cdn.ckeditor.com/4.7.3/full/ckeditor.js"></script>#}
 <script src="https://cdn.ckeditor.com/4.8.0/full-all/ckeditor.js"></script>
-    <script type="text/javascript" src="{% static '/js/attachments.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/attachments.js' %}"></script>
 
-<script src="/static/js/jquery-1.11.3.min.js"></script>
+<script src="{% static '/js/jquery-1.11.3.min.js' %}"></script>
+<script src="{% static '/js/multiple-select.js' %}"></script>
+
 <script type="application/javascript">
 $( document ).ready(function() {
     $('#id_sendto option').prop('selected', true);
@@ -247,7 +249,10 @@ function listStudents(){
                     }
                     catch (e) {}
                 });
-                $('#id_sendto option').prop('selected', true);
+                $("select").multipleSelect({
+                    placeholder: "Select a Recipient"
+                });
+{#                $('#id_sendto option').prop('selected', true);#}
             }
         })
     }
@@ -268,8 +273,24 @@ CKEDITOR.replace('id_content', {
 </script>
 
 
-
+<link href="{% static '/js/multiple-select.css' %}" rel="stylesheet" media="screen">
 <style>
+    .ms-choice {
+        width: 99%;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 8px;
+        border: 1px solid rgb(238, 238, 238);
+        border-width: 2px;
+        border-style: inset;
+    }
+    .ms-choice > div {
+        top: 4px;
+        right: 12px;
+    }
+    .ms-choice > span {
+        padding-left: 14px;
+    }
     #attachmentsDiv:empty::after{
         content: "No attachments";
         font-style: italic;
@@ -483,7 +504,7 @@ CKEDITOR.replace('id_content', {
       </div>
       <div class="modal-body">
         <p> </p>
-        <p>We recommend using a Forum post instead of mailing each student individual.</p>
+        <p>We recommend using a Forum post instead of mailing to each student.</p>
           <p>Do you accept that you have read this notice?</p>
         <p> </p>
       </div>
