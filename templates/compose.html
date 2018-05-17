@@ -222,7 +222,10 @@ function listClasses(){
 
     $('#id_course_list').on('change', function () {
         $('#show_instructor_div').slideDown();
-        $('#id_sendto option').prop('selected', true);
+        $("select").multipleSelect({
+            placeholder: "Select a Recipient"
+        });
+{#        $('#id_sendto option').prop('selected', true);#}
     });
 
     $('#select_all').click(function() {
