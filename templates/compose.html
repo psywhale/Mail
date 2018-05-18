@@ -51,8 +51,8 @@
 
                     {% if not sn in request.path %}
                         <div class="compose-section-subject" title="Course List" style="padding-top: 10px">
-                            <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
-                            <select name="instructor" id="id_course_list">
+                            <span class="glyphicon glyphicon-tasks" data-toggle="tooltip" data-placement="bottom" style="top:5px"></span>&nbsp;&nbsp;&nbsp;
+                            <select name="instructor" id="id_course_list" onchange="if (this.value) window.location.href=this.value">
                                 <option value disabled selected> &nbsp; --- Select a Course --- &nbsp; </option>
                                 <div id="selected_instructors"></div>
                             </select>
@@ -78,11 +78,11 @@
                         </div>
                     {% endif %}
 
-                    <div class="compose-section-subject" >
+                    <div class="compose-section-subject noSNnumber">
                         <span class="glyphicon glyphicon-share-alt" data-toggle="tooltip" data-placement="bottom" ></span>&nbsp;&nbsp;&nbsp;
                         <input id="id_subject" name='subject' type="text" placeholder="Subject Line..." />
                     </div>
-                    <div class="container-fluid">
+                    <div class="container-fluid noSNnumber">
                         <div class="row">
                             <div class="col-lg-12 nopadding compose">
 
@@ -93,9 +93,12 @@
                             </div>
                         </div>
                     </div>
-                <div id="attachmentsDiv"></div>
+                <div class="noSNnumberInfo" style="display:none; text-align: center; padding: 40px 10px">
+                    <img src="{% static 'images/choose.jpg' %}" alt="CHOOSE YOUR COURSE" style="width:100%; max-width: 700px; border-radius: 9px;" />
+                </div>
+                <div id="attachmentsDiv" class="noSNnumber"></div>
                     </form>
-                        <div class="col-lg-12 nopadding compose" style="padding:12px 0 0 0">
+                        <div class="col-lg-12 nopadding compose noSNnumber" style="padding:12px 0 0 0">
                                 <div class="col-sm-6" style="border-right: 1px dotted #ccc;margin-right: -1px;">
                                     <div class="container">
                                         <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data"
@@ -204,7 +207,7 @@ function listClasses(){
                   try {
                       if (termCode == info[1].toLowerCase()) {
                           $('#id_course_list').append($('<option></option> ')
-                              .attr("value", course.shortname)
+                              .attr("value", "/compose/" + course.shortname)
                               .text(course.fullname));
                       }
                   }
@@ -278,6 +281,14 @@ CKEDITOR.replace('id_content', {
 
 <link href="{% static '/js/multiple-select.css' %}" rel="stylesheet" media="screen">
 <style>
+ {% if not sn in request.path %}
+     .noSNnumber {
+        display: none;
+     }
+     .noSNnumberInfo {
+        display:block !important;
+     }
+ {% endif %}
     .ms-choice {
         width: 99%;
         height: 35px;
