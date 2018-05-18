@@ -173,7 +173,9 @@
 
 <script type="application/javascript">
 $( document ).ready(function() {
-    $('#id_sendto option').prop('selected', true);
+    if ($('#id_sendto option').length == 1) {
+        $('#id_sendto option').attr('selected', true);
+    }
     $(".sendmailbutton").click(function() {
         $("#sendReply").submit();
     });
@@ -255,6 +257,9 @@ function listStudents(){
                     }
                     catch (e) {}
                 });
+                if ($('#id_sendto option').length == 1) {
+                    $('#id_sendto option').attr('selected', true);
+                }
                 $("#id_sendto").multipleSelect({
                     placeholder: "Select a Recipient"
                 });
