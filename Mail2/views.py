@@ -126,6 +126,7 @@ class ComposeView(LoginRequiredMixin, FormView):
         return super(ComposeView, self).form_invalid(form)
 
     def form_valid(self, form):
+        print(self.request.POST['sendto'])
         new_msg = Mail()
         new_route = Route()
         new_msg.content = self.request.POST['content']
