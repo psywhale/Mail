@@ -107,7 +107,9 @@ function getCourses(){
         jsonp: 'callback',
         dataType: 'jsonp',
         success: function (response) {
-            jQuery.each(response, function (id, course) {
+            console.log("Course List");
+            if (response.length != 0){
+                jQuery.each(response, function (id, course) {
                 $('#all-courses').html($('#all-courses').html() + course.fullname);
                 var termCode = calculateCurrentTermCode();
                 var info = course.shortname.split("-");
@@ -127,6 +129,12 @@ function getCourses(){
                 catch (e) {
                 }
             });
+            }
+            else{
+                window.location = "https://moodle.wosc.edu";
+            }
+
+
             getUnreadBadges();
             addActiveCourse();
         }
