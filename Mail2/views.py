@@ -79,22 +79,23 @@ class OutboxView(LoginRequiredMixin,TemplateView):
 
 
         email = []
-        courses = []
         for usermail in usermails:
-            mail = {}
 
-            route = Route.objects.get(fk_mail=usermail)
-            # if message.section not in courses:
-            #     courses.append(message.section)
-            #if usermail.fk_sender is self.request.user:
-            # if User.objects.filter(username=route.to).exists():
-            #     tofields = User.objects.get(username=route.to)
-            #     mail['to'] = tofields.get_full_name()
-            # else:
-            mail['to'] = route.to
+            routes = Route.objects.filter(fk_mail=usermail)
+
+
+            mail = {}
+            for route in routes:
+                if 'to' in mail:
+                    mail['to'] = mail['to'] + ', ' + route.to
+                else:
+                    mail['to'] = route.to
+                if User.objects.filter(username=route.to).exists():
+                    mail['userid'] = User.objects.get(username=route.to).id
+
             mail['id'] = usermail.id
             mail['subject'] = usermail.subject
-            mail['read'] = route.read
+
             mail['termcode'] = usermail.termcode
             mail['section'] = usermail.section
             mail['date'] = str(usermail.created.month)+"/"+str(usermail.created.day)+"/"+str(usermail.created.year)
@@ -103,15 +104,9 @@ class OutboxView(LoginRequiredMixin,TemplateView):
             #pprint(mail['date'])
             mail['from'] = usermail.fk_sender
             mail['attachments'] = Attachment.objects.filter(m2m_mail=usermail)
-            # if Attachment.objects.filter(fk_mail=usermail):
-            #     mail['has_attachment'] = True
-            # else:
-            #     mail['has_attachment'] = False
             email.append(mail)
         context['email'] = email
         context['session'] = self.request.session
-        #dprint(email)
-        # context['courses'] = courses
         return context
 
 
@@ -126,18 +121,19 @@ class ComposeView(LoginRequiredMixin, FormView):
         return super(ComposeView, self).form_invalid(form)
 
     def form_valid(self, form):
-        print(self.request.POST['sendto'])
+        recipients = self.request.POST.getlist('sendto')
         new_msg = Mail()
-        new_route = Route()
         new_msg.content = self.request.POST['content']
         new_msg.subject = self.request.POST['subject']
         new_msg.termcode = self.request.POST['termcode']
         new_msg.section = self.request.POST['section']
         new_msg.fk_sender = self.request.user
         new_msg.save()
-        new_route.to = self.request.POST['sendto']
-        new_route.fk_mail = new_msg
-        new_route.save()
+        for recipient in recipients:
+            new_route = Route()
+            new_route.to = recipient
+            new_route.fk_mail = new_msg
+            new_route.save()
         attachments = self.request.POST.getlist('attachments')
         for item in attachments:
             attachment = Attachment.objects.get(id=item)
@@ -173,11 +169,12 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
     raise_exception = True
 
     def test_func(self, user):
-        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']))
+        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=self.request.user.username)
         return self.request.user.username.lower() == route.to.lower()
 
     def get(self, request, *args, **kwargs):
-        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']))
+        # print(User.objects.get(id=self.kwargs['userid']).username)
+        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=User.objects.get(id=self.kwargs['userid']).username)
         route.read = True
         route.save()
         return super(ReplyView, self).get(args, kwargs)
@@ -231,19 +228,25 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             m = Mail.objects.get(id=self.kwargs['id'])
             context['attachments'] = Attachment.objects.filter(m2m_mail=m)
-            r = Route.objects.get(fk_mail=m)
-            info= {
-                'id': m.id,
-                'content': m.content,
-                'subject': m.subject,
-                'termcode': m.termcode,
-                'section': m.section,
-                'fk_sender': m.fk_sender,
-                'to': r.to,
-                'created': m.created,
-                'timestamp': m.created.timestamp(),
-            }
-
+            routes = Route.objects.filter(fk_mail=m)
+            if m.fk_sender == self.request.user:
+                for route in routes:
+                    if 'to' in info:
+                        info['to'] = info['to'] + ', ' + route.to
+                    else:
+                        info['to'] = route.to
+            else:
+                info['to'] = self.request.user.username
+            # print(info['to'])
+            info['id'] = m.id
+            info['content'] = m.content
+            info['subject'] = m.subject
+            info['termccode'] = m.termcode
+            info['section'] = m.section
+            info['fk_sender'] = m.fk_sender
+            info['created'] = m.created
+            info['timestamp'] = m.created.timestamp()
+            # pprint(info)
             context['mail'] = info
             # dprint(context)
         else:
@@ -268,9 +271,10 @@ class OutboxReplyView(ReplyView):
         initial = super(OutboxReplyView, self).get_initial()
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             mail_obj = Mail.objects.get(id=self.kwargs['id'])
-            router = Route.objects.get(fk_mail=mail_obj)
+            # router = Route.objects.get(fk_mail=mail_obj, to=User.objects.get(self.kwargs['userid']).username)
+
             data = {}
-            data['sendto'] = router.to
+            data['sendto'] = User.objects.get(id=self.kwargs['userid']).username
             data['termcode'] = mail_obj.termcode
             data['section'] = mail_obj.section
             data['subject'] = "RE: "+mail_obj.subject
@@ -286,7 +290,7 @@ class ArchiveMailView(LoginRequiredMixin, View):
 
         if Mail.objects.filter(id=request.POST['message_id']).exists():
             message = Mail.objects.get(id=request.POST['message_id'])
-            if request.user.username == Route.objects.get(fk_mail=message).to:
+            if Route.objects.filter(fk_mail=message, to=request.user.username).exists():
                 message.archived = True
                 message.save()
                 return redirect("/")
@@ -304,7 +308,7 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
 
         if Mail.objects.filter(id=request.POST['message_id']).exists():
             message = Mail.objects.get(id=request.POST['message_id'])
-            route = Route.objects.get(fk_mail=message)
+            route = Route.objects.get(fk_mail=message, to=self.request.user.username)
             if request.user.username == route.to:
                 route.read = False
                 route.save()
@@ -395,7 +399,7 @@ class LabelView(LoginRequiredMixin, TemplateView):
                     courses.append(message.section)
                 mail['id'] = message.id
                 mail['subject'] = message.subject
-                mail['read'] = Route.objects.filter(fk_mail=message.id).get().read
+                mail['read'] = Route.objects.filter(fk_mail=message.id, to=self.request.user.username).get().read
                 mail['termcode'] = message.termcode
                 mail['section'] = message.section
                 mail['date'] = str(message.created.month) + "/" + str(message.created.day) + "/" + str(message.created.year)
@@ -423,7 +427,16 @@ class GetEmailListView(View):
     #     return super(GetEmailListView, self).dispatch(request, *args, **kwargs)
 
     def get(self, *args, **kwargs):
-        routes = Route.objects.filter(to=self.request.user)
+
+        # if no sn is specified, get all of the routes for the user.
+        if 'sn' not in self.kwargs:
+            routes = Route.objects.filter(to=self.request.user)
+        else:
+            #get all of the routes to this user in this section
+            section, termcode = self.kwargs['sn'].split('-')
+            emails = Mail.objects.filter(section=section, termcode=termcode)
+            routes = Route.objects.filter(fk_mail__in=emails, to=self.request.user.username)
+
         messages = []
         for route in routes:
             mail = route.fk_mail
@@ -438,9 +451,11 @@ class GetEmailListView(View):
             else:
                 sender['last_name'] = ""
             message = {
+                'userid': self.request.user.id,
                 'id': mail.id,
                 'read': route.read,
                 'from': sender,
+                'archived': mail.archived,
                 # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
                 'timestamp': mail.created.strftime("%m/%d/%Y"),
                 'section':  mail.section,
@@ -451,7 +466,7 @@ class GetEmailListView(View):
             else:
                 message['attachments'] = False
             messages.append(message)
-        return HttpResponse(json.dumps(messages), content_type="application/json")
+        return HttpResponse(json.dumps(list(reversed(messages))), content_type="application/json")
 
 
 

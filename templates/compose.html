@@ -59,6 +59,7 @@
                         </div>
                         <div class="compose-section-subject" id="show_students_div" style="display:none;">
                             <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" style=" float: left;  margin-top: 10px;"></span>&nbsp;&nbsp;&nbsp;
+                            <input type="hidden" id="id_recipients" value="">
                             <select name="sendto" id="id_sendto" multiple>
                                 <div id="selected_students"></div>
                             </select>
@@ -190,7 +191,7 @@ $( document ).ready(
 
 
 $(".sendmailbutton").click(function() {
-    $("#sendMail").submit();
+      $("#sendMail").submit();
 });
 
 $(document).on('change', '#id_course_list', listStudents);
