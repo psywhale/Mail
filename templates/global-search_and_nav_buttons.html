@@ -12,9 +12,9 @@
             <form action="{% url 'archivemail' %}" method="POST" id="archive" style="display:inline-block">
                 {% csrf_token %}
                 <input value="{{ mail.id }}" name="message_id" type="hidden">
-                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="archive-btn" title="Archive to Course Folder">
+                <!--<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="archive-btn" title="Archive to Course Folder">
                     <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Archive
-                </a>
+                </a>-->
             </form>
             <form action="{% url 'markunread' %}" method="POST" id="munread" style="display:inline-block">
                 {% csrf_token %}
