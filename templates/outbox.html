@@ -53,7 +53,11 @@
 
                         {% for message in email|dictsortreversed:"timestamp" %}
 
-                        <a href="{% url 'outboxreply' message.id %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}  {% if message.read == False %} unread-mail{% endif %}" title="MAIL FROM: {{ message.from.first_name }} {{ message.from.last_name }} in {{ message.section }}. SUBJECT: {{ message.subject }}.">
+			{% if message.userid %}
+				<a href="{% url 'outboxreply' message.id message.userid %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}  {% if message.read == False %} unread-mail{% endif %}" title="MAIL FROM: {{ message.from.first_name }} {{ message.from.last_name }} in {{ message.section }}. SUBJECT: {{ message.subject }}.">
+			{% else %}
+				<a href="#" style="opacity: 0.6;  cursor: not-allowed;" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}  {% if message.read == False %} unread-mail{% endif %}" title="You cannot reply to this user until they have logged in for the first time to Mail2.">
+			{% endif %}
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" class="check">

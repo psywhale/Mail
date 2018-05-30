@@ -32,26 +32,56 @@
         <div class="tab-content">
             <div class="tab-pane fade in active" id="home">
 
-                <div class="reply-section-subject" title="Subject">
-                    {{ mail.subject }} &nbsp; <span class="label label-default" style="font-size:11px"
-                                                    title="Course Section Group">{{ mail.section }}</span>
+                <div class="reply-section-subject" title="SUBJECT LINE">
+		    <span class="label label-default" style="font-size:11px;float: left; margin: 5px 8px 5px 0;" title="Course Section">
+			{{ mail.section }}
+		    </span> 
+                    {{ mail.subject }} 
                 </div>
 
-                <div style="padding:12px"
+                <div style="padding:5px 12px;font-size: 12px;"
                      title="Sent by ({{ mail.fk_sender }}) on this date: &nbsp; {{ mail.created }}">
-                    <div style="float:right; margin: 10px 5px 0 0">
-                        <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;&nbsp;
-                        <span class="calculatedtime">{{ mail.timestamp }}</span>
+                    <div style="float:right; margin: -1px 5px 0 0">
+                        <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;
+                        <span class="calculatedtime" style="font-style: italic;">{{ mail.timestamp }}</span>
                     </div>
-                    <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>
-                    &nbsp;&nbsp; <strong>SENT
-                    FROM:</strong> {{ mail.fk_sender.first_name }} {{ mail.fk_sender.last_name }} ({{ mail.fk_sender }})
+                    <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp; 
+			<span style="padding-right: 7px">SENT FROM: </span>
+			<strong> 
+				{% if mail.fk_sender == user.username %}YOU 
+                                	{% if not mail.fk_sender.first_name or not mail.fk_sender.last_name %}
+	                                    ({{ mail.fk_sender }})
+        	                        {% else %}
+                	                    ({{ mail.fk_sender.first_name|capfirst }} {{ mail.fk_sender.last_name|capfirst }})
+                        	        {% endif %}
+				{% else %}
+                                        {% if not mail.fk_sender.first_name or not mail.fk_sender.last_name %}
+                                            {{ mail.fk_sender }}
+                                        {% else %}
+                                            {{ mail.fk_sender.first_name|capfirst }} {{ mail.fk_sender.last_name|capfirst }}
+                                        {% endif %}
+				{% endif %}
+			</strong>
                 </div>
-                <div style="padding:12px; margin-top:-18px" title="Sent to you ({{ mail.to }})">
-                    <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>
-                    &nbsp;&nbsp;
-                    <div style="display: inline-block" title="Sent to you: ({{ mail.to }})">
-                        <strong>SENT TO:</strong> {{ mail.to.first_name }} {{ mail.to.last_name }} ({{ mail.to }})
+                <div style="padding:12px 22px 12px 12px; margin-top:-18px;font-size: 12px;" title="Sent to you ({{ mail.to }})">
+                    <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;
+                    <div style="display: inline" title="Sent to you: ({{ mail.to }})">
+                        <span style="padding-right: 27px">SENT TO: </span> 
+			<strong>
+				{% if mail.to == user.username %}YOU
+                                	{% if not mail.to.first_name or not mail.to.last_name %}
+	                                    ({{ mail.to }})
+	                                {% else %}
+	                                    ({{ mail.to.first_name|capfirst }} {{ mail.to.last_name|capfirst }})
+	                                {% endif %}
+				{% else %}
+                                        {% if not mail.to.first_name or not mail.to.last_name %}
+                                            {{ mail.to }}
+                                        {% else %}
+                                            {{ mail.to.first_name|capfirst }} {{ mail.to.last_name|capfirst }}
+                                        {% endif %}
+				{% endif %}
+			</strong>
                     </div>
                     <hr/>
                 </div>
@@ -63,7 +93,7 @@
                 </div>
                 <br/>
                 {% if attachments %}
-                    <h4 style="padding-left:20px">Attachment(s):</h4>
+                    <h4 style="margin: 20px 15px 10px;">Attachment(s):</h4>
                     <ul class="attachments-loop" style="list-style:none">
                         {% for attachment in attachments %}
                             {% if attachment.filename is attachment.image %}
@@ -87,11 +117,16 @@
                 <div class="container-fluid2" style="padding: 20px 15px 0;">
                     <div class="panel panel-info">
                         <div class="panel-heading" style=" padding: 10px; margin-bottom: 10px;">
+			    <a onclick="window.open('http://www.wiris.com/editor/demo/en/mathml-latex','','width=966,height=800,left='+(screen.availWidth/2-400)+',top='+(screen.availHeight/2-300)+'');return false;"
+                             href="http://www.wiris.com/editor/demo/en/mathml-latex" target="_blank"
+                             class="btn2 btn-warning2" style="float:right;font-size:11px" title="(opens a new window)">
+			     Math Tool Helper
+			    </a>
                             <span style="font-size: 11px; font-style: italic; padding:8px 8px 0">REPLY TO: &nbsp;
-                                {% if not mail.to.first_name or not mail.to.last_name %}
-                                    {{ mail.to }}
+                                {% if not mail.fk_sender.first_name or not mail.fk_sender.last_name %}
+                                    {{ mail.fk_sender }}
                                 {% else %}
-                                    {{ mail.to.first_name|capfirst }} {{ mail.to.last_name|capfirst }}
+                                    {{ mail.fk_sender.first_name|capfirst }} {{ mail.fk_sender.last_name|capfirst }}
                                 {% endif %}
                             </span>
                         </div>
@@ -150,23 +185,18 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6" style="text-align: right;border-left: 1px dotted #ccc">
-                                    <p style="float:right">
-                                        <a onclick="window.open('http://www.wiris.com/editor/demo/en/mathml-latex','','width=966,height=800,left='+(screen.availWidth/2-400)+',top='+(screen.availHeight/2-300)+'');return false;"
-                                           href="http://www.wiris.com/editor/demo/en/mathml-latex" target="_blank"
-                                           class="btn2 btn-warning2" style="width: 210px;">Math Tool Helper</a>
-                                    </p>
                                     <div style="text-align: left;">
                                         <h4>Attachment(s):</h4>
                                         <ul id="attachmentsDisplayDiv" style="list-style:none; padding:0; color:green"></ul>
                                     </div>
-                                    <button class="btn btn-success sendmailbutton" style="width: 210px;">
+				</div>
+			    </div>
+			</div>
+                        <div style="float: right; margin: -15px -10px;"><button class="btn btn-success sendmailbutton" style="width: 210px;">
                                         <span class="glyphicon glyphicon-send" data-toggle="tooltip"
                                               data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
                                         Send Message
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        </button></div>
                     </div>
                 </div>
             </div>

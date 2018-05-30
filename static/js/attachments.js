@@ -128,7 +128,7 @@
 							form.classList.add( data.success == true ? 'is-success' : 'is-error' );
 							if( !data.success ) errorMsg.textContent = data.error;
 						}
-						else alert( 'Error. Please, contact the Mail2 developer!' );
+						//else alert( 'Error. Please, contact the Mail2 developer!' );
 					};
 
 					ajax.onerror = function()

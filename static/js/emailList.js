@@ -20,7 +20,7 @@ var html = "";
 $.each(messages, function(index, message){
 
     console.log(message.read);
-    html = html + ' <a href="/reply/'+ message.id +'/" class="list-group-item message-ID-'+ message.id;
+    html = html + ' <a href="/reply/'+ message.id +'/' + message.userid + '/" class="list-group-item message-ID-'+ message.id;
     if (message.read){
         html = html + ' read"';
     }
