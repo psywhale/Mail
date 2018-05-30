@@ -58,7 +58,7 @@ a.list-group-item:focus, a.list-group-item:hover { border-left: 4px dotted #c6e8
 .reply-section-subject { font-weight: 900; font-size: 18px; padding: 10px 12px 6px; }
 #id_content { width:98% !important; height: 50px; border-radius: 8px; padding:4px 12px }
 input#id_subject { width:93%; border-radius: 8px; padding:6px 12px }
-.mail-content { padding: 20px 30px; min-height: 80px; height: 3.5em;  }
+.mail-content { padding: 25px 30px; min-height: 80px; margin: -23px 20px -22px 13px; background: #fafdfa; background: rgba(250, 253, 250, 0.45);  border: 1px solid #f7f7f7; font-size: 16px }
 .cke_editable {  }
 .nav-stacked>li+li {
     overflow: inherit;
