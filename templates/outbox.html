@@ -71,7 +71,13 @@
                                 {% endif %}
                             </span>
                             <span class="section {{ message.section }}">{{ message.section }}</span>
-                            <span class="subject text-muted"> - {{ message.subject }}</span>
+                            <span class="subject text-muted"> - 
+        	            {% if message.subject %}
+	                        {{ message.subject }}
+                	    {% else %}
+        	                (no subject)
+	                    {% endif %}
+			    </span>
                             <span class="date badge justthedateplease">
 {#                                {% now "Y-m-d" as todays_date %}#}
 {#                                {% if todays_date >= message.date|date:"Y-m-d" %}#}
