@@ -36,7 +36,11 @@
 		    <span class="label label-default" style="font-size:11px;float: left; margin: 5px 8px 5px 0;" title="Course Section">
 			{{ mail.section }}
 		    </span> 
-                    {{ mail.subject }} 
+                    {% if mail.subject %}
+                        {{ mail.subject }}
+                    {% else %}
+                        (no subject)
+                    {% endif %}
                 </div>
 
                 <div style="padding:5px 12px;font-size: 12px;"
