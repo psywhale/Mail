@@ -41,7 +41,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
             message = route.fk_mail
             # if message.section not in courses:
             #     courses.append(message.section)
-            if message.archived is False:
+            if route.archived is False:
                 mail['id'] = message.id
                 mail['subject'] = message.subject
                 mail['read'] = route.read
@@ -199,6 +199,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         new_msg.subject = self.request.POST['subject']
         new_msg.termcode = self.request.POST['termcode']
         new_msg.section = self.request.POST['section']
+        new_msg.parent_id = self.kwargs['id']
         new_msg.fk_sender = self.request.user
         new_msg.save()
         new_route.to =self.request.POST['sendto']
@@ -246,6 +247,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
             info['fk_sender'] = m.fk_sender
             info['created'] = m.created
             info['timestamp'] = m.created.timestamp()
+            info['parent'] = m.parent
             # pprint(info)
             context['mail'] = info
             # dprint(context)
@@ -455,7 +457,7 @@ class GetEmailListView(View):
                 'id': mail.id,
                 'read': route.read,
                 'from': sender,
-                'archived': mail.archived,
+                'archived': route.archived,
                 # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
                 'timestamp': mail.created.strftime("%m/%d/%Y"),
                 'section':  mail.section,

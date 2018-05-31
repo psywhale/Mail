@@ -8,9 +8,9 @@ class Mail(models.Model):
     subject = models.CharField(max_length=512)
     termcode = models.CharField(max_length=4)
     section = models.CharField(max_length=5)
-    archived = models.BooleanField(default=False)
     fk_sender = models.ForeignKey(User)
     created = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', null=True)
 
     def __str__(self):
         return self.subject
@@ -28,5 +28,5 @@ class Route(models.Model):
     to = models.CharField(max_length=300, default="")
     read = models.BooleanField(default=False)
     fk_mail = models.ForeignKey(Mail)
-
+    archived = models.BooleanField(default=False)
 

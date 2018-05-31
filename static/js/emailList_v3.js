@@ -41,7 +41,14 @@ $.each(messages, function(index, message){
         html = html + message.from.first_name.charAt(0).toUpperCase() + message.from.first_name.substr(1,message.from.first_name.length) + " " + message.from.last_name.charAt(0).toUpperCase() + message.from.last_name.substr(1,message.from.last_name.length);
     }
     html = html + '</span><span class="section s'+ message.section +'">'+ message.section +'</span>';
-    html = html + '   <span class="subject text-muted"> &nbsp; '+ message.subject +'</span>\n' +
+    html = html + '   <span class="subject text-muted"> &nbsp; ';
+if (message.subject){
+    html = html + message.subject;
+}
+else {
+    html = html + '(no subject)';
+}
+html = html + '</span>\n' +
         '\n' +
         '<span class="date badge justthedateplease">'+ message.timestamp +'</span>';
     if (message.attachments) {
