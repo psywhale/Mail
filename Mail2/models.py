@@ -10,7 +10,7 @@ class Mail(models.Model):
     section = models.CharField(max_length=5)
     fk_sender = models.ForeignKey(User)
     created = models.DateTimeField(auto_now_add=True)
-    parent = models.ForeignKey('self', null=True)
+    parent = models.ForeignKey('self', null=True, blank=True)
 
     def __str__(self):
         return self.subject
