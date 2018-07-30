@@ -14,8 +14,49 @@
         <div class="col-sm-4 col-md-3">
             {% include 'global-logo.html' %}
         </div>
-        <div class="col-sm-8 col-md-9 search-area">
-            {% include 'global-search_and_nav_buttons.html' %}
+        <div class="col-sm-8 col-md-9 search-area search-area-reply">
+
+            <!-- Split button -->
+            <a type="button" class="btn btn-default" href="{{ request.META.HTTP_REFERER }}" data-toggle="tooltip" data-placement="bottom" title="Back to Inbox">
+                <span class="fas fa-arrow-left"></span>&nbsp;&nbsp;&nbsp;Back
+            </a>
+            <!-- Single button -->
+	{% if mail.referer %}
+         {% if not mail.archived %}
+            <form action="{% url 'archivemail' %}" method="POST" id="archive" style="display:inline-block">
+                {% csrf_token %}
+                <input value="{{ mail.id }}" name="message_id" type="hidden">
+                <input value="{{ mail.referer }}" name="referer" type="hidden">
+                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="archive-btn" title="Archive to Course Folder">
+                     <span class="fas fa-cloud"></span>&nbsp;&nbsp;&nbsp;Archive
+                </a>
+            </form>
+          {% else %}
+            <form action="{% url 'unarchivemail' %}" method="POST" id="unarchive" style="display:inline-block">
+                {% csrf_token %}
+                <input value="{{ mail.id }}" name="message_id" type="hidden">
+                <input value="{{ mail.referer }}" name="referer" type="hidden">
+                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="unarchive-btn" title="Send back to Inbox">
+                     <span class="fas fa-inbox"></span>&nbsp;&nbsp;&nbsp;Send to Inbox
+                </a>
+            </form>
+          {% endif %}
+            <form action="{% url 'markunread' %}" method="POST" id="munread" style="display:inline-block">
+                {% csrf_token %}
+                <input value="{{ mail.id }}" name="message_id" type="hidden">
+                <input value="{{ mail.referer }}" name="referer" type="hidden">
+                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="munread-btn" title="Mark this Message as Un-Read">
+                    <span class="fas fa-envelope"></span>&nbsp;&nbsp;&nbsp;Mark as Un-Read
+                </a>
+            </form>
+	{% endif %}
+        <div class="input-group searchBox searchReply">
+            <input type="text" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">
+            <span class="input-group-btn">
+            <button class="btn btn-secondary" type="button">Go!</button>
+            </span>
+        </div>
+
         </div>
     </div>
     <hr style="border-top:1px solid #d4d4d4">
@@ -32,23 +73,120 @@
         <div class="tab-content">
             <div class="tab-pane fade in active" id="home">
 
+ {% if parentlist %}
+  <a href="#" id="accordian-expand-all" class="btn2 btn-default2" style="float:right; border-bottom:0; font-size:12px; margin-right:25px">Show All {{ parentlist|length }} Emails</a>
+ {% endif %}
                 <div class="reply-section-subject" title="SUBJECT LINE">
 		    <span class="label label-default" style="font-size:11px;float: left; margin: 5px 8px 5px 0;" title="Course Section">
 			{{ mail.section }}
 		    </span> 
-                    {{ mail.subject }} 
+                    {% if parentlist.0.subject %}
+                        {{ parentlist.0.subject }}
+                    {% else %}
+                        (no subject)
+                    {% endif %}
                 </div>
+
+<div class="panel-group" id="accordion">
+  {% for parent in parentlist %}
+    <!-- Panel -->
+    <div class="panel panel-default" style="margin-top:-1px;">
+        <div class="panel-heading" style="padding:0 !important; background-color: #e6ece6;">
+                <h4 class="parenttitle panel-title" data-toggle="collapse" data-target="#accordian-parentID-{{ parent.id }}" style="font-size:13px;padding: 6px 15px" title="Open past Emails in this thread">
+                   <div class="calculatedtime">
+                        {{ parent.created.timestamp }}
+                   </div>
+		   {% if parent.fk_sender.username == user.username %}
+			<span class="name" style="color:#888">
+	                   You Sent &nbsp;
+			</span>
+		   {% else %}
+			<span class="name">
+  		           {{ parent.fk_sender }} &nbsp; 
+			</span>
+		   {% endif %}
+                   <span class="fas fa-arrow-{% if not parent.fk_sender.username == user.username %}right{% else %}right yousent{% endif %}" data-toggle="tooltip" data-placement="bottom" style="margin-left:-3px" title="ID: {{ parent.id }} --- ROUTE ID: {{ parent.routeid }}"></span>&nbsp;
+		   {% if parent.attachments %}<span class="fas fa-paperclip" title="This message has an Attachement!" style="float:right; color:crimson; margin:inherit"></span>{% endif %}
+                   <div class="subject">
+                        {% autoescape off %}{{ parent.content|truncatechars:60 }}{% endautoescape %}
+                   </div>
+                </h4>
+             </div>
+             <div id="accordian-parentID-{{ parent.id }}" class="panel-collapse {% if parent.read %}collapse{% else %}in{% endif %}">
+                 <div class="panel-body" style="padding-top:20px">
+		
+                 <div style="padding:5px 12px;font-size: 12px;margin-top:-10px"
+                     title="Sent by ({{ parent.fk_sender }}) on this date: &nbsp; {{ parent.created.timestamp }}">
+		    {% if not parent.read %}<p style="color:#f55; margin:5px 0"><b>HERE IS A MESSAGE YOU MISSED</b> <i>(This will now be marked as READ)</i></p>{% endif %}
+                    <div style="float:right; margin: -1px 12px 0 0">
+                        <span class="far fa-calendar-alt" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;
+                        <span class="calculatedtime" style="margin-top:0;font-style: italic;">{{ parent.created.timestamp }}</span>
+                    </div>
+                    <span class="fas fa-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;
+                        <span style="padding-right: 7px">SENT FROM: </span>
+                        <strong>
+                                {% if parent.fk_sender.username == user.username %} You 
+                                        {% if not parent.fk_sender.first_name or not parent.fk_sender.last_name %}
+                                            ({{ parent.fk_sender }})
+                                        {% else %}
+                                            ({{ parent.fk_sender.first_name|capfirst }} {{ parent.fk_sender.last_name|capfirst }})
+                                        {% endif %}
+                                {% else %}
+                                        {% if not parent.fk_sender.first_name or not parent.fk_sender.last_name %}
+                                            {{ parent.fk_sender }}
+                                        {% else %}
+                                            {{ parent.fk_sender.first_name|capfirst }} {{ parent.fk_sender.last_name|capfirst }}
+                                        {% endif %}
+                                {% endif %}
+                        </strong>
+		    <hr />
+                 </div>
+
+                    {% autoescape off %}
+                       {{ parent.content }}
+                    {% endautoescape %}
+
+                {% if parent.attachments %}
+		    <br />
+                    <h4 style="margin: 20px 15px 10px;">Attachment(s):</h4>
+                    <ul class="attachments-loop" style="list-style:none">
+                        {% for attachment in parent.attachments %}
+                            {% if attachment.filename is attachment.image %}
+                                <li style="padding:0">
+                                    <a href="{% url 'download' attachment.id %}" class="btn btn-info">
+                                        <span class="fas fa-paperclip"></span> {{ attachment.filename }}
+                                        <img src="{% url 'download' attachment.id %}{{ attachment.filename }}" alt=""
+                                             style="width:100%;height:16px"/>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li style="padding:0">
+                                    <a href="{% url 'download' attachment.id %}" class="btn btn-info">
+                                        <span class="fas fa-paperclip"></span> {{ attachment.filename }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+		{% if not parent.id %}<i style="font-size: 11px;float:right;margin: 0 12px;color:#5bc0de">[First Email in the Thread]</i>{% endif %}
+                 </div>
+             </div>
+    </div>
+  {% endfor %}
+</div><!--/END Accordian -->
+
 
                 <div style="padding:5px 12px;font-size: 12px;"
                      title="Sent by ({{ mail.fk_sender }}) on this date: &nbsp; {{ mail.created }}">
-                    <div style="float:right; margin: -1px 5px 0 0">
-                        <span class="glyphicon glyphicon-calendar" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;
-                        <span class="calculatedtime" style="font-style: italic;">{{ mail.timestamp }}</span>
+                    <div style="float:right; margin: -1px 12px 0 0">
+                        <span class="far fa-calendar-alt" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;
+                        <span class="calculatedtime" style="margin-top:0;font-style: italic;">{{ mail.timestamp }}</span>
                     </div>
-                    <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp; 
+                    <span class="fas fa-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp; 
 			<span style="padding-right: 7px">SENT FROM: </span>
 			<strong> 
-				{% if mail.fk_sender == user.username %}YOU 
+				{% if mail.fk_sender.username == user.username %}YOU 
                                 	{% if not mail.fk_sender.first_name or not mail.fk_sender.last_name %}
 	                                    ({{ mail.fk_sender }})
         	                        {% else %}
@@ -64,7 +202,7 @@
 			</strong>
                 </div>
                 <div style="padding:12px 22px 12px 12px; margin-top:-18px;font-size: 12px;" title="Sent to you ({{ mail.to }})">
-                    <span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;
+                    <span class="fas fa-user" data-toggle="tooltip" data-placement="bottom"></span>&nbsp;
                     <div style="display: inline" title="Sent to you: ({{ mail.to }})">
                         <span style="padding-right: 27px">SENT TO: </span> 
 			<strong>
@@ -99,7 +237,7 @@
                             {% if attachment.filename is attachment.image %}
                                 <li style="padding:0">
                                     <a href="{% url 'download' attachment.id %}" class="btn btn-info">
-                                        <span class="glyphicon glyphicon-paperclip"></span> {{ attachment.filename }}
+                                        <span class="fas fa-paperclip"></span> {{ attachment.filename }}
                                         <img src="{% url 'download' attachment.id %}{{ attachment.filename }}" alt=""
                                              style="width:100%;height:16px"/>
                                     </a>
@@ -107,13 +245,15 @@
                             {% else %}
                                 <li style="padding:0">
                                     <a href="{% url 'download' attachment.id %}" class="btn btn-info">
-                                        <span class="glyphicon glyphicon-paperclip"></span> {{ attachment.filename }}
+                                        <span class="fas fa-paperclip"></span> {{ attachment.filename }}
                                     </a>
                                 </li>
                             {% endif %}
                         {% endfor %}
                     </ul>
                 {% endif %}
+		<!-- TYPE YOUR REPLY -->
+
                 <div class="container-fluid2" style="padding: 20px 15px 0;">
                     <div class="panel panel-info">
                         <div class="panel-heading" style=" padding: 10px; margin-bottom: 10px;">
@@ -138,7 +278,7 @@
                                     {% endfor %}
                                     {% csrf_token %}
                                         {{ form.content }}
-                                <div id="attachmentsDiv"></div>
+                                <!--<div id="attachmentsDiv"></div>-->
                                 </form>
                             </div>
                             <div class="col-lg-12 nopadding compose" style="padding:12px 0 0 0">
@@ -192,8 +332,8 @@
 				</div>
 			    </div>
 			</div>
-                        <div style="float: right; margin: -15px -10px;"><button class="btn btn-success sendmailbutton" style="width: 210px;">
-                                        <span class="glyphicon glyphicon-send" data-toggle="tooltip"
+                        <div style="float: right; margin: 15px;"><button class="btn btn-success sendmailbutton" style="width: 210px;">
+                                        <span class="far fa-paper-plane" data-toggle="tooltip"
                                               data-placement="bottom"></span>&nbsp;&nbsp;&nbsp;
                                         Send Message
                         </button></div>
@@ -223,10 +363,39 @@ CKEDITOR.replace( 'id_content', {
     customConfig: '/static/ckeditor/config.js'
 });
 
+
+$('#accordian-expand-all').on('click', function(){
+       if($(this).text() == 'Hide All {{ parentlist|length }} Emails'){
+           $(this).text('Show All {{ parentlist|length }} Emails');
+	   $('.panel-collapse').collapse('hide');
+       } else {
+           $(this).text('Hide All {{ parentlist|length }} Emails');
+	   $('.panel-collapse').collapse('show');
+       }
+});
+$('.messageNOTread').collapse('show');
+
+//setTimeout(
+//  function() 
+//  {
+//    $('.panel-collapse').first().collapse('toggle').addclass('lastAccord');
+//  }, 50);
+
 </script>
 
 
 <style>
+#accordion { margin: 4px 20px 12px 10px; opacity:.8 }
+#accordion:hover,#accordion:focus { opacity:1 }
+.name { width:96px }
+.subject { padding: 0 12px }
+.subject p { margin:0 }
+.calculatedtime { float:right; font-size:10px; margin:4px 5px }
+h4.parenttitle { background-color: #f5f5f5 }
+h4.parenttitle:hover { cursor:pointer !important; background-color: #e7ffe7 }
+h4 .fa-arrow-right { color:blue }
+h4 .yousent { color:green }
+.panel .collapse:first-of-type { display:block !important }
     #attachmentsDiv:empty::after{
         content: "No attachments";
         font-style: italic;

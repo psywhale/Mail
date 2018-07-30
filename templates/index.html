@@ -12,13 +12,15 @@
             {% include 'global-logo.html' %}
         </div>
         <div class="col-sm-8 col-md-9 search-area">
+<!--
             <div class="breadcrumbsed">
                 {% if sn %}
-                    Label: {{ sn }}
+                    VIEW: {{ sn }}
                 {% else %}
-                    Label: CMAIL2 Inbox
+                    VIEW: Course Mail Inbox
                 {% endif %}
             </div>
+-->
             <div class="input-group searchBox">
                 <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
                 <span class="input-group-btn">
@@ -46,8 +48,8 @@
                 </ul>
             </div>
             {% endif %}
-            <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" onClick="location.reload();" style="padding: 5px; margin: 0 10px -6px -6px;">
-                &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
+            <a type="button" class="btn btn-default refresh" data-toggle="tooltip" title="Refresh" onClick="location.reload();" style="padding: 5px; margin: 0 10px -6px -6px;">
+                &nbsp;&nbsp;&nbsp;<span class="fas fa-sync-alt"></span>&nbsp;&nbsp;&nbsp;</a>
 {#            {% if  email %}#}
 {#            <div class="btn-group paginated">#}
 {#                <div class="text-muted"><b>1</b>–<b>50</b> of <b>INFINITY</b>  </div>#}
@@ -133,17 +135,20 @@
     </div>
 </div>
 
-<script type="text/javascript" src="{% static 'js/emailList_v2.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/emailList_v4.js' %}"></script>
 <script>
     {% if sn %}
         $.get("/listEmail/{{ sn }}/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
             displayEmail(data, $('#emailList'));
             });
     {% else %}
-$.get("/listEmail/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+	$.get("/listEmail/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+	    //console.log(data);
+	    $('.inbox').addClass('active-course');
             displayEmail(data, $('#emailList'));
             });
     {% endif %}
+
 setInterval(function(){
     {% if sn %}
         $.get("/listEmail/{{ sn }}/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
@@ -155,6 +160,7 @@ setInterval(function(){
             })
     {% endif %}
         }, 5000);
+
     {#setTimeout(function() { clearInterval(intervalID);},)#}
 
 
