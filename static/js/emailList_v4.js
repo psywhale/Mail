@@ -39,7 +39,7 @@ var html = "";
  });
 
 messageDiv.html(html);
-
+colorize();
 }
 
 function buildMessage(message, html){
