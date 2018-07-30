@@ -1,15 +1,15 @@
 {% block leftcoursemenu %}
         <div class="col-sm-4 col-md-3">
         {% if not "/label/" in request.path %}
-            <a href="{% url 'compose' %}" class="btn btn-danger btn-sm btn-block" role="button"><i class="glyphicon glyphicon-edit"></i> Compose</a>
+            <a href="{% url 'compose' %}" class="btn btn-danger btn-sm btn-block" role="button"><i class="fas fa-user-edit"></i> Compose</a>
         {% else %}
-            <a href="{% url 'compose' sn %}" class="btn btn-danger btn-sm btn-block" role="button"><i class="glyphicon glyphicon-edit"></i> Compose ({{ sn }})</a>
+            <a href="{% url 'compose' sn %}" class="btn btn-danger btn-sm btn-block" role="button"><i class="fas fa-edit"></i> Compose ({{ sn }})</a>
                 <ul class="dropdown-menu" id="past-courses-compose" role="menu">
                 </ul>
         {% endif %}
             <hr>
             <ul class="nav nav-pills nav-stacked" id="current-courses">
-                <li id="inbox" class=""><a href="/"> Inbox </a>
+                <li id="00000-000S" class="inbox {% if inbox %} active-course{% endif %}"><a href="/"> Inbox </a>
                 </li>
                 <li class="{% if "/outbox/" in request.path %} active-course{% endif %}{% if "/or/" in request.path %} active-course{% endif %}"><a href="{% url 'outbox' %}">Sent Mail</a></li>
 {#                <li class="current-course-list has-badge"><a href="#" title="2C202 - College Algebra (30 unread messages)"><span class="badge pull-right2">30</span> 2C202 - College Algebra</a></li>#}

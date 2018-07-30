@@ -12,21 +12,21 @@
             {% include 'global-logo.html' %}
         </div>
         <div class="col-sm-8 col-md-9 search-area">
+<!--
             <div class="breadcrumbsed">
                 {% if sn %}
-                    Label: {{ sn }}
+                    VIEW: {{ sn }}
                 {% else %}
-                    Label: Sent Mailbox
+                    VIEW: Sent Mailbox
                 {% endif %}
             </div>
-            <div class="input-group" style="width: 33%; float: right;">
+-->
+	    <div class="input-group searchBox">
                 <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
-                <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Go!</button>
+                  <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="button">Go!</button>
                 </span>
             </div>
-            <a type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh" onClick="location.reload();" style="padding: 5px; margin: 0 10px -6px -6px;">
-                &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;</a>
             <!-- Split button -->
 {#            <div class="btn-group paginated">#}
 {#                <div class="text-muted"><b>1</b>–<b>50</b> of <b>INFINITY</b></div>#}
@@ -40,6 +40,7 @@
 {#                </div>#}
 {#            </div>#}
         </div>
+
     </div>
     <hr style="border-top:1px solid #d4d4d4">
     <div class="row">
@@ -54,15 +55,17 @@
                         {% for message in email|dictsortreversed:"timestamp" %}
 
 			{% if message.userid %}
-				<a href="{% url 'outboxreply' message.id message.userid %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}  {% if message.read == False %} unread-mail{% endif %}" title="MAIL FROM: {{ message.from.first_name }} {{ message.from.last_name }} in {{ message.section }}. SUBJECT: {{ message.subject }}.">
+				<a href="{% url 'outboxreply' message.id message.userid %}" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}  {% if message.read == False %} unread-mail{% endif %}" title="ID: {{ message.id }} -- COURSE #: {{ message.section }} -- SUBJECT: {{ message.subject }}.">
 			{% else %}
 				<a href="#" style="opacity: 0.6;  cursor: not-allowed;" class="list-group-item message-ID-{{ message.id }}{% if message.read == True %} read{% endif %}  {% if message.read == False %} unread-mail{% endif %}" title="You cannot reply to this user until they have logged in for the first time to Mail2.">
 			{% endif %}
-                            <div class="checkbox">
+				<div class="micons sent-ICON fas fa-{% if message.userid %}share-square" title="Message has been SENT!"{% else %}comment-slash" title="Message has been SENT, but the user has never logged in to this Mail program."{% endif %}></div> &nbsp; 
+<!--                            <div class="checkbox">
                                 <label>
                                     <input type="checkbox" class="check">
                                 </label>
                             </div>
+-->
                             <span class="name">
                                 {% if not message.to.first_name or not message.to.last_name %}
                                     {{ message.to }}
@@ -71,7 +74,7 @@
                                 {% endif %}
                             </span>
                             <span class="section {{ message.section }}">{{ message.section }}</span>
-                            <span class="subject text-muted"> - 
+                            <span class="subject text-muted"> &nbsp; 
         	            {% if message.subject %}
 	                        {{ message.subject }}
                 	    {% else %}
@@ -89,7 +92,7 @@
                             </span>
                             <span class="pull-right">
                                 {% if message.attachments %}
-                                    <span class="glyphicon glyphicon-paperclip">
+                                    <span class="fas fa-paperclip">
                                 {% endif %}
                             </span>
                         </span>

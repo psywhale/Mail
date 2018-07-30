@@ -1,6 +1,6 @@
 
 
-function displayEmail(messages, messageDiv){
+function displayEmail(response, messageDiv){
     //
     // Json String need to have the following info:
     //      message.id
@@ -19,20 +19,20 @@ function displayEmail(messages, messageDiv){
 var html = "";
     // loop through json
 
-    $.each(messages, function(index, message){
+    $.each(response.messages, function(index, message){
     //
 
     if (window.location.pathname.search('label') == -1) {
-        console.log('not');
+        //console.log('not');
         // Not in a label, should not show archived messages
         if (!message.archived){
             // html = html + buildMessage(message, html);
             html = buildMessage(message, html);
          }
     } else {
-        console.log('is');
+        //console.log('is');
         // In a label, go ahead and show archived
-        console.log(message.archived);
+        //console.log(message.archived);
         html = buildMessage(message, html);
     }
 
@@ -43,31 +43,24 @@ messageDiv.html(html);
 }
 
 function buildMessage(message, html){
-    var label = "home";
+    var label = "00000-000S";
     if (window.location.pathname.search('label') >= 1) {
         label = window.location.pathname.split('/')[2];
     }
-    }
-    html = html + ' <a href="/reply/'+ message.id +'/' + message.userid + '/' + label + /" class="list-group-item message-ID-'+ message.id;
+    html = html + ' <a href="/reply/'+ message.id +'/' + message.userid + '/' + label + '/" class="list-group-item message-ID-'+ message.id;
     if (message.read){
         html = html + ' read"';
     }
     else {
         html = html + ' unread-mail"';
     }
-    html = html + 'title="MAIL FROM: ' + message.from.first_name + " " + message.from.last_name + 'in ' + message.section +'. SUBJECT: '+ message.subject +'.">';
-    if (mail.archive){
-        html = html + '<div class="micons archive-ICON glyphicon glyphicon-save-file" title="Mail is ARCHIVED to the course label."></div>';
-    }
-    else if (message.threaded){
-	html = html + '<div class="micons threaded-ICON glyphicon glyphicon-tags" title="Mail has multiple conversations (THREADED)"></div>';
-	}
-    else if (message.read){
-	html = html + '<div class="micons read-ICON glyphicon glyphicon-save" title="Mail has been READ."></div>';
-	}
-    else {
-        html = html + '<div class="micons unread-ICON glyphicon glyphicon-tag" title="Mail is UNREAD."></div>';
-    }
+    html = html + 'title="ID: '+ message.id +' -- COURSE #: ' + message.section +' --  SUBJECT: '+ message.subject +'.">';
+	if (message.read){
+	    html = html + '<div class="micons read-ICON far fa-envelope-open" title="Mail has been READ."></div>';
+        }
+        else {
+            html = html + '<div class="micons unread-ICON fas fa-envelope" title="Mail is UNREAD."></div>';
+        }
         html = html + '<span class="name">';
     if((message.from.first_name == "") || (message.from.last_name == "")){
         html = html + message.from.username;
@@ -75,7 +68,16 @@ function buildMessage(message, html){
     else {
         html = html + message.from.first_name.charAt(0).toUpperCase() + message.from.first_name.substr(1,message.from.first_name.length) + " " + message.from.last_name.charAt(0).toUpperCase() + message.from.last_name.substr(1,message.from.last_name.length);
     }
-    html = html + '</span><span class="section s'+ message.section +'">'+ message.section +'</span>';
+    var sections = window.location.pathname.split("/");
+    if (sections[1] == "label"){
+        if (message.archived){
+	    html = html + '</span><span class="section s'+ message.section +'">'+ message.section +'</span>';
+	}else {
+	    html = html + '</span><span class="section s'+ message.section +' section-inbox"><strong>Inbox</strong></span>';
+	}
+    }else{
+	html = html + '</span><span class="section s'+ message.section +'">'+ message.section +'</span>';
+    }
     html = html + '   <span class="subject text-muted"> &nbsp; ';
     if (message.subject){
         html = html + message.subject;
@@ -87,7 +89,7 @@ function buildMessage(message, html){
         '\n' +
         '<span class="date badge justthedateplease">'+ message.timestamp +'</span>';
     if (message.attachments) {
-        html = html + '<span class="glyphicon glyphicon-paperclip" title="This message has an Attachement!"></span>';
+        html = html + '<span class="pull-right"><span class="fas fa-paperclip" title="This message has an Attachement!"></span></span>';
     }
     html = html + "</a>";
 
