@@ -41,7 +41,7 @@ class IndexView(LoginRequiredMixin,TemplateView):
             message = route.fk_mail
             # if message.section not in courses:
             #     courses.append(message.section)
-            if message.archived is False:
+            if route.archived is False:
                 mail['id'] = message.id
                 mail['subject'] = message.subject
                 mail['read'] = route.read
@@ -80,31 +80,32 @@ class OutboxView(LoginRequiredMixin,TemplateView):
 
         email = []
         for usermail in usermails:
+            if not Mail.objects.filter(parent=usermail).exists():
+                routes = Route.objects.filter(fk_mail=usermail)
 
-            routes = Route.objects.filter(fk_mail=usermail)
 
+                mail = {}
+                for route in routes:
 
-            mail = {}
-            for route in routes:
-                if 'to' in mail:
-                    mail['to'] = mail['to'] + ', ' + route.to
-                else:
-                    mail['to'] = route.to
-                if User.objects.filter(username=route.to).exists():
-                    mail['userid'] = User.objects.get(username=route.to).id
+                    if 'to' in mail:
+                        mail['to'] = mail['to'] + ', ' + route.to
+                    else:
+                        mail['to'] = route.to
+                    if User.objects.filter(username=route.to).exists():
+                        mail['userid'] = User.objects.get(username=route.to).id
 
-            mail['id'] = usermail.id
-            mail['subject'] = usermail.subject
+                mail['id'] = usermail.id
+                mail['subject'] = usermail.subject
 
-            mail['termcode'] = usermail.termcode
-            mail['section'] = usermail.section
-            mail['date'] = str(usermail.created.month)+"/"+str(usermail.created.day)+"/"+str(usermail.created.year)
-            mail['time'] = str(usermail.created.hour)+":"+str(usermail.created.minute)+":"+str(usermail.created.second)
-            mail['timestamp'] = usermail.created.timestamp()
-            #pprint(mail['date'])
-            mail['from'] = usermail.fk_sender
-            mail['attachments'] = Attachment.objects.filter(m2m_mail=usermail)
-            email.append(mail)
+                mail['termcode'] = usermail.termcode
+                mail['section'] = usermail.section
+                mail['date'] = str(usermail.created.month)+"/"+str(usermail.created.day)+"/"+str(usermail.created.year)
+                mail['time'] = str(usermail.created.hour)+":"+str(usermail.created.minute)+":"+str(usermail.created.second)
+                mail['timestamp'] = usermail.created.timestamp()
+                #pprint(mail['date'])
+                mail['from'] = usermail.fk_sender
+                mail['attachments'] = Attachment.objects.filter(m2m_mail=usermail)
+                email.append(mail)
         context['email'] = email
         context['session'] = self.request.session
         return context
@@ -199,6 +200,7 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         new_msg.subject = self.request.POST['subject']
         new_msg.termcode = self.request.POST['termcode']
         new_msg.section = self.request.POST['section']
+        new_msg.parent_id = self.kwargs['id']
         new_msg.fk_sender = self.request.user
         new_msg.save()
         new_route.to =self.request.POST['sendto']
@@ -225,8 +227,29 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         context = super(ReplyView, self).get_context_data(**kwargs)
         info = {}
 
+
+
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             m = Mail.objects.get(id=self.kwargs['id'])
+            # Make the parent list for threading
+            parentlist = []
+            parent = m.parent
+            while parent is not None:
+                p = {}
+                p['id'] = parent.id
+                p['fk_sender'] = parent.fk_sender
+                p['subject'] = parent.subject
+                p['created'] = parent.created
+                p['content'] = parent.content
+                p['attachments'] = Attachment.objects.filter(m2m_mail=parent)
+                if Route.objects.filter(fk_mail=parent, to=self.request.user.username):
+                    p['read'] = Route.objects.get(fk_mail=parent, to=self.request.user.username).read
+                    p['routeid'] = Route.objects.get(fk_mail=parent, to=self.request.user.username).id
+                else:
+                    p['read'] = True
+                parentlist.append(p)
+                parent = parent.parent
+            context['parentlist'] = list(reversed(parentlist))
             context['attachments'] = Attachment.objects.filter(m2m_mail=m)
             routes = Route.objects.filter(fk_mail=m)
             if m.fk_sender == self.request.user:
@@ -237,6 +260,10 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                         info['to'] = route.to
             else:
                 info['to'] = self.request.user.username
+
+            if Route.objects.filter(fk_mail=m, to=self.request.user.username).exists():
+                route = Route.objects.get(fk_mail=m, to=self.request.user.username)
+
             # print(info['to'])
             info['id'] = m.id
             info['content'] = m.content
@@ -246,19 +273,28 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
             info['fk_sender'] = m.fk_sender
             info['created'] = m.created
             info['timestamp'] = m.created.timestamp()
-            # pprint(info)
+            info['parent'] = m.parent
+            info['archived'] = route.archived
+            if 'sn' in self.kwargs:
+                info['referer'] = self.kwargs['sn']
+            pprint("This is the reply view")
+            pprint(info)
             context['mail'] = info
             # dprint(context)
         else:
             # todo raise error
             print("oh noes")
         context['session'] = self.request.session
+
+
+        # Mark all the mail in this thread as read.
+
+
         return context
 
     def form_invalid(self, form):
         pprint(form.errors)
         return super(ReplyView, self).form_invalid(form)
-
 
 
 class OutboxReplyView(ReplyView):
@@ -291,9 +327,35 @@ class ArchiveMailView(LoginRequiredMixin, View):
         if Mail.objects.filter(id=request.POST['message_id']).exists():
             message = Mail.objects.get(id=request.POST['message_id'])
             if Route.objects.filter(fk_mail=message, to=request.user.username).exists():
-                message.archived = True
-                message.save()
-                return redirect("/")
+                route = Route.objects.get(fk_mail=message, to=request.user.username)
+                route.archived = True
+                route.save()
+                if request.POST['referer'] != '00000-000S':
+                    return redirect("/label/{}".format(request.POST['referer']))
+                else:
+                    return redirect("/")
+            else:
+                raise PermissionDenied
+        else:
+            raise PermissionDenied
+
+
+class UnarchiveMailView(LoginRequiredMixin, View):
+    raise_exception = True
+    #TODO make redirect to prev page not /
+
+    def post(self, request):
+
+        if Mail.objects.filter(id=request.POST['message_id']).exists():
+            message = Mail.objects.get(id=request.POST['message_id'])
+            if Route.objects.filter(fk_mail=message, to=request.user.username).exists():
+                route = Route.objects.get(fk_mail=message, to=request.user.username)
+                route.archived = False
+                route.save()
+                if request.POST['referer'] != '00000-000S':
+                    return redirect("/label/{}".format(request.POST['referer']))
+                else:
+                    return redirect("/")
             else:
                 raise PermissionDenied
         else:
@@ -314,7 +376,10 @@ class MarkMailUnreadView(LoginRequiredMixin, View):
                 route.save()
                 message.archived = False
                 message.save()
-                return redirect("/")
+                if request.POST['referer'] != '00000-000S':
+                    return redirect("/label/{}".format(request.POST['referer']))
+                else:
+                    return redirect("/")
             else:
                 raise PermissionDenied
         else:
@@ -440,33 +505,38 @@ class GetEmailListView(View):
         messages = []
         for route in routes:
             mail = route.fk_mail
-            sender = {}
-            sender['username'] = mail.fk_sender.username
-            if mail.fk_sender.first_name is not None:
-                sender['first_name'] = mail.fk_sender.first_name
+            if not Mail.objects.filter(parent=mail).exists():
+                sender = {}
+                sender['username'] = mail.fk_sender.username
+                if mail.fk_sender.first_name is not None:
+                    sender['first_name'] = mail.fk_sender.first_name
+                else:
+                    sender['first_name'] = ""
+                if mail.fk_sender.last_name is not None:
+                    sender['last_name'] = mail.fk_sender.last_name
+                else:
+                    sender['last_name'] = ""
+                message = {
+                    'userid': self.request.user.id,
+                    'id': mail.id,
+                    'read': route.read,
+                    'from': sender,
+                    'archived': route.archived,
+                    # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
+                    'timestamp': mail.created.strftime("%m/%d/%Y"),
+                    'section':  mail.section,
+                    'subject': mail.subject,
+                    }
+                if Attachment.objects.filter(m2m_mail=mail).exists():
+                    message['attachments'] = True
+                else:
+                    message['attachments'] = False
+                messages.append(message)
+            if 'sn' in self.kwargs:
+                response = {'inbox': True, 'messages': list(reversed(messages)) }
             else:
-                sender['first_name'] = ""
-            if mail.fk_sender.last_name is not None:
-                sender['last_name'] = mail.fk_sender.last_name
-            else:
-                sender['last_name'] = ""
-            message = {
-                'userid': self.request.user.id,
-                'id': mail.id,
-                'read': route.read,
-                'from': sender,
-                'archived': mail.archived,
-                # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
-                'timestamp': mail.created.strftime("%m/%d/%Y"),
-                'section':  mail.section,
-                'subject': mail.subject,
-                }
-            if Attachment.objects.filter(m2m_mail=mail).exists():
-                message['attachments'] = True
-            else:
-                message['attachments'] = False
-            messages.append(message)
-        return HttpResponse(json.dumps(list(reversed(messages))), content_type="application/json")
+                response = {'inbox': False, 'messages': list(reversed(messages))}
+        return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 

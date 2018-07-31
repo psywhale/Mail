@@ -1,14 +1,12 @@
 /* CSS used here will be applied after bootstrap.css */
 
-body{ margin-top:20px; font-family: Roboto,sans-serif; background-color: #f4fff4}
-.user-logged-in { position: absolute; top:5px; right:15px; font-size: 11px; }
+body{ margin-top:20px; font-family: Roboto,sans-serif; background-color: #f4fff4; padding: 0 4px}
+.user-logged-in { position: absolute; top:7px; right:26px; }
 .nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
 .tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
 .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
 .tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }
 .tab-pane .list-group input[type="checkbox"]{ margin-top: 8px; }
-.tab-pane .list-group .glyphicon { margin-right:5px; }
-.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }
 a.list-group-item.read { color: #222; background-color: #f3f7f3; }
 hr { margin-top: 5px;margin-bottom: 10px; }
 .ad { padding: 5px; background: #F5F5F5; color: #222; font-size: 80%; border: 1px solid #E5E5E5; }
@@ -19,7 +17,7 @@ hr { margin-top: 5px;margin-bottom: 10px; }
 .current-course-list a { color: #0fa229 }
 .current-course-list>a>.pull-right { box-shadow: 0 0 0 6px white; }
 .has-badge { font-weight: 900 }
-.active-course a { background-color: darkgreen; color:gold !important; }
+.active-course a { background-color: #bfecc7; }
 /*.active>a>.pull-right { #box-shadow: 0 0 0 7px #337ab7; }*/
 /*.nav-pills>li.active>a>.badge { #margin-right: -12px; }*/
 .main-mail-section { background-color: #FFF; margin-top:-10px; padding-top:10px }
@@ -32,32 +30,35 @@ a.list-group-item:focus, a.list-group-item:hover { border-left: 4px dotted #c6e8
 .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover { color: inherit; background-color: inherit; font-weight: 900 }
 .nav-pills>li>a>.badge { position: absolute; margin-left: -30px; top: 6px; }
 .nav>li>a:focus, .nav>li>a:hover { background-color: #d3f5d9; }
-.active-course a:focus, .active-course a:hover { background-color:darkgreen !important; color: white !important; }
-.breadcrumbsed { color: #cecece; font-size: 16px; position: absolute; top:-40px; left:8px }
+.active-course a:focus, .active-course a:hover { background-color:#baffc6 !important; }
+.breadcrumbsed { color: #929292; font-size: 16px; position: absolute; top:-40px; left:8px }
 .container-fluid {
     padding-right: 15px;
     padding-left: 15px;
     margin-right: 9px;
     margin-left: 9px;
 }
+.dropdown-menu a.active {  background: darkgreen; color: white; }
+.inbox-section { width: 82px !important }
+.section-inbox { background-color:#bfecc7 !important }
 .btn-group .text-muted { margin:4px 10px 0; display: inline-block; }
 .search-area { margin: 22px 0 0}
 .paginated { margin: 7px 0 0}
 .main-mail-section { background: white url(https://www.wosc.edu/img/seal651.png) no-repeat center center; border-left: 1px solid #efefef; }
 .tab-content .badge { background: transparent; color: inherit; font-weight: inherit }
-.nav .badge { z-index: 999; position: absolute; top: 6px; left: -20px; background-color: #006300; }
+.nav .badge { z-index: 999; position: absolute; top: 6px; left: -23px; background-color: #006300; }
 .nav .badge div { text-align:center }
-.name, .section, .subject { width: 170px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: -5px; }
-.section { width: 60px; border-radius: 8px; background-color: aquamarine; padding: 2px 6px 2px 10px; font-weight: 500 }
+.name, .section, .subject { width: 122px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: -5px; }
+.section { width: 60px; border-radius: 8px; background-color: aquamarine; padding: 2px 6px 2px 10px; font-weight: 500; margin-right:15px }
 .s22222 { background-color: #51D2FF }
 .subject { width: 52%; #width: 415px }
-.tab-pane .list-group .glyphicon-paperclip { position: absolute; top:2px; right: -2px; border-radius: 8px; background-color: #d6d6d6; padding: 2px 3px; }
+span.fas.fa-paperclip { font-size: 18px; margin: 4px; }
 .date { width: 55px; margin: 6px 12px 6px -5px; }
 
 /*  REPLY VIEW */
 .reply-section-subject { font-weight: 900; font-size: 18px; padding: 10px 12px 6px; }
 #id_content { width:98% !important; height: 50px; border-radius: 8px; padding:4px 12px }
-input#id_subject { width:93%; border-radius: 8px; padding:6px 12px }
+input#id_subject { width:80%; border-radius: 8px; padding:6px 12px }
 .mail-content { padding: 25px 30px; min-height: 80px; margin: -23px 20px -22px 13px; background: #fafdfa; background: rgba(250, 253, 250, 0.45);  border: 1px solid #f7f7f7; font-size: 16px }
 .cke_editable {  }
 .nav-stacked>li+li {
@@ -87,15 +88,28 @@ input#id_subject { width:93%; border-radius: 8px; padding:6px 12px }
 }
 /* COMPOSE SECTION*/
 .compose-section-subject { font-weight: 900; font-size: 14px; padding: 0 12px 12px; margin-top: -4px}
-#id_course_list, #id_sendto, .compose_inputs { width:55%; border-radius: 8px; padding:6px 12px; font-size:14px;  }
+.compose-section-subject .fa-clipboard-list { padding:0 6px 0 20px }
+.compose-section-subject .fa-users { padding:0 0 0 14px }
+.compose-section-subject .fa-comments { padding:0 3px 0 14px }
+#id_course_list, #id_sendto, .compose_inputs { width:48%; border-radius: 8px; padding:6px 12px; font-size:14px; }
 #id_sendto { height: 4em; }
-.compose-section-subject .glyphicon { font-size: 22px }
+.compose-section-subject .fas { font-size: 24px }
 .compose #id_content { width:98% !important; height: 80px }
 .cke, .cke_top, .cke_inner, .cke_bottom, .cke_wysiwyg { border-radius: 8px; }
 select#id_sendto option { font-size: 20px; overflow: hidden !important; height: auto !important; }
 /*select#id_sendto option:first-of-type { font-size: 18px; }*/
 
-
+/* OUTBOX SECTION */
+.micons {
+    color: darkgreen;
+    float: left;
+    font-size: 18px;
+    margin: 4px 7px 0 -6px;
+    padding-right: 4px;
+}
+.read-ICON, .read-ICON:hover { color:#b39657 !important }
+.unread-ICON, .unread-ICON:hover { color:darkgreen !important }
+.sent-ICON, .sent-ICON:hover { color:green !important }
 
 .red { background-color:indianred }
 .blue { background-color:cornflowerblue }
@@ -119,6 +133,26 @@ a.user {
 
 a.user:hover {
     color: yellow !important;
+}
+
+.dropdown-menu .sub-menu {
+    left: 100%;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    margin-top: -1px;
+}
+
+.dropdown-menu li:hover .sub-menu {
+    visibility: visible;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.nav-tabs .dropdown-menu, .nav-pills .dropdown-menu, .navbar .dropdown-menu {
+    margin-top: 0;
 }
 
 .footable-sorted, .footable-sorted-desc {
@@ -159,7 +193,7 @@ tr.hover {
     width:40%;
     border:1px dotted #ddd
 }
-.searchBox { width: 60%; float: right; margin-top: 4px; padding-top: 1px; }
+.searchBox { width: 60%; float: right; margin-top: -1px; padding-top: 1px; }
 
 
 
@@ -168,15 +202,17 @@ tr.hover {
 }
 
 @media (max-width: 767px) {
-    input, select { width:93%; }
-    .tab-content .glyphicon { display:none }
+    .refresh { display:none }
+    input:not[type="checkbox"], select { width:90%; }
     ul.nav.nav-pills.nav-stacked {
         width: 100%;
-        margin-bottom: 10px !important;
+        margin-bottom: 40px !important;
     }
+    .search-area a.btn { margin: -8px 0 10px; }
     .subject { width: 35% }
-    .searchBox { width: 55% !important; }
+    .searchBox { width: 100% !important; }
     .name { max-width: 20%; }
+    .tab-content { border-top: 1px solid #1cb71c; }
     .tab-content .badge { #float:none }
     .breadcrumbsed { position:unset; float: right;  margin: -90px -9px 0 0; }
     .activities {
@@ -203,11 +239,13 @@ tr.hover {
         /*width: 76% !important;*/
     /*}*/
     .subject { width: 25% }
-    input#id_subject { width:90%; }
+    input#id_subject { width:80%; }
     .activities {
         margin: -10px auto 35px !important
     }
     .searchBox { width: 50% !important; }
+    .searchReply { width: 100% !important; }
+    .search-area-reply a.btn { margin: -8px 0 10px; }
     .supervisor-text:after {
         content: "Supervisor"
     }
@@ -218,15 +256,18 @@ tr.hover {
         /*width: 60% !important;*/
     /*}*/
     .searchBox { width: 55% !important; }
-    .supervisor-text:after {
-        content: "Supervisor"
-    }
+    .searchReply { width: 40% !important; }
 }
+
+@media (min-width: 1200px) and (max-width: 1379px) {
+    .searchReply { width: 52% !important; }
+}
+
 
 @media (min-width: 1600px) {
     .container-fluid {
         max-width: 1850px;
-        margin: 0 auto;
+        margin: 0 6px;
     }
 }
 
