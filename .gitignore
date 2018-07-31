@@ -173,3 +173,4 @@ db.sqlite3
 
 !/media/gitadd
 db.cnf
+/Mail2proj/settings.py
