@@ -8,22 +8,35 @@
         <a type="button" class="btn btn-default sentmailbox-indicator2" href='{% url 'outbox' %}'>SENT MAILBOX</a>
     {% endif %}
     {% if not "/or/" in request.path %}
-        {% if not "/compose/" in request.path %}
+      {% if not "/compose/" in request.path %}
+         {% if not mail.archived %}
             <form action="{% url 'archivemail' %}" method="POST" id="archive" style="display:inline-block">
                 {% csrf_token %}
                 <input value="{{ mail.id }}" name="message_id" type="hidden">
-                <!--<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="archive-btn" title="Archive to Course Folder">
-                    <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Archive
-                </a>-->
+		<input value="{{ referer }}" name="referer" type="hidden">
+                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="archive-btn" title="Archive to Course Folder">
+                     <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Archive
+                </a>
             </form>
+	  {% else %}
+            <form action="{% url 'unarchivemail' %}" method="POST" id="unarchive" style="display:inline-block">
+                {% csrf_token %}
+                <input value="{{ mail.id }}" name="message_id" type="hidden">
+		<input value="{{ referer }}" name="referer" type="hidden">
+                <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="unarchive-btn" title="Archive to Course Folder">
+                     <span class="glyphicon glyphicon-save-file"></span>&nbsp;&nbsp;&nbsp;Send to Inbox
+                </a>
+            </form>
+	  {% endif %}
             <form action="{% url 'markunread' %}" method="POST" id="munread" style="display:inline-block">
                 {% csrf_token %}
                 <input value="{{ mail.id }}" name="message_id" type="hidden">
+		<input value="{{ referer }}" name="referer" type="hidden">
                 <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="munread-btn" title="Mark this Message as Un-Read">
                     <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;&nbsp;Mark as Un-Read
                 </a>
             </form>
-        {% endif %}
+      {% endif %}
     {% endif %}
         <div class="input-group searchBox">
             <input type="text" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">
