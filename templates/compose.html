@@ -173,7 +173,7 @@ $(function () {
             console.log(data);
             var html = $('#attachmentsDisplayDiv').html();
             $('#attachmentsDisplayDiv').html(html + '<li id="attachment-id-' + data.result.attachment_id + '" style="padding:6px 0" title="Successfully attached ' + data.filename +'"><b><span class="glyphicon glyphicon-paperclip"></span> ' + data.result.filename +'</b></li>\n');
-			html = $('attachmentsDiv').html();
+			html = $('#attachmentsDiv').html();
 			$('#attachmentsDiv').html(html + '<input type="hidden" id="id_attachments" name="attachments" value="'+ data.result.attachment_id +'">');
             $.each(data.result, function (index, file) {
                 console.log(index);
