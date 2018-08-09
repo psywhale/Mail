@@ -169,6 +169,14 @@ $(function () {
     $('#fileupload').fileupload({
         url: url,
         dataType: 'json',
+        start: function(e) {
+            $('#progress').css('display','inherit');
+            $('.sendmailbutton').prop('disabled',true);
+            $('.progress-bar').text("Uploading");
+            $('.fileinput-button').css('display','none');
+
+
+        },
         done: function (e, data) {
             console.log(data);
             var html = $('#attachmentsDisplayDiv').html();
@@ -176,23 +184,29 @@ $(function () {
 			html = $('#attachmentsDiv').html();
 			$('#attachmentsDiv').html(html + '<input type="hidden" id="id_attachments" name="attachments" value="'+ data.result.attachment_id +'">');
             $.each(data.result, function (index, file) {
-                console.log(index);
+
 
 
             });
+            $('#progress').css('display','none');
+            $('.fileinput-button').css('display','initial');
+            $('.sendmailbutton').prop('disabled',false);
+
         },
         progressall: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
+
             $('#progress .progress-bar').css(
                 'width',
                 progress + '%'
             );
+            $('.progress-bar').text("Uploading "+progress+"%");
+
         }
     }).prop('disabled', !$.support.fileInput)
         .parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
 </script>
-
 
 <script src="{% static '/js/multiple-select.js' %}"></script>
 
