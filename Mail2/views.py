@@ -487,10 +487,6 @@ class LabelView(LoginRequiredMixin, TemplateView):
 
 class GetEmailListView(View):
 
-    # @method_decorator(csrf_exempt)
-    # def dispatch(self, request, *args, **kwargs):
-    #     return super(GetEmailListView, self).dispatch(request, *args, **kwargs)
-
     def get(self, *args, **kwargs):
 
         # if no sn is specified, get all of the routes for the user.
