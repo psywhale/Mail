@@ -412,6 +412,13 @@ $('.messageNOTread').collapse('show');
 //    $('.panel-collapse').first().collapse('toggle').addclass('lastAccord');
 //  }, 50);
 
+
+if (navigator.userAgent.search("Firefox") >= 0) {
+    console.log("Jups, is FireFox");
+} else { 
+    console.log("Nope, not FireFox");   
+}
+
 </script>
 
 <link href="{% static '/js/multiple-select.css' %}" rel="stylesheet" media="screen">

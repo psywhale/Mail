@@ -164,8 +164,8 @@ fabric.properties
 # no db
 db.sqlite3
 
-/Mail2/migrations/*_auto_*.py
-/Mail2/migrations/0001_initial.py
+#/Mail2/migrations/*_auto_*.py
+#/Mail2/migrations/0001_initial.py
 !/Mail2/migrations/
 !/Mail2/migrations/__init__.py
 /media/*
