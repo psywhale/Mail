@@ -162,7 +162,9 @@ class ComposeView(LoginRequiredMixin, FormView):
         return context
 
 
-class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
+
+
+class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     template_name = 'reply.html'
     form_class = ReplyForm
@@ -173,15 +175,9 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=self.request.user.username)
         return self.request.user.username.lower() == route.to.lower()
 
-    def get(self, request, *args, **kwargs):
-        # print(User.objects.get(id=self.kwargs['userid']).username)
-        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=User.objects.get(id=self.kwargs['userid']).username)
-        route.read = True
-        route.save()
-        return super(ReplyView, self).get(args, kwargs)
 
     def get_initial(self, **kwargs):
-        initial = super(ReplyView, self).get_initial()
+        initial = super(ReplyViewParent, self).get_initial()
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             mail_obj = Mail.objects.get(id=self.kwargs['id'])
             data = {}
@@ -213,18 +209,10 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                 attachment = Attachment.objects.get(id=item)
                 attachment.m2m_mail.add(new_msg)
                 attachment.save()
-        return super(ReplyView, self).form_valid(form)
+        return super(ReplyViewParent, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
-        #
-        # content = models.TextField()
-        # subject = models.CharField(max_length=512)
-        # termcode = models.CharField(max_length=4)
-        # section = models.CharField(max_length=5)
-        # archived = models.BooleanField(default=False)
-        # fk_sender = models.ForeignKey(User)
-        # created = models.DateTi
-        context = super(ReplyView, self).get_context_data(**kwargs)
+        context = super(ReplyViewParent, self).get_context_data(**kwargs)
         info = {}
 
 
@@ -294,10 +282,19 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     def form_invalid(self, form):
         pprint(form.errors)
-        return super(ReplyView, self).form_invalid(form)
+        return super(ReplyViewParent, self).form_invalid(form)
 
 
-class OutboxReplyView(ReplyView):
+class ReplyView(ReplyViewParent):
+
+    def get(self, request, *args, **kwargs):
+        # print(User.objects.get(id=self.kwargs['userid']).username)
+        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=User.objects.get(id=self.kwargs['userid']).username)
+        route.read = True
+        route.save()
+        return super(ReplyView, self).get(args, kwargs)
+
+class OutboxReplyView(ReplyViewParent):
 
     def test_func(self, user):
         mail = Mail.objects.get(pk=self.kwargs['id'])
@@ -488,6 +485,7 @@ class LabelView(LoginRequiredMixin, TemplateView):
 class GetEmailListView(View):
 
     def get(self, *args, **kwargs):
+        response = {}
 
         # if no sn is specified, get all of the routes for the user.
         if 'sn' not in self.kwargs:
@@ -501,38 +499,39 @@ class GetEmailListView(View):
         messages = []
         for route in routes:
             mail = route.fk_mail
-            if not Mail.objects.filter(parent=mail).exists():
-                sender = {}
-                sender['username'] = mail.fk_sender.username
-                if mail.fk_sender.first_name is not None:
-                    sender['first_name'] = mail.fk_sender.first_name
-                else:
-                    sender['first_name'] = ""
-                if mail.fk_sender.last_name is not None:
-                    sender['last_name'] = mail.fk_sender.last_name
-                else:
-                    sender['last_name'] = ""
-                message = {
-                    'userid': self.request.user.id,
-                    'id': mail.id,
-                    'read': route.read,
-                    'from': sender,
-                    'archived': route.archived,
-                    # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
-                    'timestamp': mail.created.strftime("%m/%d/%Y"),
-                    'section':  mail.section,
-                    'subject': mail.subject,
-                    }
-                if Attachment.objects.filter(m2m_mail=mail).exists():
-                    message['attachments'] = True
-                else:
-                    message['attachments'] = False
-                messages.append(message)
+            # if not Mail.objects.filter(parent=mail).exists():
+            sender = {}
+            sender['username'] = mail.fk_sender.username
+            if mail.fk_sender.first_name is not None:
+                sender['first_name'] = mail.fk_sender.first_name
+            else:
+                sender['first_name'] = ""
+            if mail.fk_sender.last_name is not None:
+                sender['last_name'] = mail.fk_sender.last_name
+            else:
+                sender['last_name'] = ""
+            message = {
+                'userid': self.request.user.id,
+                'id': mail.id,
+                'read': route.read,
+                'from': sender,
+                'archived': route.archived,
+                # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
+                'timestamp': mail.created.strftime("%m/%d/%Y"),
+                'section':  mail.section,
+                'subject': mail.subject,
+                }
+            if Attachment.objects.filter(m2m_mail=mail).exists():
+                message['attachments'] = True
+            else:
+                message['attachments'] = False
+            messages.append(message)
             if 'sn' in self.kwargs:
                 response = {'inbox': True, 'messages': list(reversed(messages)) }
             else:
                 response = {'inbox': False, 'messages': list(reversed(messages))}
         return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 
 
