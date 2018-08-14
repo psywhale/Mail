@@ -150,7 +150,16 @@
 </div>
 
 
+<script type="application/javascript">
+if (navigator.userAgent.search("Firefox") >= 0) {
+    console.log("Jups, is FireFox");
+    //$('.file-upload').remove();
+} else {
+    console.log("Nope, not FireFox");
+    //$.getScript('{% static '/js/attachments_v2.js' %}');
+}
 
+</script>
 {#<script src="https://cdn.ckeditor.com/4.7.3/full/ckeditor.js"></script>#}
 <script src="https://cdn.ckeditor.com/4.8.0/full-all/ckeditor.js"></script>
 
