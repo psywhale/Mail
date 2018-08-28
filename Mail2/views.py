@@ -169,7 +169,7 @@ class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
     form_class = ReplyForm
     success_url = "/"
     # raise_exception = True
-    login_url = 'http://localhost/mod/lti/view.php?id=3'
+    login_url = 'https://moodle.wosc.edu/mod/lti/view.php?id=26984'
 
     def test_func(self, user):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=self.request.user.username)
