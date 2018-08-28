@@ -707,7 +707,7 @@ def build_email(msg_form, destinations):
                 'sectioncode': "{}-{}".format(msg_form.section,msg_form.termcode)
                 }
 
-        cont = {'server_url': 'https://moodle.wosc.edu',
+        cont = {'server_url': 'https://mail2.wosc.edu',
                 'mail':mail }
 
         html_email = render_to_string("email_the_mail_html.html", cont)
