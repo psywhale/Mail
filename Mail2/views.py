@@ -724,6 +724,6 @@ def build_email(msg_form, destinations):
 
 
 def send_email(msg, destination):
-    email_server = smtplib.SMTP("10.250.20.150")
+    email_server = smtplib.SMTP("10.250.20.169")
     email_server.sendmail(msg=msg.as_string(), from_addr='NoReply_MoodleMail@wosc.edu', to_addrs=destination)
 
