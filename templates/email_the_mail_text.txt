@@ -1,0 +1,14 @@
+From: no_reply@wosc.edu
+To:{{ mail.to.email_address }}
+Subject: COURSE MAIL: {{ mail.section }} - {{ mail.subject }}
+
+{{ mail.to.first_name|capfirst }} {{ mail.to.last_name|capfirst }}, You have a new message in {{ mail.section }}, please see below:
+
+____________________
+{% autoescape off %}
+	{{ mail.content }}
+{% endautoescape %}
+____________________
+
+Full message and Reply can be found here: {{ server_url }}({% url 'outboxreply' mail.id %})
+

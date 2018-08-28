@@ -45,8 +45,8 @@
     {% if not user.first_name or not user.last_name %}{{ user.username }}{% else %}{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}{% endif %}
     <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu" aria-labelledby="dLabel">
-   <li style="padding: 0 15px; color: #999;">Email Notifications:</li>
+  <ul class="dropdown-menu" aria-labelledby="dLabel" style="margin-top:-1px">
+   <!--<li style="padding: 0 15px; color: #999;">Email Notifications:</li>
    {% if notifications %}
     <li><a href="#" id="notifications-on" class=active>Notifications are ON</a></li>
    {% else %}
@@ -56,7 +56,7 @@
     <li><a href="#" id="notifications-off" class=active>Notifications are OFF</a></li>
    {% else %}
     <li><a href="#" id="notifications-off">Notifications OFF</a></li>
-   {% endif %}
+   {% endif %}-->
     <li><a href="https://moodle.wosc.edu" style="color:red; border-bottom:none; margin: 9px 0 5px;">Back to Moodle</a></li>
   </ul>
 </div>

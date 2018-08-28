@@ -26,8 +26,10 @@ urlpatterns= [
     url(r'^or/(?P<id>[0-9]+)/(?P<userid>[0-9]+)/$', OutboxReplyView.as_view(), name='outboxreply'),
     url(r'^or/(?P<id>[0-9]+)/$', OutboxReplyView.as_view(), name='outboxreply'),
     url(r'^launch/', Launch.as_view(), name='launch'),
+    url(r'^launch/(<test>)', Launch.as_view(), name='launch'),
     url(r'^listEmail/$', GetEmailListView.as_view(), name='listEmail'),
     url(r'^listEmail/(?P<sn>[0-9Cc]{5}\-[0-9]{3}[sS]+)/$', GetEmailListView.as_view(), name='listEmail'),
+    url(r'^emailed/(?P<id>[0-9]+)/$', OutboxReplyView.as_view(), name='emailed'),
 
 
 ]
