@@ -625,7 +625,6 @@ class Launch(LtiLaunch):
             # Get the user or add them if they do not currently exist
             user = self.get_or_add_user(tp)
             params = tp.to_params()
-            print(params['custom_redirect'])
             m = {}
 
             # get the course number from the course title if this is a Moodle integration
