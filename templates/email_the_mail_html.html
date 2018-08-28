@@ -18,7 +18,7 @@
   <hr />
   <br />
   <p>Please reply here:<br />
-    <a href='http://{{ server_url }}{% url 'reply' mail.id mail.userid mail.sectioncode %}' class="btn yes" title="This will open a new window" target="_blank" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; display: inline-block; outline: 0; white-space: nowrap; font-weight: 500; font-style: normal; margin: 4px 7px; padding: 9px 16px; line-height: 1.4; position: relative; border-radius: 10px; -webkit-transition: 0.1s; transition: 0.1s; cursor: pointer; box-shadow: 5px 5px 0 0 rgba(0,0,0,0.15); text-shadow: 1px 1px 1px black; color: white!important; text-decoration: none;background: #44B978; border: 5px solid #44B978; font-side: 18px">REPLY</a>
+    <a href='{{ server_url }}{% url 'reply' mail.id mail.userid mail.sectioncode %}' class="btn yes" title="This will open a new window" target="_blank" style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; display: inline-block; outline: 0; white-space: nowrap; font-weight: 500; font-style: normal; margin: 4px 7px; padding: 9px 16px; line-height: 1.4; position: relative; border-radius: 10px; -webkit-transition: 0.1s; transition: 0.1s; cursor: pointer; box-shadow: 5px 5px 0 0 rgba(0,0,0,0.15); text-shadow: 1px 1px 1px black; color: white!important; text-decoration: none;background: #44B978; border: 5px solid #44B978; font-side: 18px">REPLY</a>
   </p>
   <p style="color:white">Message ID: {{ mail.id }}</p>
 </div>
