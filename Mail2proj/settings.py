@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'Mail2proj.wsgi.application'
 
 LTI = {
     'title' : 'Mail2',
-    'launch_url' : 'http://mail2.wosc.edu:8900/launch/',
+    'launch_url' : 'http://localhost:8900/launch/',
     'secure_launch' : 'demo_url',
     'extensions' : {},
     'description' : 'Course Mail 2',

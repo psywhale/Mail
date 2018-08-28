@@ -17,7 +17,11 @@ from pprint import pprint
 from django.contrib.auth import login
 from hashlib import sha1
 import magic
-import os, tempfile
+import os, tempfile, smtplib
+from django.template.loader import render_to_string
+from django.template import Context
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 # Create your views here.
 
 
@@ -140,13 +144,8 @@ class ComposeView(LoginRequiredMixin, FormView):
             attachment = Attachment.objects.get(id=item)
             attachment.m2m_mail.add(new_msg)
             attachment.save()
-
+        build_email(new_msg, recipients)
         return super(ComposeView, self).form_valid(form)
-    
-    def form_invalid(self, form):
-        pprint(form.errors)
-        return super(ComposeView, self).form_invalid(form)
-
 
 
     def get_context_data(self, **kwargs):
@@ -169,7 +168,8 @@ class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
     template_name = 'reply.html'
     form_class = ReplyForm
     success_url = "/"
-    raise_exception = True
+    # raise_exception = True
+    login_url = 'http://localhost/mod/lti/view.php?id=3'
 
     def test_func(self, user):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=self.request.user.username)
@@ -209,6 +209,7 @@ class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
                 attachment = Attachment.objects.get(id=item)
                 attachment.m2m_mail.add(new_msg)
                 attachment.save()
+        build_email(new_msg, [self.request.POST['sendto']])
         return super(ReplyViewParent, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -289,7 +290,7 @@ class ReplyView(ReplyViewParent):
 
     def get(self, request, *args, **kwargs):
         # print(User.objects.get(id=self.kwargs['userid']).username)
-        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=User.objects.get(id=self.kwargs['userid']).username)
+        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=User.objects.get(id=request.user.id))
         route.read = True
         route.save()
         return super(ReplyView, self).get(args, kwargs)
@@ -611,10 +612,11 @@ class FileUpload(LoginRequiredMixin, View):
         return JsonResponse(res)
 
 
+
 class Launch(LtiLaunch):
 
-    def post(self, request, *args, **kwargs):
 
+    def post(self, request, *args, **kwargs):
         # flushing the session prevents conflicting sessions when the open multiple tabs/windows.
         self.request.session.flush()
         # Returns tp if valid LTI user
@@ -623,6 +625,7 @@ class Launch(LtiLaunch):
             # Get the user or add them if they do not currently exist
             user = self.get_or_add_user(tp)
             params = tp.to_params()
+            print(params['custom_redirect'])
             m = {}
 
             # get the course number from the course title if this is a Moodle integration
@@ -635,11 +638,15 @@ class Launch(LtiLaunch):
             if self.is_instructor(tp):
                 login(request, user)
                 self.request.session['usertype'] = 'instructor'
+                if 'custom_redirect' in params:
+                    return redirect(params['custom_redirect'])
                 return redirect("IndexView")
 
             if self.is_student(tp):
                 login(request, user)
                 self.request.session['usertype'] = 'student'
+                if 'custom_redirect' in params:
+                    return redirect(params['custom_redirect'])
                 return redirect("IndexView")
             else:
                 return HttpResponse("You must be an instructor or student.")
@@ -674,3 +681,50 @@ def hash_file(fp, buffer_size=65536):
 def dprint(msg):
     if DEBUG == True:
         pprint(msg)
+
+
+def build_email(msg_form, destinations):
+    cont = {}
+
+    for destination in destinations:
+
+        receiver = User.objects.get(username=destination)
+
+        to = {'first_name':receiver.first_name,
+              'last_name':receiver.last_name,
+              'email_address':receiver.email,
+              }
+
+        sender = {'first_name': msg_form.fk_sender.first_name,
+                'last_name': msg_form.fk_sender.last_name }
+
+        mail = {'to': to,
+                'sender': sender,
+                'userid': receiver.id,
+                'section':msg_form.section,
+                'subject':msg_form.subject,
+                'content':msg_form.content,
+                'id': msg_form.id,
+                'sectioncode': "{}-{}".format(msg_form.section,msg_form.termcode)
+                }
+
+        cont = {'server_url': 'https://moodle.wosc.edu',
+                'mail':mail }
+
+        html_email = render_to_string("email_the_mail_html.html", cont)
+        text_email = render_to_string("email_the_mail_text.txt", cont)
+        part1 = MIMEText(text_email, 'plain')
+        part2 = MIMEText(html_email, 'html')
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = '📧 New MoodleMail from course: {} new'.format(msg_form.section)
+        msg['From'] = 'NoReply_MoodleMail@wosc.edu'
+        msg['To'] = to['email_address']
+        msg.attach(part1)
+        msg.attach(part2)
+        send_email(msg, to['email_address'])
+
+
+def send_email(msg, destination):
+    email_server = smtplib.SMTP("10.250.20.150")
+    email_server.sendmail(msg=msg.as_string(), from_addr='NoReply_MoodleMail@wosc.edu', to_addrs=destination)
+
