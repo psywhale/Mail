@@ -23,6 +23,7 @@ from django.template.loader import render_to_string
 from django.template import Context
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import requests
 # Create your views here.
 
 
@@ -688,44 +689,58 @@ def build_email(msg_form, destinations):
     cont = {}
 
     for destination in destinations:
-        if User.objects.filter(username=destination).exists():
-            receiver = User.objects.get(username=destination)
+        if not User.objects.filter(username=destination).exists():
+            create_user(destination)
 
-            to = {'first_name':receiver.first_name,
-                  'last_name':receiver.last_name,
-                  'email_address':receiver.email,
-                  }
+        receiver = User.objects.get(username=destination)
 
-            sender = {'first_name': msg_form.fk_sender.first_name,
-                    'last_name': msg_form.fk_sender.last_name }
+        to = {'first_name':receiver.first_name,
+              'last_name':receiver.last_name,
+              'email_address':receiver.email,
+              }
 
-            mail = {'to': to,
-                    'sender': sender,
-                    'userid': receiver.id,
-                    'section':msg_form.section,
-                    'subject':msg_form.subject,
-                    'content':msg_form.content,
-                    'id': msg_form.id,
-                    'sectioncode': "{}-{}".format(msg_form.section,msg_form.termcode)
-                    }
+        sender = {'first_name': msg_form.fk_sender.first_name,
+                'last_name': msg_form.fk_sender.last_name }
 
-            cont = {'server_url': settings.SERVER_URL,
-                    'mail':mail }
+        mail = {'to': to,
+                'sender': sender,
+                'userid': receiver.id,
+                'section':msg_form.section,
+                'subject':msg_form.subject,
+                'content':msg_form.content,
+                'id': msg_form.id,
+                'sectioncode': "{}-{}".format(msg_form.section,msg_form.termcode)
+                }
 
-            html_email = render_to_string("email_the_mail_html.html", cont)
-            text_email = render_to_string("email_the_mail_text.txt", cont)
-            part1 = MIMEText(text_email, 'plain')
-            part2 = MIMEText(html_email, 'html')
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = '📧 New MoodleMail from course: {}'.format(msg_form.section)
-            msg['From'] = 'NoReply_MoodleMail@wosc.edu'
-            msg['To'] = to['email_address']
-            msg.attach(part1)
-            msg.attach(part2)
-            send_email(msg, to['email_address'])
+        cont = {'server_url': settings.SERVER_URL,
+                'mail':mail }
+
+        html_email = render_to_string("email_the_mail_html.html", cont)
+        text_email = render_to_string("email_the_mail_text.txt", cont)
+        part1 = MIMEText(text_email, 'plain')
+        part2 = MIMEText(html_email, 'html')
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = '📧 New MoodleMail from course: {}'.format(msg_form.section)
+        msg['From'] = 'NoReply_MoodleMail@wosc.edu'
+        msg['To'] = to['email_address']
+        msg.attach(part1)
+        msg.attach(part2)
+        send_email(msg, to['email_address'])
 
 
 def send_email(msg, destination):
     email_server = smtplib.SMTP(settings.MAIL_SERVER)
     email_server.sendmail(msg=msg.as_string(), from_addr='NoReply_MoodleMail@wosc.edu', to_addrs=destination)
 
+
+def create_user(username):
+    request_url = "{}wosc/rest.php?rest_key={}&action=get_user_info&username={}".format(
+                                                            settings.MOODLE_URL, settings.MOODLE_REST_KEY, username)
+    print(request_url)
+    r = requests.get(request_url)
+    print(r.text)
+    new_user = r.json()
+    user = User.objects.create_user(username=username, email=new_user['email'])
+    user.first_name = new_user['firstname']
+    user.last_name = new_user['lastname']
+    user.save()
