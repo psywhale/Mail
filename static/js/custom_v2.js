@@ -100,7 +100,7 @@ function calculateCurrentTime(){
 
   });
 
-function getCourses(){
+function getCourses(path){
     $.ajax({
         url: 'https://moodle.wosc.edu/wosc/rest.php',
         data: {rest_key: 'HkHO25shu0i3Tq24iCknrB1mnpOY', action: 'get_my_courses'},
@@ -131,7 +131,7 @@ function getCourses(){
             });
             }
             else{
-                window.location = "https://moodle.wosc.edu";
+                window.location = "https://moodle.wosc.edu/mod/lti/view.php?id=26984&next=" + path;
             }
 
 
