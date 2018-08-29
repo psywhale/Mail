@@ -113,6 +113,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
                 email.append(mail)
         context['email'] = email
         context['session'] = self.request.session
+        print(context)
         return context
 
 
@@ -279,7 +280,7 @@ class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
         # Mark all the mail in this thread as read.
 
-
+        print(context)
         return context
 
     def form_invalid(self, form):
@@ -716,7 +717,7 @@ def build_email(msg_form, destinations):
             part1 = MIMEText(text_email, 'plain')
             part2 = MIMEText(html_email, 'html')
             msg = MIMEMultipart('alternative')
-            msg['Subject'] = '📧 New MoodleMail from course: {} new'.format(msg_form.section)
+            msg['Subject'] = '📧 New MoodleMail from course: {}'.format(msg_form.section)
             msg['From'] = 'NoReply_MoodleMail@wosc.edu'
             msg['To'] = to['email_address']
             msg.attach(part1)

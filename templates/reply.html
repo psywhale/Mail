@@ -82,7 +82,9 @@
 		    </span> 
                     {% if parentlist.0.subject %}
                         {{ parentlist.0.subject }}
-                    {% else %}
+                    {% elif mail.subject %}
+			{{ mail.subject }}
+		    {% else %}
                         (no subject)
                     {% endif %}
                 </div>
