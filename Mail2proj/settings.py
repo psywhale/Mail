@@ -78,6 +78,11 @@ TEMPLATES = [
     },
 ]
 
+
+MAIL_SERVER = 'mailbox.wosc.edu'
+LTI_LOGIN_URL = 'https://moodle.wosc.edu/mod/lti/view.php?id=26984'
+SERVER_URL = 'http://localhost:8900'
+
 WSGI_APPLICATION = 'Mail2proj.wsgi.application'
 
 LTI = {

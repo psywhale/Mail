@@ -17,6 +17,7 @@ from pprint import pprint
 from django.contrib.auth import login
 from hashlib import sha1
 import magic
+from django.conf import settings
 import os, tempfile, smtplib
 from django.template.loader import render_to_string
 from django.template import Context
@@ -169,7 +170,7 @@ class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
     form_class = ReplyForm
     success_url = "/"
     # raise_exception = True
-    login_url = 'https://moodle.wosc.edu/mod/lti/view.php?id=26984'
+    login_url = settings.LTI_LOGIN_URL
 
     def test_func(self, user):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=self.request.user.username)
@@ -686,44 +687,44 @@ def build_email(msg_form, destinations):
     cont = {}
 
     for destination in destinations:
+        if User.objects.filter(username=destination).exists():
+            receiver = User.objects.get(username=destination)
 
-        receiver = User.objects.get(username=destination)
+            to = {'first_name':receiver.first_name,
+                  'last_name':receiver.last_name,
+                  'email_address':receiver.email,
+                  }
 
-        to = {'first_name':receiver.first_name,
-              'last_name':receiver.last_name,
-              'email_address':receiver.email,
-              }
+            sender = {'first_name': msg_form.fk_sender.first_name,
+                    'last_name': msg_form.fk_sender.last_name }
 
-        sender = {'first_name': msg_form.fk_sender.first_name,
-                'last_name': msg_form.fk_sender.last_name }
+            mail = {'to': to,
+                    'sender': sender,
+                    'userid': receiver.id,
+                    'section':msg_form.section,
+                    'subject':msg_form.subject,
+                    'content':msg_form.content,
+                    'id': msg_form.id,
+                    'sectioncode': "{}-{}".format(msg_form.section,msg_form.termcode)
+                    }
 
-        mail = {'to': to,
-                'sender': sender,
-                'userid': receiver.id,
-                'section':msg_form.section,
-                'subject':msg_form.subject,
-                'content':msg_form.content,
-                'id': msg_form.id,
-                'sectioncode': "{}-{}".format(msg_form.section,msg_form.termcode)
-                }
+            cont = {'server_url': settings.SERVER_URL,
+                    'mail':mail }
 
-        cont = {'server_url': 'https://mail2.wosc.edu',
-                'mail':mail }
-
-        html_email = render_to_string("email_the_mail_html.html", cont)
-        text_email = render_to_string("email_the_mail_text.txt", cont)
-        part1 = MIMEText(text_email, 'plain')
-        part2 = MIMEText(html_email, 'html')
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = '📧 New MoodleMail from course: {} new'.format(msg_form.section)
-        msg['From'] = 'NoReply_MoodleMail@wosc.edu'
-        msg['To'] = to['email_address']
-        msg.attach(part1)
-        msg.attach(part2)
-        send_email(msg, to['email_address'])
+            html_email = render_to_string("email_the_mail_html.html", cont)
+            text_email = render_to_string("email_the_mail_text.txt", cont)
+            part1 = MIMEText(text_email, 'plain')
+            part2 = MIMEText(html_email, 'html')
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = '📧 New MoodleMail from course: {} new'.format(msg_form.section)
+            msg['From'] = 'NoReply_MoodleMail@wosc.edu'
+            msg['To'] = to['email_address']
+            msg.attach(part1)
+            msg.attach(part2)
+            send_email(msg, to['email_address'])
 
 
 def send_email(msg, destination):
-    email_server = smtplib.SMTP("10.250.20.169")
+    email_server = smtplib.SMTP(settings.MAIL_SERVER)
     email_server.sendmail(msg=msg.as_string(), from_addr='NoReply_MoodleMail@wosc.edu', to_addrs=destination)
 
