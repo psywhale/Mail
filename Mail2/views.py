@@ -17,7 +17,13 @@ from pprint import pprint
 from django.contrib.auth import login
 from hashlib import sha1
 import magic
-import os, tempfile
+from django.conf import settings
+import os, tempfile, smtplib
+from django.template.loader import render_to_string
+from django.template import Context
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import requests
 # Create your views here.
 
 
@@ -108,6 +114,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
                 email.append(mail)
         context['email'] = email
         context['session'] = self.request.session
+        print(context)
         return context
 
 
@@ -140,13 +147,8 @@ class ComposeView(LoginRequiredMixin, FormView):
             attachment = Attachment.objects.get(id=item)
             attachment.m2m_mail.add(new_msg)
             attachment.save()
-
+        build_email(new_msg, recipients)
         return super(ComposeView, self).form_valid(form)
-    
-    def form_invalid(self, form):
-        pprint(form.errors)
-        return super(ComposeView, self).form_invalid(form)
-
 
 
     def get_context_data(self, **kwargs):
@@ -162,26 +164,23 @@ class ComposeView(LoginRequiredMixin, FormView):
         return context
 
 
-class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
+
+
+class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     template_name = 'reply.html'
     form_class = ReplyForm
     success_url = "/"
-    raise_exception = True
+    # raise_exception = True
+    login_url = settings.LTI_LOGIN_URL
 
     def test_func(self, user):
         route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=self.request.user.username)
         return self.request.user.username.lower() == route.to.lower()
 
-    def get(self, request, *args, **kwargs):
-        # print(User.objects.get(id=self.kwargs['userid']).username)
-        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=User.objects.get(id=self.kwargs['userid']).username)
-        route.read = True
-        route.save()
-        return super(ReplyView, self).get(args, kwargs)
 
     def get_initial(self, **kwargs):
-        initial = super(ReplyView, self).get_initial()
+        initial = super(ReplyViewParent, self).get_initial()
         if Mail.objects.filter(id=self.kwargs['id']).exists():
             mail_obj = Mail.objects.get(id=self.kwargs['id'])
             data = {}
@@ -213,18 +212,11 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
                 attachment = Attachment.objects.get(id=item)
                 attachment.m2m_mail.add(new_msg)
                 attachment.save()
-        return super(ReplyView, self).form_valid(form)
+        build_email(new_msg, [self.request.POST['sendto']])
+        return super(ReplyViewParent, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
-        #
-        # content = models.TextField()
-        # subject = models.CharField(max_length=512)
-        # termcode = models.CharField(max_length=4)
-        # section = models.CharField(max_length=5)
-        # archived = models.BooleanField(default=False)
-        # fk_sender = models.ForeignKey(User)
-        # created = models.DateTi
-        context = super(ReplyView, self).get_context_data(**kwargs)
+        context = super(ReplyViewParent, self).get_context_data(**kwargs)
         info = {}
 
 
@@ -289,15 +281,24 @@ class ReplyView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
         # Mark all the mail in this thread as read.
 
-
+        print(context)
         return context
 
     def form_invalid(self, form):
         pprint(form.errors)
-        return super(ReplyView, self).form_invalid(form)
+        return super(ReplyViewParent, self).form_invalid(form)
 
 
-class OutboxReplyView(ReplyView):
+class ReplyView(ReplyViewParent):
+
+    def get(self, request, *args, **kwargs):
+        # print(User.objects.get(id=self.kwargs['userid']).username)
+        route = Route.objects.get(fk_mail=Mail.objects.get(pk=self.kwargs['id']), to=User.objects.get(id=request.user.id))
+        route.read = True
+        route.save()
+        return super(ReplyView, self).get(args, kwargs)
+
+class OutboxReplyView(ReplyViewParent):
 
     def test_func(self, user):
         mail = Mail.objects.get(pk=self.kwargs['id'])
@@ -487,11 +488,8 @@ class LabelView(LoginRequiredMixin, TemplateView):
 
 class GetEmailListView(View):
 
-    # @method_decorator(csrf_exempt)
-    # def dispatch(self, request, *args, **kwargs):
-    #     return super(GetEmailListView, self).dispatch(request, *args, **kwargs)
-
     def get(self, *args, **kwargs):
+        response = {}
 
         # if no sn is specified, get all of the routes for the user.
         if 'sn' not in self.kwargs:
@@ -505,38 +503,39 @@ class GetEmailListView(View):
         messages = []
         for route in routes:
             mail = route.fk_mail
-            if not Mail.objects.filter(parent=mail).exists():
-                sender = {}
-                sender['username'] = mail.fk_sender.username
-                if mail.fk_sender.first_name is not None:
-                    sender['first_name'] = mail.fk_sender.first_name
-                else:
-                    sender['first_name'] = ""
-                if mail.fk_sender.last_name is not None:
-                    sender['last_name'] = mail.fk_sender.last_name
-                else:
-                    sender['last_name'] = ""
-                message = {
-                    'userid': self.request.user.id,
-                    'id': mail.id,
-                    'read': route.read,
-                    'from': sender,
-                    'archived': route.archived,
-                    # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
-                    'timestamp': mail.created.strftime("%m/%d/%Y"),
-                    'section':  mail.section,
-                    'subject': mail.subject,
-                    }
-                if Attachment.objects.filter(m2m_mail=mail).exists():
-                    message['attachments'] = True
-                else:
-                    message['attachments'] = False
-                messages.append(message)
+            # if not Mail.objects.filter(parent=mail).exists():
+            sender = {}
+            sender['username'] = mail.fk_sender.username
+            if mail.fk_sender.first_name is not None:
+                sender['first_name'] = mail.fk_sender.first_name
+            else:
+                sender['first_name'] = ""
+            if mail.fk_sender.last_name is not None:
+                sender['last_name'] = mail.fk_sender.last_name
+            else:
+                sender['last_name'] = ""
+            message = {
+                'userid': self.request.user.id,
+                'id': mail.id,
+                'read': route.read,
+                'from': sender,
+                'archived': route.archived,
+                # TODO if sent today, use just time, else just use date.  ("%I:%M %p")
+                'timestamp': mail.created.strftime("%m/%d/%Y"),
+                'section':  mail.section,
+                'subject': mail.subject,
+                }
+            if Attachment.objects.filter(m2m_mail=mail).exists():
+                message['attachments'] = True
+            else:
+                message['attachments'] = False
+            messages.append(message)
             if 'sn' in self.kwargs:
                 response = {'inbox': True, 'messages': list(reversed(messages)) }
             else:
                 response = {'inbox': False, 'messages': list(reversed(messages))}
         return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 
 
@@ -616,10 +615,11 @@ class FileUpload(LoginRequiredMixin, View):
         return JsonResponse(res)
 
 
+
 class Launch(LtiLaunch):
 
-    def post(self, request, *args, **kwargs):
 
+    def post(self, request, *args, **kwargs):
         # flushing the session prevents conflicting sessions when the open multiple tabs/windows.
         self.request.session.flush()
         # Returns tp if valid LTI user
@@ -640,11 +640,15 @@ class Launch(LtiLaunch):
             if self.is_instructor(tp):
                 login(request, user)
                 self.request.session['usertype'] = 'instructor'
+                if 'custom_redirect' in params:
+                    return redirect(params['custom_redirect'])
                 return redirect("IndexView")
 
             if self.is_student(tp):
                 login(request, user)
                 self.request.session['usertype'] = 'student'
+                if 'custom_redirect' in params:
+                    return redirect(params['custom_redirect'])
                 return redirect("IndexView")
             else:
                 return HttpResponse("You must be an instructor or student.")
@@ -679,3 +683,64 @@ def hash_file(fp, buffer_size=65536):
 def dprint(msg):
     if DEBUG == True:
         pprint(msg)
+
+
+def build_email(msg_form, destinations):
+    cont = {}
+
+    for destination in destinations:
+        if not User.objects.filter(username=destination).exists():
+            create_user(destination)
+
+        receiver = User.objects.get(username=destination)
+
+        to = {'first_name':receiver.first_name,
+              'last_name':receiver.last_name,
+              'email_address':receiver.email,
+              }
+
+        sender = {'first_name': msg_form.fk_sender.first_name,
+                'last_name': msg_form.fk_sender.last_name }
+
+        mail = {'to': to,
+                'sender': sender,
+                'userid': receiver.id,
+                'section':msg_form.section,
+                'subject':msg_form.subject,
+                'content':msg_form.content,
+                'id': msg_form.id,
+                'sectioncode': "{}-{}".format(msg_form.section,msg_form.termcode)
+                }
+
+        cont = {'server_url': settings.SERVER_URL,
+                'mail':mail }
+
+        html_email = render_to_string("email_the_mail_html.html", cont)
+        text_email = render_to_string("email_the_mail_text.txt", cont)
+        part1 = MIMEText(text_email, 'plain')
+        part2 = MIMEText(html_email, 'html')
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = '📧 New MoodleMail from course: {}'.format(msg_form.section)
+        msg['From'] = 'NoReply_MoodleMail@wosc.edu'
+        msg['To'] = to['email_address']
+        msg.attach(part1)
+        msg.attach(part2)
+        send_email(msg, to['email_address'])
+
+
+def send_email(msg, destination):
+    email_server = smtplib.SMTP(settings.MAIL_SERVER)
+    email_server.sendmail(msg=msg.as_string(), from_addr='NoReply_MoodleMail@wosc.edu', to_addrs=destination)
+
+
+def create_user(username):
+    request_url = "{}wosc/rest.php?rest_key={}&action=get_user_info&username={}".format(
+                                                            settings.MOODLE_URL, settings.MOODLE_REST_KEY, username)
+    print(request_url)
+    r = requests.get(request_url)
+    print(r.text)
+    new_user = r.json()
+    user = User.objects.create_user(username=username, email=new_user['email'])
+    user.first_name = new_user['firstname']
+    user.last_name = new_user['lastname']
+    user.save()
