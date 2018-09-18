@@ -580,10 +580,10 @@ class DownloadView(UserPassesTestMixin, View):
 
         attachment = get_object_or_404(Attachment, pk=self.kwargs['pk'])
         file = open(attachment.filepath, 'rb')
-        mime = magic.from_file(attachment.filepath)
+        mime = magic.from_file(attachment.filepath, mime=True)
         pprint(mime)
         response = HttpResponse(file.read(), content_type=mime)
-        response['Content-Disposition'] = 'attachment; filename={}'.format(attachment.filename)
+        response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
         return response
 
 
