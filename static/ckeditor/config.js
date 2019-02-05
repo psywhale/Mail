@@ -45,10 +45,17 @@ CKEDITOR.editorConfig = function( config ) {
 		// // Note: by default CKEditor looks for styles.js file. Defining stylesSet inline (as below) stops CKEditor from loading
 		// // that file, which means one HTTP request less (and a faster startup).
 		// // For more information see http://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_styles
-		// stylesSet: [
+		 stylesSet: [
 		// 	/* Inline Styles */
 		// 	{ name: 'Marker', element: 'span', attributes: { 'class': 'marker' } },
-		// 	{ name: 'Cited Work', element: 'cite' },
+		 	{ 
+				name: 'cke_editable', 
+				element: 'body', 
+				//attributes: { 'class': 'cke_editable'},
+			        styles: {
+                                      'padding-bottom': '50%'
+                                }
+			} 
 		// 	{ name: 'Inline Quotation', element: 'q' },
 		// 	/* Object Styles */
 		// 	{
@@ -75,5 +82,5 @@ CKEDITOR.editorConfig = function( config ) {
 		// 	},
 		// 	{ name: 'Borderless Table', element: 'table', styles: { 'border-style': 'hidden', 'background-color': '#E6E6FA' } },
 		// 	{ name: 'Square Bulleted List', element: 'ul', styles: { 'list-style-type': 'square' } }
-		// ]
+		 ]
 };

@@ -54,6 +54,16 @@ a.list-group-item:focus, a.list-group-item:hover { border-left: 4px dotted #c6e8
 .subject { width: 52%; #width: 415px }
 span.fas.fa-paperclip { font-size: 18px; margin: 4px; }
 .date { width: 55px; margin: 6px 12px 6px -5px; }
+.pagination li.active span { background-color: #0c7b1f; border-color:#ccc }
+.pagination li.active span:hover { background-color: #0c7b1f; border-color:#ccc }
+.pagination li a { color: darkgreen }
+.pag-txt { background-color: #0b740b !important; color:white !important; border-left:0 !important; border-right:0 !important; }
+.pag-txt input { width:30px !important; height:20px !important; text-align: center; color: black !important}
+#search-mail { padding: 0 32px; }
+#search-icon { position: absolute;z-index: 99;margin: 10px; }
+#search-mail-clear, #search-mail-go { background-color:#f7f7f7; border: 1px solid #ccc }
+#search-mail-clear:hover { background-color:#dbb3b3; color:#bf4844}
+#search-mail-go:hover { background-color: #cdf5b7 }
 
 /*  REPLY VIEW */
 .reply-section-subject { font-weight: 900; font-size: 18px; padding: 10px 12px 6px; }
@@ -199,6 +209,11 @@ tr.hover {
 
 @media (max-width: 410px) and (max-width: 767px) {
     .subject { width: 17% }
+    .cke_editable { padding-bottom: 50% }
+}
+
+@media (max-width: 500px) and (max-width: 767px) {
+    .logo-col { margin-top:22px }
 }
 
 @media (max-width: 767px) {

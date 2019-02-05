@@ -78,7 +78,7 @@
             LEAD: &nbsp;Steve Prater
             BACK-END DEVELOPER: &nbsp; Brian Carpenter
             FRONT-END DEVELOPER: &nbsp;Nicholas Hood">
-                -- <b>Course Mail System</b> -- <br>Version 0.4
+                -- <b>Course Mail System</b> -- <br>Version 0.6
             </div>
         </p>
     </div>
@@ -98,7 +98,7 @@
 {#<script src="/static/js/jquery.maskedinput.min.js"></script>#}
 <script type="text/javascript">
 
-$('.searchBox input').attr("placeholder", "Search coming soon!");
+//$('.searchBox input').attr("placeholder", "Search coming soon!");
 
 {#    ------- THIS IS AJAX YO --------#}
 $( document ).ready(
@@ -108,8 +108,8 @@ $( document ).ready(
 
 function doAjax() {
     getCourses("{{ request.path }}");
-
 }
+
 
 
 function getUnreadBadges(){
@@ -244,6 +244,95 @@ $('#munread-btn').click(function () {
             $(this).html(createdTime.toLocaleDateString());
         }
     )
+
+
+// ######################################
+// ######################################
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};
+
+
+var setUrlParameter = function setUrlParameter(sParam, newValue) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    var getParameters = "";
+    if (sURLVariables.length > 1 ){
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                if (i > 0) {
+                    getParameters += "&";
+                } else {
+                    getParameters += "?";
+                }
+                getParameters += sParameterName[0] + "=" + newValue;
+            } else {
+                if (i > 0) {
+                    getParameters += "&";
+                } else {
+                    getParameters += "?";
+                }
+                getParameters += +sParameterName[0] + "=" + sParameterName[1];
+            }
+        }
+    }
+    else{
+        if(i > 0){
+            getParameters += "&";
+        }
+        else {
+            getParameters += "?";
+        }
+        getParameters += sParam + "=" + newValue;
+    }
+
+    return getParameters;
+};
+
+// ######################################
+// ######################################
+
+
+// SEARCH MAIL
+$("#search-mail").keypress(function(event) {
+    var search_mail_val = $("#search-mail").val();
+    if (event.which == 13) {
+        event.preventDefault();
+	window.location.href = window.location.origin + setUrlParameter("search", search_mail_val);
+    }
+});
+$("#search-mail-go").click(function() {
+        var search_mail_val = $("#search-mail").val();
+        window.location.href = window.location.origin + setUrlParameter("search", search_mail_val);
+});
+$("#search-mail-clear").click(function() {
+	window.location.href = window.location.origin + setUrlParameter("search","");
+});
+$("#search-mail").val(getUrlParameter("search"));
+
+if (getUrlParameter("search") == "") {
+	$("#search-mail").focus();
+};
+$("#search-icon").click(function() {
+	$("#search-mail").focus();
+});
 
 </script>
 

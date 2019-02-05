@@ -39,9 +39,10 @@
       {% endif %}
     {% endif %}
         <div class="input-group searchBox">
-            <input type="text" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">
+            <input type="text" id="search-mail" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">
             <span class="input-group-btn">
-            <button class="btn btn-secondary" type="button">Go!</button>
+            <button id="search-mail-go" class="btn btn-secondary" type="button">Go!</button>
+	    <button id="search-mail-clear" class="btn btn-secondary" type="button" style="color:red"><i class="fas fa-times-circle"></i></button>
             </span>
         </div>
 {% endblock %}

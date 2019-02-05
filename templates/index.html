@@ -8,7 +8,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-4 col-md-3">
+        <div class="logo-col col-sm-4 col-md-3">
             {% include 'global-logo.html' %}
         </div>
         <div class="col-sm-8 col-md-9 search-area">
@@ -22,9 +22,11 @@
             </div>
 -->
             <div class="input-group searchBox">
-                <input type="text" class="form-control pull-right" placeholder="Search Course Mail..." aria-label="Search Course Mail...">
+		<i class="icon fa fa-search" id="search-icon"></i>
+                <input id="search-mail" type="text" class="form-control pull-right" placeholder="Search All Course Mail..." aria-label="Search All Course Mail...">
                 <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Go!</button>
+                <button id="search-mail-go" class="btn btn-secondary" type="button">Go!</button>
+		<button id="search-mail-clear" class="btn btn-secondary" type="button" title="Clear Search" ><i class="fas fa-times-circle"></i></button>
                 </span>
             </div>
             {% if  email %}
@@ -135,16 +137,33 @@
     </div>
 </div>
 
+<!-- start pagination-->
+<div id="email-pagination" style="text-align: center; margin-top: 55px;">
+</div><!--/end pagination-->
+
+
 <script type="text/javascript" src="{% static 'js/emailList_v4.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/colors.js' %}"></script>
 <script>
     {% if sn %}
-        $.get("/listEmail/{{ sn }}/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+        {% if term %}
+            $.get("/listEmail/{{ sn }}/?page={{ page }}&num_per_page={{ num_per_page }}&search={{ term }}", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
             displayEmail(data, $('#emailList'));
             });
+        {% else %}
+            $.get("/listEmail/{{ sn }}/?page={{ page }}&num_per_page={{ num_per_page }}", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+            displayEmail(data, $('#emailList'));
+            });
+        {% endif %}
+
     {% else %}
-	$.get("/listEmail/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+        {% if term %}
+            $.get("/listEmail/?page={{ page }}&num_per_page={{ num_per_page }}&search={{ term }}", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
 	    //console.log(data);
+        {% else %}
+            $.get("/listEmail/?page={{ page }}&num_per_page={{ num_per_page }}", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+	    //console.log(data);
+        {% endif %}
 	    $('.inbox').addClass('active-course');
             displayEmail(data, $('#emailList'));
             });
@@ -152,12 +171,25 @@
 
 setInterval(function(){
     {% if sn %}
-        $.get("/listEmail/{{ sn }}/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+        {% if term %}
+            $.get("/listEmail/{{ sn }}/?page={{ page }}&num_per_page={{ num_per_page }}&search={{ term }}", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
             displayEmail(data, $('#emailList'));
             });
-    {% else %}
-        $.get("/listEmail/", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+            {% else %}
+            $.get("/listEmail/{{ sn }}/?page={{ page }}&num_per_page={{ num_per_page }}", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
             displayEmail(data, $('#emailList'));
+            });
+            {% endif %}
+
+    {% else %}
+            {% if term %}
+                $.get("/listEmail/?page={{ page }}&num_per_page={{ num_per_page }}&search={{ term }}", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+            displayEmail(data, $('#emailList'));
+                {% else %}
+                $.get("/listEmail/?page={{ page }}&num_per_page={{ num_per_page }}", {'csrfmiddlewaretoken': "{% csrf_token %}" }, function(data) {
+            displayEmail(data, $('#emailList'));
+                {% endif %}
+
             })
     {% endif %}
         }, 30000);

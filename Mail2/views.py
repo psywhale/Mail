@@ -24,6 +24,7 @@ from django.template import Context
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import requests
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -38,35 +39,46 @@ class IndexView(LoginRequiredMixin,TemplateView):
         # Creating a context with the proper information.
         # Don't know of an easier way to do this.
 
-        routes = Route.objects.filter(to=self.request.user.username)
+        # routes = Route.objects.filter(to=self.request.user.username)
+        #
+        # email = []
+        # courses = []
+        # # for route in routes:
+        #     mail = {}
+        #     message = route.fk_mail
+        #     # if message.section not in courses:
+        #     #     courses.append(message.section)
+        #     if route.archived is False:
+        #         mail['id'] = message.id
+        #         mail['subject'] = message.subject
+        #         mail['read'] = route.read
+        #         mail['termcode'] = message.termcode
+        #         mail['section'] = message.section
+        #         mail['date'] = str(message.created.month)+"/"+str(message.created.day)+"/"+str(message.created.year)
+        #         mail['time'] = str(message.created.hour)+":"+str(message.created.minute)+":"+str(message.created.second)
+        #         mail['timestamp'] = message.created.timestamp()
+        #         #pprint(mail['date'])
+        #         mail['from'] = message.fk_sender
+        #         mail['attachments'] = Attachment.objects.filter(m2m_mail=message)
+        #         # if Attachment.objects.filter(fk_mail=message):
+        #         #     mail['has_attachment'] = True
+        #         # else:
+        #         #     mail['has_attachment'] = False
+        #         email.append(mail)
+        # context['email'] = email
+        # context['session'] = self.request.session
 
-        email = []
-        courses = []
-        for route in routes:
-            mail = {}
-            message = route.fk_mail
-            # if message.section not in courses:
-            #     courses.append(message.section)
-            if route.archived is False:
-                mail['id'] = message.id
-                mail['subject'] = message.subject
-                mail['read'] = route.read
-                mail['termcode'] = message.termcode
-                mail['section'] = message.section
-                mail['date'] = str(message.created.month)+"/"+str(message.created.day)+"/"+str(message.created.year)
-                mail['time'] = str(message.created.hour)+":"+str(message.created.minute)+":"+str(message.created.second)
-                mail['timestamp'] = message.created.timestamp()
-                #pprint(mail['date'])
-                mail['from'] = message.fk_sender
-                mail['attachments'] = Attachment.objects.filter(m2m_mail=message)
-                # if Attachment.objects.filter(fk_mail=message):
-                #     mail['has_attachment'] = True
-                # else:
-                #     mail['has_attachment'] = False
-                email.append(mail)
-        context['email'] = email
-        context['session'] = self.request.session
-        # context['courses'] = courses
+        if 'search' in self.request.GET:
+            context['term']= self.request.GET['search']
+
+        if 'num_per_page' in self.request.GET:
+            context['num_per_page'] = self.request.GET['num_per_page']
+        else:
+            context['num_per_page'] = 25
+        if 'page' in self.request.GET:
+            context['page'] = self.request.GET['page']
+        else:
+            context['page'] = 1
         return context
 
 
@@ -482,6 +494,16 @@ class LabelView(LoginRequiredMixin, TemplateView):
                 email.append(mail)
             context['email'] = email
             context['courses'] = courses
+        if 'search' in self.request.GET:
+            context['term'] = self.request.GET['search']
+        if 'num_per_page' in self.request.GET:
+            context['num_per_page'] = self.request.GET['num_per_page']
+        else:
+            context['num_per_page'] = 25
+        if 'page' in self.request.GET:
+            context['page'] = self.request.GET['page']
+        else:
+            context['page'] = 1
         context['session'] = self.request.session
         return context
 
@@ -491,17 +513,41 @@ class GetEmailListView(View):
     def get(self, *args, **kwargs):
         response = {}
 
+        if 'num_per_page' in self.request.GET:
+            num_per_page = self.request.GET['num_per_page']
+        else:
+            num_per_page = 25
+        if 'page' in self.request.GET:
+            page_num = self.request.GET['page']
+        else:
+            page_num = 1
         # if no sn is specified, get all of the routes for the user.
         if 'sn' not in self.kwargs:
-            routes = Route.objects.filter(to=self.request.user)
+            if 'search' in self.request.GET:
+                dprint('searching')
+                term = self.request.GET['search']
+                mails = Mail.objects.filter(Q(fk_sender__username__contains=term) | Q(subject__contains=term) | Q(content__contains=term))
+                routes = Route.objects.filter(to=self.request.user, fk_mail__in=mails).order_by("-id")
+            else:
+                routes = Route.objects.filter(to=self.request.user, archived=False).order_by("-id")
+            paginator = Paginator(routes, num_per_page)
+            rts = paginator.page(page_num)
         else:
             #get all of the routes to this user in this section
             section, termcode = self.kwargs['sn'].split('-')
-            emails = Mail.objects.filter(section=section, termcode=termcode)
-            routes = Route.objects.filter(fk_mail__in=emails, to=self.request.user.username)
+            ems = Mail.objects.filter(section=section, termcode=termcode)
+            if 'search' in self.request.GET:
+                dprint('searching')
+                term = self.request.GET['search']
+                mails = ems.filter(Q(fk_sender__username__contains=term) | Q(subject__contains=term) | Q(content__contains=term))
+                routes = Route.objects.filter(to=self.request.user, fk_mail__in=mails).order_by("-id")
+            else:
+                routes = Route.objects.filter(fk_mail__in=ems, to=self.request.user.username).order_by("-id")
+            paginator = Paginator(routes, num_per_page)
+            rts = paginator.page(page_num)
 
         messages = []
-        for route in routes:
+        for route in rts:
             mail = route.fk_mail
             # if not Mail.objects.filter(parent=mail).exists():
             sender = {}
@@ -530,10 +576,44 @@ class GetEmailListView(View):
             else:
                 message['attachments'] = False
             messages.append(message)
-            if 'sn' in self.kwargs:
-                response = {'inbox': True, 'messages': list(reversed(messages)) }
+            if paginator.page(page_num).has_next():
+                has_next = True
+                next_page_number = paginator.page(page_num).next_page_number()
             else:
-                response = {'inbox': False, 'messages': list(reversed(messages))}
+                has_next = False
+                next_page_number = 0
+            if paginator.page(page_num).has_previous():
+                has_previous = True
+                previous_page_number = paginator.page(page_num).previous_page_number()
+            else:
+                has_previous = False
+                previous_page_number = 0
+            i = 1
+            for i in paginator.page_range:
+                i += 1
+            i -= 1
+            if 'sn' in self.kwargs:
+                response = {'inbox': True, 'messages': list(messages),
+                            'page_num': page_num,
+                            'pages': paginator.num_pages,
+                            'num_per_page': num_per_page,
+                            'has_next': has_next,
+                            'last_page': i,
+                            'has_previous': has_previous,
+                            'next_page_number': next_page_number,
+                            'previous_page_number': previous_page_number,
+                            }
+            else:
+                response = {'inbox': False, 'messages': list(messages),
+                            'page_num': page_num,
+                            'pages': paginator.num_pages,
+                            'num_per_page': num_per_page,
+                            'has_next': has_next,
+                            'last_page': i,
+                            'has_previous': has_previous,
+                            'next_page_number': next_page_number,
+                            'previous_page_number': previous_page_number,
+                            }
         return HttpResponse(json.dumps(response), content_type="application/json")
 
 
