@@ -1,9 +1,9 @@
 
 
 // {#    ------- THIS IS BUTTONTS & MAIL FUNCTIONS --------#}
-    $("#checkAll").click(function () {
-        $(".check").prop('checked', $(this).prop('checked'));
-    });
+//    $("#checkAll").click(function () {
+//        $(".check").prop('checked', $(this).prop('checked'));
+//    });
 
 
 // {#    ------- THIS IS FOOTABLES --------#}
