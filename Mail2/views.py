@@ -526,7 +526,7 @@ class GetEmailListView(View):
             if 'search' in self.request.GET:
                 dprint('searching')
                 term = self.request.GET['search']
-                mails = Mail.objects.filter(Q(fk_sender__username__contains=term) | Q(subject__contains=term) | Q(content__contains=term))
+                mails = Mail.objects.filter(Q(fk_sender__username__icontains=term) | Q(subject__icontains=term) | Q(content__icontains=term))
                 routes = Route.objects.filter(to=self.request.user, fk_mail__in=mails).order_by("-id")
             else:
                 routes = Route.objects.filter(to=self.request.user, archived=False).order_by("-id")
@@ -539,7 +539,7 @@ class GetEmailListView(View):
             if 'search' in self.request.GET:
                 dprint('searching')
                 term = self.request.GET['search']
-                mails = ems.filter(Q(fk_sender__username__contains=term) | Q(subject__contains=term) | Q(content__contains=term))
+                mails = ems.filter(Q(fk_sender__username__icontains=term) | Q(subject__icontains=term) | Q(content__icontains=term))
                 routes = Route.objects.filter(to=self.request.user, fk_mail__in=mails).order_by("-id")
             else:
                 routes = Route.objects.filter(fk_mail__in=ems, to=self.request.user.username).order_by("-id")
