@@ -16,6 +16,7 @@ node {
             stage('Build') {
                 try {
                     sh 'mv jenkinsdb.cnf db.cnf'
+                    sh 'mv Mail2proj/settings-jenkins.py Mail2proj/settings.py'
                     sh 'python manage.py makemigrations'
                     sh 'python manage.py migrate'
                  }
