@@ -68,6 +68,10 @@ class IndexView(LoginRequiredMixin,TemplateView):
         # context['email'] = email
         # context['session'] = self.request.session
 
+        # commenting out the above BROKE tests
+        # (╯°□°）╯︵ ┻━┻
+        # see https://gogs.wosc.edu/IT/Mail2/commit/521b6f39218bde9955ffe240f74d81e29c224b52
+
         if 'search' in self.request.GET:
             context['term']= self.request.GET['search']
 
