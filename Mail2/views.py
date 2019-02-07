@@ -343,8 +343,11 @@ class ArchiveMailView(LoginRequiredMixin, View):
                 route = Route.objects.get(fk_mail=message, to=request.user.username)
                 route.archived = True
                 route.save()
-                if request.POST['referer'] != '00000-000S':
-                    return redirect("/label/{}".format(request.POST['referer']))
+                if 'referer' in request.POST:
+                    if request.POST['referer'] != '00000-000S':
+                        return redirect("/label/{}".format(request.POST['referer']))
+                    else:
+                        return redirect("/")
                 else:
                     return redirect("/")
             else:
@@ -365,6 +368,7 @@ class UnarchiveMailView(LoginRequiredMixin, View):
                 route = Route.objects.get(fk_mail=message, to=request.user.username)
                 route.archived = False
                 route.save()
+
                 if request.POST['referer'] != '00000-000S':
                     return redirect("/label/{}".format(request.POST['referer']))
                 else:
