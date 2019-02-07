@@ -177,7 +177,7 @@ class InboxTest(myTestCase):
         res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/')
         exists = False
-        pprint(reslogin)
+        pprint("RESLOGIN###" + reslogin)
         for message in reslogin.context['emailList']:
             if message['subject'] == "test message for Frank":
                 exists = True
@@ -188,6 +188,7 @@ class InboxTest(myTestCase):
         res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/')
         exists = False
+
         for message in reslogin.context['email']:
             if message['subject'] == "test subject for Ned":
                 exists = True
