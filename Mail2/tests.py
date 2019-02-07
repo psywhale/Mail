@@ -177,7 +177,7 @@ class InboxTest(myTestCase):
         res = c.login(username='Frank', password='whatevs')
         reslogin = c.get('/')
         exists = False
-        for message in reslogin.context['email']:
+        for message in reslogin.context['emailList']:
             if message['subject'] == "test message for Frank":
                 exists = True
         self.assertTrue(exists)
