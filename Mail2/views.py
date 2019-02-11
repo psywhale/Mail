@@ -130,7 +130,7 @@ class OutboxView(LoginRequiredMixin,TemplateView):
                 email.append(mail)
         context['email'] = email
         context['session'] = self.request.session
-        print(context)
+        dprint(context)
         return context
 
 
@@ -222,7 +222,7 @@ class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
         new_route.fk_mail = new_msg
         new_route.save()
         attachments = self.request.POST.getlist('attachments')
-        pprint(attachments)
+        # pprint(attachments)
         for item in attachments:
             if item != "":
                 attachment = Attachment.objects.get(id=item)
@@ -285,8 +285,8 @@ class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
             info['archived'] = route.archived
             if 'sn' in self.kwargs:
                 info['referer'] = self.kwargs['sn']
-            pprint("This is the reply view")
-            pprint(info)
+            # pprint("This is the reply view")
+            # pprint(info)
             context['mail'] = info
             # dprint(context)
         else:
@@ -297,7 +297,7 @@ class ReplyViewParent(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
         # Mark all the mail in this thread as read.
 
-        print(context)
+        #print(context)
         return context
 
     def form_invalid(self, form):
@@ -669,7 +669,7 @@ class DownloadView(UserPassesTestMixin, View):
         attachment = get_object_or_404(Attachment, pk=self.kwargs['pk'])
         file = open(attachment.filepath, 'rb')
         mime = magic.from_file(attachment.filepath, mime=True)
-        pprint(mime)
+        dprint(mime)
         response = HttpResponse(file.read(), content_type=mime)
         response['Content-Disposition'] = 'inline; filename={}'.format(attachment.filename)
         return response
@@ -824,9 +824,9 @@ def send_email(msg, destination):
 def create_user(username):
     request_url = "{}wosc/rest.php?rest_key={}&action=get_user_info&username={}".format(
                                                             settings.MOODLE_URL, settings.MOODLE_REST_KEY, username)
-    print(request_url)
+    dprint(request_url)
     r = requests.get(request_url)
-    print(r.text)
+    dprint(r.text)
     new_user = r.json()
     user = User.objects.create_user(username=username, email=new_user['email'])
     user.first_name = new_user['firstname']
